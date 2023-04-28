@@ -1,0 +1,77 @@
+---
+title: "Gradient Boosting"
+author: "Jinwook Chang"
+date: "2023-04-18"
+date-modified: "2023-04-18"
+categories: [DataScience, EnsembleLearning, Script]
+---
+
+![](front.png)
+
+### Gradient Boosting이란..
+
+그래디언트 부스팅(Gradient Boosting)은 앙상블 학습 기법 중 하나로, 일련의 약한 학습기(보통 결정 트리)를 순차적으로 학습시켜 강력한 모델을 만드는 방법입니다. 그래디언트 부스팅은 손실 함수의 그래디언트(기울기)를 최소화하는 방향으로 모델을 업데이트하는 과정을 반복하며, 이를 통해 각 학습기가 이전 학습기의 오차를 줄이는 방향으로 학습됩니다.
+
+그래디언트 부스팅의 주요 단계는 다음과 같습니다:
+
+1. 초기 예측: 모든 데이터 포인트에 대해 동일한 초기 예측 값을 설정합니다. 이 값은 일반적으로 평균(회귀) 또는 가장 빈번한 클래스(분류)로 설정됩니다.
+2. 약한 학습기 학습: 첫 번째 약한 학습기(일반적으로 결정 트리)를 학습시키고, 예측 오차를 계산합니다.
+3. 손실 함수 및 그래디언트 계산: 손실 함수(예: 평균 제곱 오차, 로그 손실 등)를 사용하여 예측 오차를 측정하고, 그래디언트를 계산합니다.
+4. 새로운 약한 학습기 학습: 이전 학습기의 오차를 줄이는 방향으로 새로운 약한 학습기를 학습시킵니다. 이 과정은 그래디언트에 음의 가중치를 부여하여 이루어집니다.
+5. 학습기 결합: 모든 약한 학습기의 예측을 가중치를 적용하여 결합합니다. 이렇게 하여 최종 예측이 개선됩니다.
+6. 수렴 여부 확인: 손실 함수 값이 더 이상 개선되지 않거나 지정된 반복 횟수에 도달할 때까지 단계 2-5를 반복합니다.
+
+그래디언트 부스팅은 다양한 문제에서 높은 성능을 보이며, 회귀와 분류 문제 모두에 적용할 수 있습니다. XGBoost, LightGBM 및 CatBoost와 같은 그래디언트 부스팅 구현은 대용량 데이터셋에서도 빠르게 학습되도록 최적화되어 있으며, 고성능 그래디언트 부스팅 모델을 생성하는 데 널리 사용됩니다.
+
+### HistGradientBoosting 예제
+
+```r
+r
+# load required library
+library(tidyverse)
+library(tidymodels)
+library(reticulate)
+
+
+python
+# load required library
+from sklearn.datasets import load_breast_cancer
+from sklearn.ensemble import HistGradientBoostingClassifier
+from sklearn.model_selection import train_test_split
+
+
+python
+# Split Data
+data = load_breast_cancer()
+X, y = data.data, data.target
+colname_x = data.feature_names
+
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
+
+python
+# Init Model
+model = HistGradientBoostingClassifier(random_state=42)
+model.fit(X_train, y_train)
+y_pred = model.predict(X_test)
+
+
+r
+# Calc Accuracy
+X_test <- as_tibble(py$X_test,.name_repair)
+y_test <- tibble(py$y_test)
+y_pred = tibble(py$y_pred)
+
+result <- X_test |> bind_cols(y_test,y_pred)
+colnames(result) <- c(py$colname_x,"truth","estimate")
+result$truth <- as.factor(result$truth)
+result$estimate <- as.factor(result$estimate)
+
+yardstick::accuracy(result,truth,estimate)
+```
+
+```r
+# A tibble: 1 × 3
+  .metric  .estimator .estimate
+  <chr>    <chr>          <dbl>
+1 accuracy binary         0.974
+```

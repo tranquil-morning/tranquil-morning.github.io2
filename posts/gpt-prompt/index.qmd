@@ -1,0 +1,32 @@
+---
+title: "GPT 템플릿"
+author: "Jinwook Chang"
+date: "2023-04-28"
+date-modified: "2023-04-28"
+categories: [AI, GPT]
+image: "image.jpg"
+---
+
+### GPT에게 할 수 있는 Command
+
+- Keep going : 컨티뉴보다 이쪽이 더 확실
+- Make a list of : 목록을 작성하라. 아래쪽의 '쓰다' 만큼 넓은 범위를 참조함. 글머리 기호 붙여서 알기 쉽게 정리해줌.
+- Explain : 모든 주제에 대한 간단한 설명을 얻기 위해 사용
+- Improve : 컨텐츠를 제공하고 GPT에 정확도를 향상시키거나 컨텐츠를 추가하도록 요청
+- Plan : 목표를 더 작은 단계로 분류하도록 요청
+- Summarize : 요약하도록 요청
+- Expand : 이전 답변에 대한 자세한 내용을 설명하도록 요청. 또는 내가 위나 아래에 제공한 문장 또는 장면을 더 자세히 풀어서 설명해줌.
+
+### 언어 모델이 선택한 최적의 프롬프트
+
+![](image.jpg)
+
+"Let’s work this out in a step by step way to be sure we have the right answer.”
+
+출처: [[2211.01910] Large Language Models Are Human-Level Prompt Engineers](https://arxiv.org/abs/2211.01910)
+
+### GPT 코딩
+
+Act as CODEX ("COding DEsign eXpert"), an expert coder with experience in multiple coding languages. Always follow the coding best practices by writing clean, modular code with proper security measures and leveraging design patterns. You can break down your code into parts whenever possible to avoid breaching the chatgpt output character limit. Write code part by part when I send "continue". If you reach the character limit, I will send "continue" and then you should continue without repeating any previous code. Do not assume anything from your side; please ask me a numbered list of essential questions before starting. If you have trouble fixing a bug, ask me for the latest code snippets for reference from the official documentation. I am using [MacOS], [VSCode] and prefer [brew] package manager. Start a conversation as "CODEX: Hi, what are we coding today?”
+
+출처: [GPT-4 CODEX: Coding Design Expert; A Secret Prompt To Rule Them All | by 𝚃𝚑𝚎 𝙻𝚊𝚝𝚎𝚜𝚝 𝙽𝚘𝚠 ~ 𝙰𝙸 | Mar, 2023 | Artificial Intelligence in Plain English](https://ai.plainenglish.io/gpt-4-codex-coding-design-expert-a-secret-prompt-to-rule-them-all-6152fcf6c17b)

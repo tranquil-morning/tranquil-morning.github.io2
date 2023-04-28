@@ -1,0 +1,29 @@
+---
+title: "About"
+image: profile.jpg
+about:
+  template: jolla
+  links:
+    - icon: github
+      text: GitHub
+      href: https://github.com/tranquil-morning
+    - icon: linkedin
+      text: LinkedIn
+      href: https://www.linkedin.com/in/tranquil-morning/
+    - icon: instagram
+      text: Instagram
+      href: https://www.instagram.com/zzang_jinuk/
+---
+
+## Jinwook Chang (張鎭旭)
+
+
+**Experienced Supply Chain Manager**  
+**Data Scientist**
+
+**Samsung Electronics (Jul 2019 ~ )**
+
+MS in Data Science
+
+BS in Industrial Engineering  
+BA in Sports Industry Management

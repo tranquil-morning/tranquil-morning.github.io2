@@ -1,0 +1,132 @@
+---
+title: "N-1 더미 변수를 활용하는 이유"
+author: "Jinwook Chang"
+date: "2023-04-15"
+date-modified: "2023-04-15"
+categories: [DataScience, Script]
+---
+
+
+### Sample Data 생성
+
+```r
+library(tidyverse)
+
+set.seed(42)
+smp_dt <- tibble(Season = rep(c("Spring", "Summer", "Fall", "Winter"),2),
+Sales = as.integer(runif(8,min = 300, max = 1000)))
+
+# A tibble: 8 × 2
+  Season Sales
+  <chr>  <int>
+1 Spring   940
+2 Summer   955
+3 Fall     500
+4 Winter   881
+5 Spring   749
+6 Summer   663
+7 Fall     815
+8 Winter   394
+```
+
+### 직관적으로..
+
+단순히 생각하였을 때, n개의 더미 변수를 사용할 경우, Spring ~ Winter까지의 열 벡터를 합하면, Intercept 열이 되어, 선형독립을 만족치 못한다. 그렇기에 역행렬이 구해지지 않는 것이 당연하다고 볼 수 있다. 하기 예제로 실제로 그러한지 확인해보자.
+
+```r
+      Spring Summer Fall Winter Intercept Sales
+[1,]      1      0    0      0         1   940
+[2,]      0      1    0      0         1   955
+[3,]      0      0    1      0         1   500
+[4,]      0      0    0      1         1   881
+[5,]      1      0    0      0         1   749
+[6,]      0      1    0      0         1   663
+[7,]      0      0    1      0         1   815
+[8,]      0      0    0      1         1   394
+```
+
+### n 더미 변수의 경우..
+
+```r
+smp_dt_dummy_1 <-
+tibble( 
+      Spring = c(1L, 0L, 0L, 0L, 1L, 0L, 0L, 0L),
+      Summer = c(0L, 1L, 0L, 0L, 0L, 1L, 0L, 0L),
+        Fall = c(0L, 0L, 1L, 0L, 0L, 0L, 1L, 0L),
+      Winter = c(0L, 0L, 0L, 1L, 0L, 0L, 0L, 1L),
+      Intercept = rep(1, 8),
+      Sales = smp_dt$Sales
+)
+smp_dt_dummy_1_mat <- smp_dt_dummy_1 |> as.matrix()
+smp_dt_dummy_1_mat
+
+      Spring Summer Fall Winter Intercept Sales
+[1,]      1      0    0      0         1   940
+[2,]      0      1    0      0         1   955
+[3,]      0      0    1      0         1   500
+[4,]      0      0    0      1         1   881
+[5,]      1      0    0      0         1   749
+[6,]      0      1    0      0         1   663
+[7,]      0      0    1      0         1   815
+[8,]      0      0    0      1         1   394
+```
+
+Least Square Formula 에 따라 $(A^TA)^{-1} \cdot A^Tb$ 를 계산하고자 할 때, $Det(A^TA)$의 값이 0이 되어, 역행렬을 구할 수 없다. 에러 메시지를 통해 해당 행렬이 선형적으로 종속되어있음을 확인할 수 있다.
+
+```r
+solve(t(smp_dt_dummy_1_mat[,1:5]) %*% smp_dt_dummy_1_mat[,1:5])
+ %*% t(smp_dt_dummy_1_mat[,1:5]) %*% (smp_dt_dummy_1_mat[,6])
+#---------------------------------------------------------------------
+Error in solve.default(t(smp_dt_dummy_1_mat[, 1:5]) %*% smp_dt_dummy_1_mat[,  : 
+  Lapack routine dgesv: system is exactly singular: U[5,5] = 0
+#------------------------------------------------------------------------
+det(t(smp_dt_dummy_1_mat[,1:5]) %*% smp_dt_dummy_1_mat[,1:5])
+[1] 0
+```
+
+### n-1 더미 변수의 경우..
+
+```r
+smp_dt_dummy_2 <-
+  tibble(
+      Spring = c(1L, 0L, 0L, 0L, 1L, 0L, 0L, 0L),
+      Summer = c(0L, 1L, 0L, 0L, 0L, 1L, 0L, 0L),
+        Fall = c(0L, 0L, 1L, 0L, 0L, 0L, 1L, 0L),
+      Intercept = rep(1, 8),
+      Sales = smp_dt$Sales
+  )
+
+smp_dt_dummy_2
+
+      Spring Summer Fall Intercept Sales
+[1,]      1      0    0         1   940
+[2,]      0      1    0         1   955
+[3,]      0      0    1         1   500
+[4,]      0      0    0         1   881
+[5,]      1      0    0         1   749
+[6,]      0      1    0         1   663
+[7,]      0      0    1         1   815
+[8,]      0      0    0         1   394
+```
+
+반면 n-1 dummy variables의 경우, Least Square Formula의 계산이 제대로 된다.
+
+```r
+solve(t(smp_dt_dummy_2_mat[,1:4]) %*% smp_dt_dummy_2_mat[,1:4]) %*% 
+t(smp_dt_dummy_2_mat[,1:4]) %*% (smp_dt_dummy_2_mat[,5])
+
+           [,1]
+Spring    207.0
+Summer    171.5
+Fall       20.0
+Intercept 637.5
+
+lm(Sales ~., smp_dt_dummy_2)
+
+Call:
+lm(formula = Sales ~ ., data = smp_dt_dummy_2)
+
+Coefficients:
+(Intercept)       Spring       Summer         Fall
+      637.5        207.0        171.5         20.0
+```

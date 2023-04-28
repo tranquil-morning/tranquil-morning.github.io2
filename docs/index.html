@@ -1,0 +1,1338 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.3.313">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>Note of myself - Note</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+</style>
+
+
+<script src="site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="site_libs/quarto-nav/headroom.min.js"></script>
+<script src="site_libs/clipboard/clipboard.min.js"></script>
+<script src="site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="site_libs/quarto-search/fuse.min.js"></script>
+<script src="site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="./">
+<script src="site_libs/quarto-listing/list.min.js"></script>
+<script src="site_libs/quarto-listing/quarto-listing.js"></script>
+<script src="site_libs/quarto-html/quarto.js"></script>
+<script src="site_libs/quarto-html/popper.min.js"></script>
+<script src="site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="site_libs/quarto-html/anchor.min.js"></script>
+<link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "navbar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "end",
+  "type": "overlay",
+  "limit": 20,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit"
+  }
+}</script>
+<script>
+
+  window.document.addEventListener("DOMContentLoaded", function (_event) {
+    const listingTargetEl = window.document.querySelector('#listing-listing .list');
+    if (!listingTargetEl) {
+      // No listing discovered, do not attach.
+      return; 
+    }
+
+    const options = {
+      valueNames: ['listing-date','listing-title','listing-author','listing-image','listing-description','listing-categories',{ data: ['index'] },{ data: ['categories'] },{ data: ['listing-date-sort'] },{ data: ['listing-file-modified-sort'] }],
+      
+      searchColumns: ["listing-date","listing-title","listing-author","listing-image","listing-description","listing-categories"],
+    };
+
+    window['quarto-listings'] = window['quarto-listings'] || {};
+    window['quarto-listings']['listing-listing'] = new List('listing-listing', options);
+
+    if (window['quarto-listing-loaded']) {
+      window['quarto-listing-loaded']();
+    }
+  });
+
+  window.addEventListener('hashchange',() => {
+    if (window['quarto-listing-loaded']) {
+      window['quarto-listing-loaded']();
+    }
+  })
+  </script>
+
+  <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+
+<link rel="stylesheet" href="styles.css">
+</head>
+
+<body class="nav-fixed">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+    <nav class="navbar navbar-expand-lg navbar-dark ">
+      <div class="navbar-container container-fluid">
+      <div class="navbar-brand-container">
+    <a class="navbar-brand" href="./index.html">
+    <span class="navbar-title">Note of myself</span>
+    </a>
+  </div>
+            <div id="quarto-search" class="" title="Search"></div>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+  <span class="navbar-toggler-icon"></span>
+</button>
+          <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav navbar-nav-scroll ms-auto">
+  <li class="nav-item">
+    <a class="nav-link" href="./about.html" rel="" target="">
+ <span class="menu-text">About</span></a>
+  </li>  
+  <li class="nav-item compact">
+    <a class="nav-link" href="https://github.com/tranquil-morning" rel="" target=""><i class="bi bi-github" role="img">
+</i> 
+ <span class="menu-text"></span></a>
+  </li>  
+  <li class="nav-item compact">
+    <a class="nav-link" href="https://www.linkedin.com/in/tranquil-morning/" rel="" target=""><i class="bi bi-linkedin" role="img">
+</i> 
+ <span class="menu-text"></span></a>
+  </li>  
+  <li class="nav-item compact">
+    <a class="nav-link" href="https://www.instagram.com/zzang_jinuk/" rel="" target=""><i class="bi bi-instagram" role="img">
+</i> 
+ <span class="menu-text"></span></a>
+  </li>  
+</ul>
+            <div class="quarto-navbar-tools">
+</div>
+          </div> <!-- /navcollapse -->
+      </div> <!-- /container-fluid -->
+    </nav>
+</header>
+<!-- content -->
+<header id="title-block-header" class="quarto-title-block default page-columns page-full">
+  <div class="quarto-title-banner page-columns page-full">
+    <div class="quarto-title column-page-left">
+      <h1 class="title">Note</h1>
+                      </div>
+  </div>
+    
+  
+  <div class="quarto-title-meta">
+
+      
+    
+      
+    </div>
+    
+  
+  </header><div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-full page-navbar">
+<!-- sidebar -->
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        
+    <h5 class="quarto-listing-category-title">Categories</h5><div class="quarto-listing-category category-default"><div class="category" data-category="">All <span class="quarto-category-count">(23)</span></div><div class="category" data-category="AI">AI <span class="quarto-category-count">(1)</span></div><div class="category" data-category="Clustering">Clustering <span class="quarto-category-count">(4)</span></div><div class="category" data-category="DataScience">DataScience <span class="quarto-category-count">(22)</span></div><div class="category" data-category="DimensionReduction">DimensionReduction <span class="quarto-category-count">(4)</span></div><div class="category" data-category="EnsembleLearning">EnsembleLearning <span class="quarto-category-count">(3)</span></div><div class="category" data-category="GPT">GPT <span class="quarto-category-count">(1)</span></div><div class="category" data-category="MainTheme">MainTheme <span class="quarto-category-count">(3)</span></div><div class="category" data-category="Math">Math <span class="quarto-category-count">(2)</span></div><div class="category" data-category="Metric">Metric <span class="quarto-category-count">(1)</span></div><div class="category" data-category="NLP">NLP <span class="quarto-category-count">(2)</span></div><div class="category" data-category="Optimization">Optimization <span class="quarto-category-count">(3)</span></div><div class="category" data-category="Script">Script <span class="quarto-category-count">(13)</span></div></div></div>
+<!-- main -->
+<main class="content quarto-banner-title-block column-page-left" id="quarto-document-content">
+
+
+
+
+
+
+
+
+<div class="quarto-listing quarto-listing-container-default" id="listing-listing">
+<div class="listing-actions-group">
+    <div class="input-group input-group-sm quarto-listing-filter">
+      <span class="input-group-text"><i class="bi bi-search"></i></span>
+      <input type="text" class="search form-control" placeholder="Filter">
+    </div>
+</div>
+<div class="list quarto-listing-default">
+<div class="quarto-post image-right" data-index="0" data-categories="AI,GPT" data-listing-date-sort="1682607600000" data-listing-file-modified-sort="1682674029789" data-listing-date-modified-sort="1682607600000" data-listing-reading-time-sort="2">
+<div class="thumbnail">
+<p><a href="./posts/gpt-prompt/index.html"> <img src="./posts/gpt-prompt/image.jpg" class="thumbnail-image"> </a></p>
+</div>
+<div class="body">
+<a href="./posts/gpt-prompt/index.html">
+<h3 class="no-anchor listing-title">
+GPT 템플릿
+</h3>
+<div class="listing-subtitle">
+
+</div>
+</a>
+<div class="listing-categories">
+<div class="listing-category" onclick="window.quartoListingCategory('AI'); return false;">
+AI
+</div>
+<div class="listing-category" onclick="window.quartoListingCategory('GPT'); return false;">
+GPT
+</div>
+</div>
+<a href="./posts/gpt-prompt/index.html">
+<div class="listing-description">
+“Let’s work this out in a step by step way to be sure we have the right answer.”
+</div>
+</a>
+</div>
+<div class="metadata">
+<a href="./posts/gpt-prompt/index.html">
+<div class="listing-date">
+Apr 28, 2023
+</div>
+<div class="listing-author">
+Jinwook Chang
+</div>
+</a>
+</div>
+</div>
+<div class="quarto-post image-right" data-index="1" data-categories="DataScience,Math" data-listing-date-sort="1682521200000" data-listing-file-modified-sort="1682677195931" data-listing-date-modified-sort="1682521200000" data-listing-reading-time-sort="1">
+<div class="thumbnail">
+<p><a href="./posts/entropy/index.html"> <p class="card-img-top"><img src="posts\entropy\front.png"  class="thumbnail-image card-img"/></p> </a></p>
+</div>
+<div class="body">
+<a href="./posts/entropy/index.html">
+<h3 class="no-anchor listing-title">
+Entropy 쉽게 이해하기
+</h3>
+<div class="listing-subtitle">
+
+</div>
+</a>
+<div class="listing-categories">
+<div class="listing-category" onclick="window.quartoListingCategory('DataScience'); return false;">
+DataScience
+</div>
+<div class="listing-category" onclick="window.quartoListingCategory('Math'); return false;">
+Math
+</div>
+</div>
+<a href="./posts/entropy/index.html">
+<div class="listing-description">
+엔트로피(entropy)는 정보 이론에서 확률 변수의 불확실성을 측정하는 지표입니다. 엔트로피는 어떤 정보를 표현하기 위해 필요한 평균 비트 수를 나타내며, 이를 통해 정보의 복잡성이나 압축 가능성을 파악할 수 있습니다. 높은 엔트로피는 높은 불확실성을 의미하며, 낮은 엔트로피는 낮은 불확실성을 의미합니다.
+</div>
+</a>
+</div>
+<div class="metadata">
+<a href="./posts/entropy/index.html">
+<div class="listing-date">
+Apr 27, 2023
+</div>
+<div class="listing-author">
+Jinwook Chang
+</div>
+</a>
+</div>
+</div>
+<div class="quarto-post image-right" data-index="2" data-categories="DataScience,Metric" data-listing-date-sort="1682521200000" data-listing-file-modified-sort="1682677199595" data-listing-date-modified-sort="1682521200000" data-listing-reading-time-sort="1">
+<div class="thumbnail">
+<p><a href="./posts/mutual-information/index.html"> <p class="card-img-top"><img src="posts\mutual-information\front.png"  class="thumbnail-image card-img"/></p> </a></p>
+</div>
+<div class="body">
+<a href="./posts/mutual-information/index.html">
+<h3 class="no-anchor listing-title">
+상호 정보량 (Mutual Informaion)
+</h3>
+<div class="listing-subtitle">
+
+</div>
+</a>
+<div class="listing-categories">
+<div class="listing-category" onclick="window.quartoListingCategory('DataScience'); return false;">
+DataScience
+</div>
+<div class="listing-category" onclick="window.quartoListingCategory('Metric'); return false;">
+Metric
+</div>
+</div>
+<a href="./posts/mutual-information/index.html">
+<div class="listing-description">
+상호 정보량(mutual information, MI)은 정보…
+</div>
+</a>
+</div>
+<div class="metadata">
+<a href="./posts/mutual-information/index.html">
+<div class="listing-date">
+Apr 27, 2023
+</div>
+<div class="listing-author">
+Jinwook Chang
+</div>
+</a>
+</div>
+</div>
+<div class="quarto-post image-right" data-index="3" data-categories="DataScience,NLP,Script" data-listing-date-sort="1682521200000" data-listing-file-modified-sort="1682675759916" data-listing-date-modified-sort="1682521200000" data-listing-reading-time-sort="2">
+<div class="thumbnail">
+<p><a href="./posts/word-embedding/index.html"> <p class="card-img-top"><img src="posts\word-embedding\parallelogram.png"  class="thumbnail-image card-img"/></p> </a></p>
+</div>
+<div class="body">
+<a href="./posts/word-embedding/index.html">
+<h3 class="no-anchor listing-title">
+Word Embedding과 Word2Vec
+</h3>
+<div class="listing-subtitle">
+
+</div>
+</a>
+<div class="listing-categories">
+<div class="listing-category" onclick="window.quartoListingCategory('DataScience'); return false;">
+DataScience
+</div>
+<div class="listing-category" onclick="window.quartoListingCategory('NLP'); return false;">
+NLP
+</div>
+<div class="listing-category" onclick="window.quartoListingCategory('Script'); return false;">
+Script
+</div>
+</div>
+<a href="./posts/word-embedding/index.html">
+<div class="listing-description">
+단어 임베딩은 단어들을 고차원 벡터 공간에 매핑하는 과정입니다. 이렇게 변환된 벡터는…
+</div>
+</a>
+</div>
+<div class="metadata">
+<a href="./posts/word-embedding/index.html">
+<div class="listing-date">
+Apr 27, 2023
+</div>
+<div class="listing-author">
+Jinwook Chang
+</div>
+</a>
+</div>
+</div>
+<div class="quarto-post image-right" data-index="4" data-categories="DataScience,Optimization" data-listing-date-sort="1682175600000" data-listing-file-modified-sort="1682677547356" data-listing-date-modified-sort="1682175600000" data-listing-reading-time-sort="1">
+<div class="thumbnail">
+<p><a href="./posts/dual-number/index.html"> <div class="listing-item-img-placeholder card-img-top" >&nbsp;</div> </a></p>
+</div>
+<div class="body">
+<a href="./posts/dual-number/index.html">
+<h3 class="no-anchor listing-title">
+이원수와 전진자동미분
+</h3>
+<div class="listing-subtitle">
+
+</div>
+</a>
+<div class="listing-categories">
+<div class="listing-category" onclick="window.quartoListingCategory('DataScience'); return false;">
+DataScience
+</div>
+<div class="listing-category" onclick="window.quartoListingCategory('Optimization'); return false;">
+Optimization
+</div>
+</div>
+<a href="./posts/dual-number/index.html">
+<div class="listing-description">
+이원수(dual number)는 복소수의 일반화로 볼 수 있는 수 체계입니다. 듀얼 넘버는 다음과 같은 형태로 표현됩니다:
+</div>
+</a>
+</div>
+<div class="metadata">
+<a href="./posts/dual-number/index.html">
+<div class="listing-date">
+Apr 23, 2023
+</div>
+<div class="listing-author">
+Jinwook Chang
+</div>
+</a>
+</div>
+</div>
+<div class="quarto-post image-right" data-index="5" data-categories="DataScience" data-listing-date-sort="1682089200000" data-listing-file-modified-sort="1682676596560" data-listing-date-modified-sort="1682089200000" data-listing-reading-time-sort="2">
+<div class="thumbnail">
+<p><a href="./posts/causal-relationship/index.html"> <p class="card-img-top"><img src="posts\causal-relationship\front.png"  class="thumbnail-image card-img"/></p> </a></p>
+</div>
+<div class="body">
+<a href="./posts/causal-relationship/index.html">
+<h3 class="no-anchor listing-title">
+인과관계의 조건과 탐색
+</h3>
+<div class="listing-subtitle">
+
+</div>
+</a>
+<div class="listing-categories">
+<div class="listing-category" onclick="window.quartoListingCategory('DataScience'); return false;">
+DataScience
+</div>
+</div>
+<a href="./posts/causal-relationship/index.html">
+<div class="listing-description">
+ [출처]: Correlation Vs Causation - GeeksforGeeks
+</div>
+</a>
+</div>
+<div class="metadata">
+<a href="./posts/causal-relationship/index.html">
+<div class="listing-date">
+Apr 22, 2023
+</div>
+<div class="listing-author">
+Jinwook Chang
+</div>
+</a>
+</div>
+</div>
+<div class="quarto-post image-right" data-index="6" data-categories="DataScience,Clustering,Script" data-listing-date-sort="1681916400000" data-listing-file-modified-sort="1682675673619" data-listing-date-modified-sort="1681916400000" data-listing-reading-time-sort="2">
+<div class="thumbnail">
+<p><a href="./posts/dbscan/index.html"> <p class="card-img-top"><img src="posts\dbscan\dbscan.png"  class="thumbnail-image card-img"/></p> </a></p>
+</div>
+<div class="body">
+<a href="./posts/dbscan/index.html">
+<h3 class="no-anchor listing-title">
+DBSCAN
+</h3>
+<div class="listing-subtitle">
+
+</div>
+</a>
+<div class="listing-categories">
+<div class="listing-category" onclick="window.quartoListingCategory('DataScience'); return false;">
+DataScience
+</div>
+<div class="listing-category" onclick="window.quartoListingCategory('Clustering'); return false;">
+Clustering
+</div>
+<div class="listing-category" onclick="window.quartoListingCategory('Script'); return false;">
+Script
+</div>
+</div>
+<a href="./posts/dbscan/index.html">
+<div class="listing-description">
+DBSCAN (Density-Based Spatial Clustering of Applications with Noise)은 밀도 기반의 클러스터링 알고리즘 중 하나로…
+</div>
+</a>
+</div>
+<div class="metadata">
+<a href="./posts/dbscan/index.html">
+<div class="listing-date">
+Apr 20, 2023
+</div>
+<div class="listing-author">
+Jinwook Chang
+</div>
+</a>
+</div>
+</div>
+<div class="quarto-post image-right" data-index="7" data-categories="DataScience,EnsembleLearning,Script" data-listing-date-sort="1681743600000" data-listing-file-modified-sort="1682676429313" data-listing-date-modified-sort="1681743600000" data-listing-reading-time-sort="2">
+<div class="thumbnail">
+<p><a href="./posts/gradient-boosting/index.html"> <p class="card-img-top"><img src="posts\gradient-boosting\front.png"  class="thumbnail-image card-img"/></p> </a></p>
+</div>
+<div class="body">
+<a href="./posts/gradient-boosting/index.html">
+<h3 class="no-anchor listing-title">
+Gradient Boosting
+</h3>
+<div class="listing-subtitle">
+
+</div>
+</a>
+<div class="listing-categories">
+<div class="listing-category" onclick="window.quartoListingCategory('DataScience'); return false;">
+DataScience
+</div>
+<div class="listing-category" onclick="window.quartoListingCategory('EnsembleLearning'); return false;">
+EnsembleLearning
+</div>
+<div class="listing-category" onclick="window.quartoListingCategory('Script'); return false;">
+Script
+</div>
+</div>
+<a href="./posts/gradient-boosting/index.html">
+<div class="listing-description">
+그래디언트 부스팅(Gradient…
+</div>
+</a>
+</div>
+<div class="metadata">
+<a href="./posts/gradient-boosting/index.html">
+<div class="listing-date">
+Apr 18, 2023
+</div>
+<div class="listing-author">
+Jinwook Chang
+</div>
+</a>
+</div>
+</div>
+<div class="quarto-post image-right" data-index="8" data-categories="DataScience,EnsembleLearning,Script" data-listing-date-sort="1681657200000" data-listing-file-modified-sort="1682676368527" data-listing-date-modified-sort="11148678000000" data-listing-reading-time-sort="2">
+<div class="thumbnail">
+<p><a href="./posts/random-forest/index.html"> <p class="card-img-top"><img src="posts\random-forest\front.jpg"  class="thumbnail-image card-img"/></p> </a></p>
+</div>
+<div class="body">
+<a href="./posts/random-forest/index.html">
+<h3 class="no-anchor listing-title">
+Random Forest
+</h3>
+<div class="listing-subtitle">
+
+</div>
+</a>
+<div class="listing-categories">
+<div class="listing-category" onclick="window.quartoListingCategory('DataScience'); return false;">
+DataScience
+</div>
+<div class="listing-category" onclick="window.quartoListingCategory('EnsembleLearning'); return false;">
+EnsembleLearning
+</div>
+<div class="listing-category" onclick="window.quartoListingCategory('Script'); return false;">
+Script
+</div>
+</div>
+<a href="./posts/random-forest/index.html">
+<div class="listing-description">
+[출처] Random Forest Simple Explanation | by Will Koehrsen | Medium
+</div>
+</a>
+</div>
+<div class="metadata">
+<a href="./posts/random-forest/index.html">
+<div class="listing-date">
+Apr 17, 2023
+</div>
+<div class="listing-author">
+Jinwook Chang
+</div>
+</a>
+</div>
+</div>
+<div class="quarto-post image-right" data-index="9" data-categories="DataScience,MainTheme,EnsembleLearning" data-listing-date-sort="1681570800000" data-listing-file-modified-sort="1682676300084" data-listing-date-modified-sort="1681570800000" data-listing-reading-time-sort="2">
+<div class="thumbnail">
+<p><a href="./posts/ensemble-learning/index.html"> <p class="card-img-top"><img src="posts\ensemble-learning\front.png"  class="thumbnail-image card-img"/></p> </a></p>
+</div>
+<div class="body">
+<a href="./posts/ensemble-learning/index.html">
+<h3 class="no-anchor listing-title">
+Ensemble Learning
+</h3>
+<div class="listing-subtitle">
+
+</div>
+</a>
+<div class="listing-categories">
+<div class="listing-category" onclick="window.quartoListingCategory('DataScience'); return false;">
+DataScience
+</div>
+<div class="listing-category" onclick="window.quartoListingCategory('MainTheme'); return false;">
+MainTheme
+</div>
+<div class="listing-category" onclick="window.quartoListingCategory('EnsembleLearning'); return false;">
+EnsembleLearning
+</div>
+</div>
+<a href="./posts/ensemble-learning/index.html">
+<div class="listing-description">
+[출처] Ensemble Learning: Bagging &amp; Boosting | by Fernando López | Towards Data Science
+</div>
+</a>
+</div>
+<div class="metadata">
+<a href="./posts/ensemble-learning/index.html">
+<div class="listing-date">
+Apr 16, 2023
+</div>
+<div class="listing-author">
+Jinwook Chang
+</div>
+</a>
+</div>
+</div>
+<div class="quarto-post image-right" data-index="10" data-categories="DataScience,Clustering,Script" data-listing-date-sort="1681570800000" data-listing-file-modified-sort="1682675743913" data-listing-date-modified-sort="1681570800000" data-listing-reading-time-sort="2">
+<div class="thumbnail">
+<p><a href="./posts/k-means/index.html"> <p class="card-img-top"><img src="posts\k-means\k-means.png"  class="thumbnail-image card-img"/></p> </a></p>
+</div>
+<div class="body">
+<a href="./posts/k-means/index.html">
+<h3 class="no-anchor listing-title">
+K-means clustering
+</h3>
+<div class="listing-subtitle">
+
+</div>
+</a>
+<div class="listing-categories">
+<div class="listing-category" onclick="window.quartoListingCategory('DataScience'); return false;">
+DataScience
+</div>
+<div class="listing-category" onclick="window.quartoListingCategory('Clustering'); return false;">
+Clustering
+</div>
+<div class="listing-category" onclick="window.quartoListingCategory('Script'); return false;">
+Script
+</div>
+</div>
+<a href="./posts/k-means/index.html">
+<div class="listing-description">
+Centroid Based Clustering 기법 중 하나로, 데이터 포인트들을 K개의 군집으로 나누는 비지도 학습(unsupervised learning) 방법입니다. K-means 알고리즘은 다음과 같은 과정을 거쳐 데이터를 군집화합니다.
+</div>
+</a>
+</div>
+<div class="metadata">
+<a href="./posts/k-means/index.html">
+<div class="listing-date">
+Apr 16, 2023
+</div>
+<div class="listing-author">
+Jinwook Chang
+</div>
+</a>
+</div>
+</div>
+<div class="quarto-post image-right" data-index="11" data-categories="DataScience,DimensionReduction,Script" data-listing-date-sort="1681570800000" data-listing-file-modified-sort="1682675714448" data-listing-date-modified-sort="1681570800000" data-listing-reading-time-sort="2">
+<div class="thumbnail">
+<p><a href="./posts/t-sne/index.html"> <p class="card-img-top"><img src="posts\t-sne\result.png"  class="thumbnail-image card-img"/></p> </a></p>
+</div>
+<div class="body">
+<a href="./posts/t-sne/index.html">
+<h3 class="no-anchor listing-title">
+t-sne
+</h3>
+<div class="listing-subtitle">
+
+</div>
+</a>
+<div class="listing-categories">
+<div class="listing-category" onclick="window.quartoListingCategory('DataScience'); return false;">
+DataScience
+</div>
+<div class="listing-category" onclick="window.quartoListingCategory('DimensionReduction'); return false;">
+DimensionReduction
+</div>
+<div class="listing-category" onclick="window.quartoListingCategory('Script'); return false;">
+Script
+</div>
+</div>
+<a href="./posts/t-sne/index.html">
+<div class="listing-description">
+t-SNE(t-Distributed Stochastic Neighbor Embedding)는 고차원 데이터를 저차원…
+</div>
+</a>
+</div>
+<div class="metadata">
+<a href="./posts/t-sne/index.html">
+<div class="listing-date">
+Apr 16, 2023
+</div>
+<div class="listing-author">
+Jinwook Chang
+</div>
+</a>
+</div>
+</div>
+<div class="quarto-post image-right" data-index="12" data-categories="DataScience,DimensionReduction,Script" data-listing-date-sort="1681570800000" data-listing-file-modified-sort="1682675720417" data-listing-date-modified-sort="1681570800000" data-listing-reading-time-sort="2">
+<div class="thumbnail">
+<p><a href="./posts/umap/index.html"> <p class="card-img-top"><img src="posts\umap\result.png"  class="thumbnail-image card-img"/></p> </a></p>
+</div>
+<div class="body">
+<a href="./posts/umap/index.html">
+<h3 class="no-anchor listing-title">
+UMAP
+</h3>
+<div class="listing-subtitle">
+
+</div>
+</a>
+<div class="listing-categories">
+<div class="listing-category" onclick="window.quartoListingCategory('DataScience'); return false;">
+DataScience
+</div>
+<div class="listing-category" onclick="window.quartoListingCategory('DimensionReduction'); return false;">
+DimensionReduction
+</div>
+<div class="listing-category" onclick="window.quartoListingCategory('Script'); return false;">
+Script
+</div>
+</div>
+<a href="./posts/umap/index.html">
+<div class="listing-description">
+UMAP (Uniform Manifold Approximation and Projection)은 고차원 데이터를…
+</div>
+</a>
+</div>
+<div class="metadata">
+<a href="./posts/umap/index.html">
+<div class="listing-date">
+Apr 16, 2023
+</div>
+<div class="listing-author">
+Jinwook Chang
+</div>
+</a>
+</div>
+</div>
+<div class="quarto-post image-right" data-index="13" data-categories="MainTheme,DataScience,Clustering" data-listing-date-sort="1681484400000" data-listing-file-modified-sort="1682675663300" data-listing-date-modified-sort="1682262000000" data-listing-reading-time-sort="2">
+<div class="thumbnail">
+<p><a href="./posts/clustering/index.html"> <p class="card-img-top"><img src="posts\clustering\front_image.jpg"  class="thumbnail-image card-img"/></p> </a></p>
+</div>
+<div class="body">
+<a href="./posts/clustering/index.html">
+<h3 class="no-anchor listing-title">
+Clustering
+</h3>
+<div class="listing-subtitle">
+
+</div>
+</a>
+<div class="listing-categories">
+<div class="listing-category" onclick="window.quartoListingCategory('MainTheme'); return false;">
+MainTheme
+</div>
+<div class="listing-category" onclick="window.quartoListingCategory('DataScience'); return false;">
+DataScience
+</div>
+<div class="listing-category" onclick="window.quartoListingCategory('Clustering'); return false;">
+Clustering
+</div>
+</div>
+<a href="./posts/clustering/index.html">
+<div class="listing-description">
+클러스터링(clustering)은 데이터 마이닝과 머신러닝에서 사용되는 비지도 학습(unsupervised learning) 방법 중 하나입니다. 클러스터링의 목적은 주어진 데이터셋에서 유사한 특성을 가진 데이터 포인트들을 그룹화하는 것입니다. 이렇게 그룹화된…
+</div>
+</a>
+</div>
+<div class="metadata">
+<a href="./posts/clustering/index.html">
+<div class="listing-date">
+Apr 15, 2023
+</div>
+<div class="listing-author">
+Jinwook Chang
+</div>
+</a>
+</div>
+</div>
+<div class="quarto-post image-right" data-index="14" data-categories="MainTheme,DataScience,DimensionReduction" data-listing-date-sort="1681484400000" data-listing-file-modified-sort="1682675688900" data-listing-date-modified-sort="1682262000000" data-listing-reading-time-sort="2">
+<div class="thumbnail">
+<p><a href="./posts/dimension-reduction/index.html"> <p class="card-img-top"><img src="posts\dimension-reduction\PCA_Projection_Illustration.gif"  class="thumbnail-image card-img"/></p> </a></p>
+</div>
+<div class="body">
+<a href="./posts/dimension-reduction/index.html">
+<h3 class="no-anchor listing-title">
+Dimension Reduction (차원 축소)
+</h3>
+<div class="listing-subtitle">
+
+</div>
+</a>
+<div class="listing-categories">
+<div class="listing-category" onclick="window.quartoListingCategory('MainTheme'); return false;">
+MainTheme
+</div>
+<div class="listing-category" onclick="window.quartoListingCategory('DataScience'); return false;">
+DataScience
+</div>
+<div class="listing-category" onclick="window.quartoListingCategory('DimensionReduction'); return false;">
+DimensionReduction
+</div>
+</div>
+<a href="./posts/dimension-reduction/index.html">
+<div class="listing-description">
+<strong>차원의 저주(curse of dimensionality)</strong>는 고차원 데이터에서 발생하는 여러 문제를 총체적으로 설명하는 용어입니다. 데이터의 차원이 증가할수록, 데이터 포인트 간의 거리가 점점 멀어져서 데이터가 희소해지는 현상이 발생합니다. 이러한 현상은 다음과 같은 문제를 야기합니다:
+</div>
+</a>
+</div>
+<div class="metadata">
+<a href="./posts/dimension-reduction/index.html">
+<div class="listing-date">
+Apr 15, 2023
+</div>
+<div class="listing-author">
+Jinwook Chang
+</div>
+</a>
+</div>
+</div>
+<div class="quarto-post image-right" data-index="15" data-categories="DataScience,Script" data-listing-date-sort="1681484400000" data-listing-file-modified-sort="1682677542867" data-listing-date-modified-sort="1681484400000" data-listing-reading-time-sort="7">
+<div class="thumbnail">
+<p><a href="./posts/dummy-variables/index.html"> <div class="listing-item-img-placeholder card-img-top" >&nbsp;</div> </a></p>
+</div>
+<div class="body">
+<a href="./posts/dummy-variables/index.html">
+<h3 class="no-anchor listing-title">
+N-1 더미 변수를 활용하는 이유
+</h3>
+<div class="listing-subtitle">
+
+</div>
+</a>
+<div class="listing-categories">
+<div class="listing-category" onclick="window.quartoListingCategory('DataScience'); return false;">
+DataScience
+</div>
+<div class="listing-category" onclick="window.quartoListingCategory('Script'); return false;">
+Script
+</div>
+</div>
+<a href="./posts/dummy-variables/index.html">
+<div class="listing-description">
+단순히 생각하였을 때, n개의 더미 변수를 사용할 경우, Spring ~ Winter까지의 열 벡터를 합하면, Intercept 열이 되어, 선형독립을 만족치 못한다. 그렇기에 역행렬이 구해지지 않는 것이 당연하다고 볼 수 있다. 하기 예제로 실제로 그러한지 확인해보자.
+</div>
+</a>
+</div>
+<div class="metadata">
+<a href="./posts/dummy-variables/index.html">
+<div class="listing-date">
+Apr 15, 2023
+</div>
+<div class="listing-author">
+Jinwook Chang
+</div>
+</a>
+</div>
+</div>
+<div class="quarto-post image-right" data-index="16" data-categories="DataScience,Optimization" data-listing-date-sort="1681484400000" data-listing-file-modified-sort="1682677020438" data-listing-date-modified-sort="1681484400000" data-listing-reading-time-sort="2">
+<div class="thumbnail">
+<p><a href="./posts/regularization/index.html"> <p class="card-img-top"><img src="posts\regularization\front.png"  class="thumbnail-image card-img"/></p> </a></p>
+</div>
+<div class="body">
+<a href="./posts/regularization/index.html">
+<h3 class="no-anchor listing-title">
+Regularization (정규화 기법)
+</h3>
+<div class="listing-subtitle">
+
+</div>
+</a>
+<div class="listing-categories">
+<div class="listing-category" onclick="window.quartoListingCategory('DataScience'); return false;">
+DataScience
+</div>
+<div class="listing-category" onclick="window.quartoListingCategory('Optimization'); return false;">
+Optimization
+</div>
+</div>
+<a href="./posts/regularization/index.html">
+<div class="listing-description">
+정규화 기법은 모델의 복잡도를 줄이고 일반화 성능을 향상시키기 위해 사용됩니다. 일반적인 정규화 기법으로는 릿지 회귀(Ridge Regression), 라쏘 회귀(Lasso Regression), 그리고 엘라스틱넷 회귀(Elastic Net Regression)가 있습니다.
+</div>
+</a>
+</div>
+<div class="metadata">
+<a href="./posts/regularization/index.html">
+<div class="listing-date">
+Apr 15, 2023
+</div>
+<div class="listing-author">
+Jinwook Chang
+</div>
+</a>
+</div>
+</div>
+<div class="quarto-post image-right" data-index="17" data-categories="DataScience,Math" data-listing-date-sort="1681311600000" data-listing-file-modified-sort="1682677208116" data-listing-date-modified-sort="1681311600000" data-listing-reading-time-sort="1">
+<div class="thumbnail">
+<p><a href="./posts/covariance/index.html"> <p class="card-img-top"><img src="posts\covariance\front.png"  class="thumbnail-image card-img"/></p> </a></p>
+</div>
+<div class="body">
+<a href="./posts/covariance/index.html">
+<h3 class="no-anchor listing-title">
+Covariance Matrix
+</h3>
+<div class="listing-subtitle">
+
+</div>
+</a>
+<div class="listing-categories">
+<div class="listing-category" onclick="window.quartoListingCategory('DataScience'); return false;">
+DataScience
+</div>
+<div class="listing-category" onclick="window.quartoListingCategory('Math'); return false;">
+Math
+</div>
+</div>
+<a href="./posts/covariance/index.html">
+<div class="listing-description">
+공분산 행렬(covariance matrix)은 변수들 간의 공분산을 요소로 갖는 정방행렬(square matrix)입니다. 공분산은 두 변수가 함께 변하는 정도를 측정하는 값으로, 하나의 변수가 증가할 때 다른 변수가 어떻게 변하는지를 나타냅니다.
+</div>
+</a>
+</div>
+<div class="metadata">
+<a href="./posts/covariance/index.html">
+<div class="listing-date">
+Apr 13, 2023
+</div>
+<div class="listing-author">
+Jinwook Chang
+</div>
+</a>
+</div>
+</div>
+<div class="quarto-post image-right" data-index="18" data-categories="DataScience,Clustering,Script" data-listing-date-sort="1681311600000" data-listing-file-modified-sort="1682675734982" data-listing-date-modified-sort="1681311600000" data-listing-reading-time-sort="2">
+<div class="thumbnail">
+<p><a href="./posts/hierarchical/index.html"> <p class="card-img-top"><img src="posts\hierarchical\dendrogram.png"  class="thumbnail-image card-img"/></p> </a></p>
+</div>
+<div class="body">
+<a href="./posts/hierarchical/index.html">
+<h3 class="no-anchor listing-title">
+Hierarchical Clustering
+</h3>
+<div class="listing-subtitle">
+
+</div>
+</a>
+<div class="listing-categories">
+<div class="listing-category" onclick="window.quartoListingCategory('DataScience'); return false;">
+DataScience
+</div>
+<div class="listing-category" onclick="window.quartoListingCategory('Clustering'); return false;">
+Clustering
+</div>
+<div class="listing-category" onclick="window.quartoListingCategory('Script'); return false;">
+Script
+</div>
+</div>
+<a href="./posts/hierarchical/index.html">
+<div class="listing-description">
+데이터 포인트 간의 거리를 기반으로 클러스터를 형성하는데, 처음에는 각 데이터 포인트가 하나의 클러스터로 간주되며 가장 가까운 클러스터끼리 병합하는 과정을 반복하면서 최종적으로 하나의 클러스터로 합쳐집니다. 계층적 클러스터링은 덴드로그램(dendrogram)을 사용하여 클러스터 구조를 시각화할 수 있습니다.
+</div>
+</a>
+</div>
+<div class="metadata">
+<a href="./posts/hierarchical/index.html">
+<div class="listing-date">
+Apr 13, 2023
+</div>
+<div class="listing-author">
+Jinwook Chang
+</div>
+</a>
+</div>
+</div>
+<div class="quarto-post image-right" data-index="19" data-categories="DataScience,DimensionReduction,Script" data-listing-date-sort="1681311600000" data-listing-file-modified-sort="1682678884915" data-listing-date-modified-sort="1681311600000" data-listing-reading-time-sort="2">
+<div class="thumbnail">
+<p><a href="./posts/pca/index.html"> <p class="card-img-top"><img src="posts\pca\3d_sample.png"  class="thumbnail-image card-img"/></p> </a></p>
+</div>
+<div class="body">
+<a href="./posts/pca/index.html">
+<h3 class="no-anchor listing-title">
+Principal Component Analysis
+</h3>
+<div class="listing-subtitle">
+
+</div>
+</a>
+<div class="listing-categories">
+<div class="listing-category" onclick="window.quartoListingCategory('DataScience'); return false;">
+DataScience
+</div>
+<div class="listing-category" onclick="window.quartoListingCategory('DimensionReduction'); return false;">
+DimensionReduction
+</div>
+<div class="listing-category" onclick="window.quartoListingCategory('Script'); return false;">
+Script
+</div>
+</div>
+<a href="./posts/pca/index.html">
+<div class="listing-description">
+좌측 3D 모델을 2차원으로 옮긴 모습.
+</div>
+</a>
+</div>
+<div class="metadata">
+<a href="./posts/pca/index.html">
+<div class="listing-date">
+Apr 13, 2023
+</div>
+<div class="listing-author">
+Jinwook Chang
+</div>
+</a>
+</div>
+</div>
+<div class="quarto-post image-right" data-index="20" data-categories="DataScience,Optimization,Script" data-listing-date-sort="1680966000000" data-listing-file-modified-sort="1682672896916" data-listing-date-modified-sort="1680966000000" data-listing-reading-time-sort="2">
+<div class="thumbnail">
+<p><a href="./posts/alpha-max-plus-beta-min/index.html"> <p class="card-img-top"><img src="posts\alpha-max-plus-beta-min\Untitled.png"  class="thumbnail-image card-img"/></p> </a></p>
+</div>
+<div class="body">
+<a href="./posts/alpha-max-plus-beta-min/index.html">
+<h3 class="no-anchor listing-title">
+Alpha max plus Beta min (Fast 2D Eculedian Distance)
+</h3>
+<div class="listing-subtitle">
+
+</div>
+</a>
+<div class="listing-categories">
+<div class="listing-category" onclick="window.quartoListingCategory('DataScience'); return false;">
+DataScience
+</div>
+<div class="listing-category" onclick="window.quartoListingCategory('Optimization'); return false;">
+Optimization
+</div>
+<div class="listing-category" onclick="window.quartoListingCategory('Script'); return false;">
+Script
+</div>
+</div>
+<a href="./posts/alpha-max-plus-beta-min/index.html">
+<div class="listing-description">
+Alpha max plus Beta min 알고리즘은 두 제곱의 합의 제곱근을 고속으로 근사하는 방법입니다. 이 계산은 직각 삼각형의 빗변 길이를 구하거나, 2차원 벡터의 놈, 또는 실수와 허수부를 가진 복소수 z = a + bi의 크기를 구하는 데 사용되는 유용한 기능입니다.
+</div>
+</a>
+</div>
+<div class="metadata">
+<a href="./posts/alpha-max-plus-beta-min/index.html">
+<div class="listing-date">
+Apr 9, 2023
+</div>
+<div class="listing-author">
+Jinwook Chang
+</div>
+</a>
+</div>
+</div>
+<div class="quarto-post image-right" data-index="21" data-categories="DataScience,Script" data-listing-date-sort="1680966000000" data-listing-file-modified-sort="1682675635591" data-listing-date-modified-sort="1680966000000" data-listing-reading-time-sort="3">
+<div class="thumbnail">
+<p><a href="./posts/benfords-law/index.html"> <p class="card-img-top"><img src="posts\benfords-law\Rozklad_benforda.svg.png"  class="thumbnail-image card-img"/></p> </a></p>
+</div>
+<div class="body">
+<a href="./posts/benfords-law/index.html">
+<h3 class="no-anchor listing-title">
+Benford’s Law
+</h3>
+<div class="listing-subtitle">
+
+</div>
+</a>
+<div class="listing-categories">
+<div class="listing-category" onclick="window.quartoListingCategory('DataScience'); return false;">
+DataScience
+</div>
+<div class="listing-category" onclick="window.quartoListingCategory('Script'); return false;">
+Script
+</div>
+</div>
+<a href="./posts/benfords-law/index.html">
+<div class="listing-description">
+벤포드의 법칙(Benford’s…
+</div>
+</a>
+</div>
+<div class="metadata">
+<a href="./posts/benfords-law/index.html">
+<div class="listing-date">
+Apr 9, 2023
+</div>
+<div class="listing-author">
+Jinwook Chang
+</div>
+</a>
+</div>
+</div>
+<div class="quarto-post image-right" data-index="22" data-categories="DataScience,NLP,Script" data-listing-date-sort="1680966000000" data-listing-file-modified-sort="1682675754479" data-listing-date-modified-sort="1680966000000" data-listing-reading-time-sort="2">
+<div class="thumbnail">
+<p><a href="./posts/zifs-law/index.html"> <p class="card-img-top"><img src="posts\zifs-law\front.jpg"  class="thumbnail-image card-img"/></p> </a></p>
+</div>
+<div class="body">
+<a href="./posts/zifs-law/index.html">
+<h3 class="no-anchor listing-title">
+Zipf’s Law (단어 사용의 분포)
+</h3>
+<div class="listing-subtitle">
+
+</div>
+</a>
+<div class="listing-categories">
+<div class="listing-category" onclick="window.quartoListingCategory('DataScience'); return false;">
+DataScience
+</div>
+<div class="listing-category" onclick="window.quartoListingCategory('NLP'); return false;">
+NLP
+</div>
+<div class="listing-category" onclick="window.quartoListingCategory('Script'); return false;">
+Script
+</div>
+</div>
+<a href="./posts/zifs-law/index.html">
+<div class="listing-description">
+…
+</div>
+</a>
+</div>
+<div class="metadata">
+<a href="./posts/zifs-law/index.html">
+<div class="listing-date">
+Apr 9, 2023
+</div>
+<div class="listing-author">
+Jinwook Chang
+</div>
+</a>
+</div>
+</div>
+</div>
+<div class="listing-no-matching d-none">
+No matching items
+</div>
+</div></main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const isCodeAnnotation = (el) => {
+    for (const clz of el.classList) {
+      if (clz.startsWith('code-annotation-')) {                     
+        return true;
+      }
+    }
+    return false;
+  }
+  const clipboard = new window.ClipboardJS('.code-copy-button', {
+    text: function(trigger) {
+      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+  });
+  clipboard.on('success', function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Copied!");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  });
+  function tippyHover(el, contentFn) {
+    const config = {
+      allowHTML: true,
+      content: contentFn,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start'
+    };
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      return note.innerHTML;
+    });
+  }
+      let selectedAnnoteEl;
+      const selectorForAnnotation = ( cell, annotation) => {
+        let cellAttr = 'data-code-cell="' + cell + '"';
+        let lineAttr = 'data-code-annotation="' +  annotation + '"';
+        const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+        return selector;
+      }
+      const selectCodeLines = (annoteEl) => {
+        const doc = window.document;
+        const targetCell = annoteEl.getAttribute("data-target-cell");
+        const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+        const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+        const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+        const lineIds = lines.map((line) => {
+          return targetCell + "-" + line;
+        })
+        let top = null;
+        let height = null;
+        let parent = null;
+        if (lineIds.length > 0) {
+            //compute the position of the single el (top and bottom and make a div)
+            const el = window.document.getElementById(lineIds[0]);
+            top = el.offsetTop;
+            height = el.offsetHeight;
+            parent = el.parentElement.parentElement;
+          if (lineIds.length > 1) {
+            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+            const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+            height = bottom - top;
+          }
+          if (top !== null && height !== null && parent !== null) {
+            // cook up a div (if necessary) and position it 
+            let div = window.document.getElementById("code-annotation-line-highlight");
+            if (div === null) {
+              div = window.document.createElement("div");
+              div.setAttribute("id", "code-annotation-line-highlight");
+              div.style.position = 'absolute';
+              parent.appendChild(div);
+            }
+            div.style.top = top - 2 + "px";
+            div.style.height = height + 4 + "px";
+            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+            if (gutterDiv === null) {
+              gutterDiv = window.document.createElement("div");
+              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+              gutterDiv.style.position = 'absolute';
+              const codeCell = window.document.getElementById(targetCell);
+              const gutter = codeCell.querySelector('.code-annotation-gutter');
+              gutter.appendChild(gutterDiv);
+            }
+            gutterDiv.style.top = top - 2 + "px";
+            gutterDiv.style.height = height + 4 + "px";
+          }
+          selectedAnnoteEl = annoteEl;
+        }
+      };
+      const unselectCodeLines = () => {
+        const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+        elementsIds.forEach((elId) => {
+          const div = window.document.getElementById(elId);
+          if (div) {
+            div.remove();
+          }
+        });
+        selectedAnnoteEl = undefined;
+      };
+      // Attach click handler to the DT
+      const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+      for (const annoteDlNode of annoteDls) {
+        annoteDlNode.addEventListener('click', (event) => {
+          const clickedEl = event.target;
+          if (clickedEl !== selectedAnnoteEl) {
+            unselectCodeLines();
+            const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+            if (activeEl) {
+              activeEl.classList.remove('code-annotation-active');
+            }
+            selectCodeLines(clickedEl);
+            clickedEl.classList.add('code-annotation-active');
+          } else {
+            // Unselect the line
+            unselectCodeLines();
+            clickedEl.classList.remove('code-annotation-active');
+          }
+        });
+      }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
+      });
+    }
+  }
+});
+</script>
+</div> <!-- /content -->
+
+
+
+</body></html>

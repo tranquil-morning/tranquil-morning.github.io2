@@ -1,0 +1,68 @@
+---
+title: "Random Forest"
+author: "Jinwook Chang"
+date: "2023-04-17"
+date-modified: "2323-04-17"
+categories: [DataScience, EnsembleLearning, Script]
+---
+
+![](front.jpg)
+
+[출처] [Random Forest Simple Explanation | by Will Koehrsen | Medium](https://williamkoehrsen.medium.com/random-forest-simple-explanation-377895a60d2d)
+
+### Random Forest는..
+
+랜덤 포레스트는 배깅(Bagging)의 한 형태로서, 여러 개의 결정 트리를 조합하여 예측 결과를 도출하는 앙상블 기법입니다. 이 방법은 결정 트리의 가장 큰 문제점 중 하나인 과적합(overfitting)을 효과적으로 해결하고, 높은 예측 성능을 보여줍니다.
+
+랜덤 포레스트의 기본 아이디어는 다음과 같습니다:
+
+1. 원본 데이터셋에서 부트스트랩 샘플링을 통해 여러 개의 샘플을 생성합니다. 이때, 중복 허용으로 원본 데이터셋과 같은 크기의 샘플을 만듭니다.
+2. 각 샘플로부터 결정 트리를 학습시킵니다. 이 과정에서 무작위로 선택된 특성(feature)의 부분집합을 사용해 노드를 분할하는 최적의 분할을 찾습니다. 이러한 무작위성은 결정 트리 간의 상관관계를 낮추고, 다양성을 높여 과적합을 방지합니다.
+3. 테스트 데이터셋에 대한 예측을 수행할 때, 각 결정 트리의 예측을 모아 최종 예측 결과를 도출합니다. 분류 문제의 경우 다수결 투표(Majority Voting) 방식을 사용해 최종 예측 클래스를 결정하며, 회귀 문제의 경우 각 트리의 예측값의 평균을 사용합니다.
+
+### Fashion MNIST 데이터를 활용한 Random Forest 예제
+
+![](dataset.png)
+[출처] : [Fashion MNIST | Kaggle](https://www.kaggle.com/datasets/zalando-research/fashionmnist)
+
+```r
+library(tidymodels)
+
+## Load Dataset
+fmnist <- arrow::read_feather("fashion-mnist.feather")
+fmnist$label <- as.factor(fmnist$label)
+
+set.seed(42)
+split_index <- initial_split(fmnist,3/4,label)
+train_tb <- training(split_index)
+test_tb <- testing(split_index)
+
+## Make workflow
+
+fmnist_recipe <- recipe(label ~ ., data = train_tb) |>
+  step_normalize(all_numeric_predictors()) |> 
+  prep()
+
+fmnist_rf <- rand_forest(trees = 100, mtry = sqrt(784)) |> 
+  set_engine("ranger", importance = "impurity") |> 
+  set_mode("classification")
+
+fmnist_wf <- workflow() |>
+  add_recipe(fmnist_recipe) |> 
+  add_model(fmnist_rf)
+
+fmnist_wf_trained <- fmnist_wf |> fit(train_tb)
+
+# Predict with test dat
+predictions <- predict(fmnist_wf_trained, test_tb) |> 
+  bind_cols(test_tb |>  select(label))
+
+accuracy(predictions, truth = label, estimate = .pred_class)
+```
+
+```r
+# A tibble: 1 × 3
+  .metric  .estimator .estimate
+  <chr>    <chr>          <dbl>
+1 accuracy multiclass     0.882
+```

@@ -1,0 +1,70 @@
+---
+title: "Hierarchical Clustering"
+author: "Jinwook Chang"
+date: "2023-04-13"
+date-modified: "2023-04-13"
+categories: [DataScience, Clustering, Script]
+---
+
+### **Hierarchical Clustering은..**
+
+데이터 포인트 간의 거리를 기반으로 클러스터를 형성하는데, 처음에는 각 데이터 포인트가 하나의 클러스터로 간주되며 가장 가까운 클러스터끼리 병합하는 과정을 반복하면서 최종적으로 하나의 클러스터로 합쳐집니다. 계층적 클러스터링은 덴드로그램(dendrogram)을 사용하여 클러스터 구조를 시각화할 수 있습니다.
+
+### Hierachical Clustring의 병합 방법 (Linkage Method)
+
+1. **완전 연결법 (Complete Linkage)**: 클러스터 간 거리를 두 클러스터에 속하는 모든 데이터 포인트 쌍의 거리 중 최대값으로 정의하는 방법입니다. 이 방법은 비교적 밀집되고 잘 구분된 클러스터를 형성하는 경향이 있습니다. (method = “complete”)
+2. **단일 연결법 (Single Linkage)**: 클러스터 간 거리를 두 클러스터에 속하는 모든 데이터 포인트 쌍의 거리 중 최소값으로 정의하는 방법입니다. 이 방법은 길고 늘어진 체인 형태의 클러스터를 형성할 수 있으며, 노이즈에 민감한 특성이 있습니다. (method = “single”)
+3. **평균 연결법 (Average Linkage)**: 클러스터 간 거리를 두 클러스터에 속하는 모든 데이터 포인트 쌍의 거리의 평균값으로 정의하는 방법입니다. 이 방법은 노이즈에 상대적으로 덜 민감하며, 단일 연결법에 비해 더 균형 잡힌 클러스터를 형성하는 경향이 있습니다. (method = “average”)
+4. **중심 연결법 (Centroid Linkage)**: 클러스터 간 거리를 두 클러스터의 중심(centroid, 즉 평균 벡터) 간의 거리로 정의하는 방법입니다. 이 방법은 보다 밀집된 클러스터를 형성하는 경향이 있지만, 거리 척도의 선택에 민감한 특성이 있습니다. (method = “centroid”)
+
+### Hierarchical Clustering 예제
+
+![Result of Hierachical clustering](dendrogram.png)
+
+```r
+# Load required libraries
+library(tidyverse)
+library(cluster)
+
+# Extract numeric columns
+iris_numeric <- iris[, 1:4]
+
+# Standardize the data
+iris_std <- scale(iris_numeric)
+
+# Compute Euclidean distance matrix
+dist_matrix <- dist(iris_std, method = "euclidean")
+
+# Perform hierarchical clustering
+hc <- hclust(dist_matrix, method = "complete")
+
+# Plot dendrogram
+plot(hc, labels = iris$Species, cex = 0.6, hang = -1)
+
+# Cut the tree into clusters
+k <- 3 # Number of clusters
+cluster_assignments <- cutree(hc, k)
+
+# Add cluster assignments to the Iris dataset
+
+iris <- iris |> mutate(Cluster = case_when(
+  cluster_assignments == 1 ~ "setosa",
+  cluster_assignments == 2 ~ "versicolor",
+  .default = "virginica"
+))
+
+iris$Cluster <- as.factor(iris$Cluster)
+
+iris |> yardstick::conf_mat(Species, Cluster)
+iris |> yardstick::accuracy(Species, Cluster)
+```
+
+```r
+Truth
+Prediction   setosa versicolor virginica
+  setosa         49          0         0
+  versicolor      1         21         2
+  virginica       0         29        48
+
+accuracy multiclass     0.787
+```

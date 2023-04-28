@@ -1,0 +1,30 @@
+[
+  {
+    "listing": "/index.html",
+    "items": [
+      "/posts/gpt-prompt/index.html",
+      "/posts/entropy/index.html",
+      "/posts/mutual-information/index.html",
+      "/posts/word-embedding/index.html",
+      "/posts/dual-number/index.html",
+      "/posts/causal-relationship/index.html",
+      "/posts/dbscan/index.html",
+      "/posts/gradient-boosting/index.html",
+      "/posts/random-forest/index.html",
+      "/posts/ensemble-learning/index.html",
+      "/posts/k-means/index.html",
+      "/posts/t-sne/index.html",
+      "/posts/umap/index.html",
+      "/posts/clustering/index.html",
+      "/posts/dimension-reduction/index.html",
+      "/posts/dummy-variables/index.html",
+      "/posts/regularization/index.html",
+      "/posts/covariance/index.html",
+      "/posts/hierarchical/index.html",
+      "/posts/pca/index.html",
+      "/posts/alpha-max-plus-beta-min/index.html",
+      "/posts/benfords-law/index.html",
+      "/posts/zifs-law/index.html"
+    ]
+  }
+]

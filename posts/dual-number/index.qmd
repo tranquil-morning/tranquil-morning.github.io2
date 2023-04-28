@@ -1,0 +1,38 @@
+---
+title: "이원수와 전진자동미분"
+author: "Jinwook Chang"
+date: "2023-04-23"
+date-modified: "2023-04-23"
+categories: [DataScience, Optimization]
+---
+
+
+### 이원수(Dual Number)란..
+
+이원수(dual number)는 복소수의 일반화로 볼 수 있는 수 체계입니다. 듀얼 넘버는 다음과 같은 형태로 표현됩니다:
+
+$$
+\alpha + {\beta}{\epsilon}
+$$
+
+여기서 a와 b는 실수이며, ε는 듀얼 단위로, ε^2 = 0 (ε ≠ 0)을 만족합니다. 복소수에서 허수 단위 i와 비슷한 역할을 합니다.
+
+이원수를 활용한 미분은 오일러의 수학적 아이디어를 기반으로 합니다. 이원수의 성질을 이용하면, 함수의 미분을 정확하게 계산하는데 사용할 수 있습니다.
+
+이원수를 사용하여 함수 $f(x)$의 도함수를 구하는 방법은 다음과 같습니다:
+
+1. 함수 $f(x)$를 이원수 형태로 확장합니다. 즉, $x = \alpha + {\beta}{\epsilon}$로 설정합니다.
+2. 함수 $f(x)$에 듀얼 넘버를 대입하여, $f(\alpha + {\beta}{\epsilon})$를 계산합니다.
+3. 계산된 결과에서 ε에 대한 계수를 찾습니다. 이 계수는 함수 $f(x)$의 도함수 값이 됩니다.
+
+예를 들어, $f(x)=x^2$를 미분해 보겠습니다.
+
+$f(x) = (\alpha + {\beta}{\epsilon})^2 = \alpha^2 + 2\alpha\beta\epsilon + \beta^2\epsilon^2$
+
+위 식에서 $\epsilon^2 = 0$이므로, 결과는 다음과 같습니다:
+
+$f(\alpha + \beta\epsilon) = (\alpha + {\beta}{\epsilon})^2 = \alpha^2 + 2\alpha\beta\epsilon$
+
+여기서 ε에 대한 계수는 2a입니다. 따라서 $f'(x) = 2x$가 됩니다. 이 결과는 기대한 대로 함수  $f(x)=x^2$의 도함수 값입니다.
+
+위를 일반화 할 경우, $f(\alpha) + f'(\alpha)\cdot\beta\epsilon$으로 정리할 수 있습니다.
