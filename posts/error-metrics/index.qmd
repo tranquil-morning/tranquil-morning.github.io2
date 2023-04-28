@@ -1,9 +1,9 @@
 ---
-title: "Confusion Matrix 헷갈리지 않게 이해하기"
+title: "1종 오류 2종 오류 헷갈리지 않기"
 author: "Jinwook Chang"
 date: "2023-04-28"
 date-modified: "2023-04-28"
-categories: [DataScience, Metrics]
+categories: [DataScience, Statistics]
 ---
 
 ### 1종 오류 / 2종 오류
