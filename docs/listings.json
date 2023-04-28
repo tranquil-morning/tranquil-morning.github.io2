@@ -2,6 +2,7 @@
   {
     "listing": "/index.html",
     "items": [
+      "/posts/error-metrics/index.html",
       "/posts/gpt-prompt/index.html",
       "/posts/entropy/index.html",
       "/posts/mutual-information/index.html",
