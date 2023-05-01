@@ -9,7 +9,7 @@
 <meta name="author" content="Jinwook Chang">
 <meta name="dcterms.date" content="2023-05-01">
 
-<title>Note of myself - Linear optimization를 활용한 생산계획</title>
+<title>Note of myself - 생산계획</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -95,8 +95,6 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   }
 }</script>
 
-  <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
-  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
 
 <link rel="stylesheet" href="../../styles.css">
 </head>
@@ -148,7 +146,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <header id="title-block-header" class="quarto-title-block default page-columns page-full">
   <div class="quarto-title-banner page-columns page-full">
     <div class="quarto-title column-body">
-      <h1 class="title">Linear optimization를 활용한 생산계획</h1>
+      <h1 class="title">생산계획</h1>
                                 <div class="quarto-categories">
                 <div class="quarto-category">DataScience</div>
                 <div class="quarto-category">Optimization</div>
@@ -194,30 +192,34 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 
 
 
+<p><img src="front.jpg" class="img-fluid"></p>
 <section id="개요" class="level3">
 <h3 class="anchored" data-anchor-id="개요">개요</h3>
-<p>ortools를 사용하여 선형 프로그래밍 문제를 해결하는 예제로 간단한 생산 계획 최적화 문제를 살펴보겠습니다. 이 예제에서는 두 가지 제품을 생산하는 공장이 있으며, 각 제품에는 일정한 이익이 있습니다. 공장은 제한된 자원을 사용하여 이익을 최대화하려고 합니다.</p>
+<p>ortools를 사용하여 선형 프로그래밍 문제를 해결하는 예제로 생산 계획 최적화 문제를 살펴보겠습니다.<br>
+이 예제에서는 두 가지 제품을 생산하는 공장이 있으며, 각 제품에는 일정한 이익이 있습니다.<br>
+공장은 제한된 자원을 사용하여 이익을 최대화하려고 합니다.</p>
 </section>
 <section id="문제-설정" class="level3">
 <h3 class="anchored" data-anchor-id="문제-설정">문제 설정</h3>
-<p>제품 A와 제품 B를 생산할 수 있으며, 각각 $20, $40의 이익을 얻을 수 있습니다. 제품 A는 자원 1을 3 단위, 자원 2를 2 단위 사용합니다. 제품 B는 자원 1을 2 단위, 자원 2를 5 단위 사용합니다. 공장은 자원 1을 30 단위, 자원 2를 40 단위 사용할 수 있습니다. 목표: 이익을 최대화하면서 제한된 자원을 사용하여 제품 A와 B의 최적 생산량을 찾으세요.</p>
-<p>이 문제를 파이썬의 ortools 라이브러리를 사용하여 해결해보겠습니다.</p>
+<ul>
+<li>제품 A와 제품 B를 생산할 수 있으며, 각각 $20, $40의 이익을 얻을 수 있습니다.<br>
+</li>
+<li>제품 A는 자원 1을 3 단위, 자원 2를 2 단위 사용합니다.<br>
+</li>
+<li>제품 B는 자원 1을 2 단위, 자원 2를 5 단위 사용합니다.<br>
+</li>
+<li>공장은 자원 1을 30 단위, 자원 2를 40 단위 사용할 수 있습니다.</li>
+</ul>
+<p>목표: 이익을 최대화하면서 제한된 자원을 사용하여 제품 A와 B의 최적 생산량을 찾으세요.</p>
 </section>
-<section id="제약식" class="level3">
-<h3 class="anchored" data-anchor-id="제약식">제약식</h3>
-<p><span class="math display">\[ Z = 20 x_1 + 40 x_2 \]</span></p>
-<p><span class="math display">\[ 3x_1 + 2x_2 \leq 30 \]</span></p>
-<p><span class="math display">\[ 2x_1 + 5x_2 \leq 40 \]</span></p>
-<p><span class="math display">\[ x1 \meq 0, x2 \meq 0 \]</span></p>
-</section>
-<section id="스크립트" class="level3">
-<h3 class="anchored" data-anchor-id="스크립트">스크립트</h3>
+<section id="문제-해결" class="level3">
+<h3 class="anchored" data-anchor-id="문제-해결">문제 해결</h3>
 <div class="sourceCode" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> ortools.linear_solver <span class="im">import</span> pywraplp</span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="co"># 선형 프로그래밍 솔버 생성</span></span>
 <span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>solver <span class="op">=</span> pywraplp.Solver.CreateSolver(<span class="st">'GLOP'</span>)</span>
 <span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="co"># 변수 생성</span></span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="co"># 변수 생성 (정수형의 경우 IntVar)</span></span>
 <span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>product_a <span class="op">=</span> solver.NumVar(<span class="dv">0</span>, solver.infinity(), <span class="st">'Product_A'</span>)</span>
 <span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a>product_b <span class="op">=</span> solver.NumVar(<span class="dv">0</span>, solver.infinity(), <span class="st">'Product_B'</span>)</span>
 <span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a></span>

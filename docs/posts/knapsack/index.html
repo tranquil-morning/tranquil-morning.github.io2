@@ -9,7 +9,7 @@
 <meta name="author" content="Jinwook Chang">
 <meta name="dcterms.date" content="2023-05-01">
 
-<title>Note of myself - 최적화 도구 ortools 가이드</title>
+<title>Note of myself - 배낭 문제</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -21,6 +21,40 @@ ul.task-list li input[type="checkbox"] {
   width: 0.8em;
   margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
   vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
 }
 </style>
 
@@ -112,10 +146,11 @@ ul.task-list li input[type="checkbox"] {
 <header id="title-block-header" class="quarto-title-block default page-columns page-full">
   <div class="quarto-title-banner page-columns page-full">
     <div class="quarto-title column-body">
-      <h1 class="title">최적화 도구 ortools 가이드</h1>
+      <h1 class="title">배낭 문제</h1>
                                 <div class="quarto-categories">
                 <div class="quarto-category">DataScience</div>
                 <div class="quarto-category">Optimization</div>
+                <div class="quarto-category">Script</div>
               </div>
                   </div>
   </div>
@@ -157,14 +192,58 @@ ul.task-list li input[type="checkbox"] {
 
 
 
-<section id="ortools란" class="level3">
-<h3 class="anchored" data-anchor-id="ortools란">ortools란…</h3>
-<p><code>ortools</code>은 Google의 최적화 도구 모음인 Operations Research Tools의 약자로, 파이썬과 다른 프로그래밍 언어를 위한 최적화 및 수치 계산 라이브러리입니다. 이 라이브러리는 다양한 최적화 문제를 해결할 수 있는 풍부한 기능을 제공하며, 대표적으로 선형 및 정수 프로그래밍, 제약 프로그래밍, 최단 경로, 유량 네트워크, 그래프 알고리즘 등을 포함합니다.</p>
-<p>Google의 <code>ortools</code>는 공급망 최적화, 스케줄링, 교통 물류, 광고 캠페인 최적화 등과 같은 실제 상황에서의 복잡한 문제를 효과적으로 해결하기 위해 사용됩니다. 이 라이브러리를 사용하면 효율적인 알고리즘을 활용하여 대규모 최적화 문제를 쉽게 해결할 수 있습니다. 파이썬 외에도 C++, C#, Java 등의 언어에서도 사용할 수 있습니다.</p>
-<ul>
-<li><a href="../linear-optimization">생산계획</a></li>
-<li><a href="../knapsack">배낭문제</a></li>
-</ul>
+<section id="개요" class="level3">
+<h3 class="anchored" data-anchor-id="개요">개요</h3>
+<p>ortools를 사용하여 배낭 문제를 해결하는 예제를 살펴보겠습니다.<br>
+일반적인 애플리케이션은 상자를 배송 트럭에 효율적으로 로드하는 것입니다.</p>
+<p><img src="front.png" class="img-fluid"></p>
+</section>
+<section id="문제-설정" class="level3">
+<h3 class="anchored" data-anchor-id="문제-설정">문제 설정</h3>
+<p>850의 무게를 담을 수 있는 컨테이너와 50가지 항목의 아이템들이 있습니다.<br>
+아이템은 값과 무게로 이루어져있습니다.</p>
+<div class="sourceCode" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>values <span class="op">=</span> [</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>    <span class="dv">360</span>, <span class="dv">83</span>, <span class="dv">59</span>, <span class="dv">130</span>, <span class="dv">431</span>, <span class="dv">67</span>, <span class="dv">230</span>, <span class="dv">52</span>, <span class="dv">93</span>, <span class="dv">125</span>, <span class="dv">670</span>, <span class="dv">892</span>, <span class="dv">600</span>, <span class="dv">38</span>, <span class="dv">48</span>, <span class="dv">147</span>,</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>    <span class="dv">78</span>, <span class="dv">256</span>, <span class="dv">63</span>, <span class="dv">17</span>, <span class="dv">120</span>, <span class="dv">164</span>, <span class="dv">432</span>, <span class="dv">35</span>, <span class="dv">92</span>, <span class="dv">110</span>, <span class="dv">22</span>, <span class="dv">42</span>, <span class="dv">50</span>, <span class="dv">323</span>, <span class="dv">514</span>, <span class="dv">28</span>,</span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>    <span class="dv">87</span>, <span class="dv">73</span>, <span class="dv">78</span>, <span class="dv">15</span>, <span class="dv">26</span>, <span class="dv">78</span>, <span class="dv">210</span>, <span class="dv">36</span>, <span class="dv">85</span>, <span class="dv">189</span>, <span class="dv">274</span>, <span class="dv">43</span>, <span class="dv">33</span>, <span class="dv">10</span>, <span class="dv">19</span>, <span class="dv">389</span>, <span class="dv">276</span>,</span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>    <span class="dv">312</span></span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>]</span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>weights <span class="op">=</span> [[</span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a>    <span class="dv">7</span>, <span class="dv">0</span>, <span class="dv">30</span>, <span class="dv">22</span>, <span class="dv">80</span>, <span class="dv">94</span>, <span class="dv">11</span>, <span class="dv">81</span>, <span class="dv">70</span>, <span class="dv">64</span>, <span class="dv">59</span>, <span class="dv">18</span>, <span class="dv">0</span>, <span class="dv">36</span>, <span class="dv">3</span>, <span class="dv">8</span>, <span class="dv">15</span>, <span class="dv">42</span>, <span class="dv">9</span>, <span class="dv">0</span>,</span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a>    <span class="dv">42</span>, <span class="dv">47</span>, <span class="dv">52</span>, <span class="dv">32</span>, <span class="dv">26</span>, <span class="dv">48</span>, <span class="dv">55</span>, <span class="dv">6</span>, <span class="dv">29</span>, <span class="dv">84</span>, <span class="dv">2</span>, <span class="dv">4</span>, <span class="dv">18</span>, <span class="dv">56</span>, <span class="dv">7</span>, <span class="dv">29</span>, <span class="dv">93</span>, <span class="dv">44</span>, <span class="dv">71</span>,</span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a>    <span class="dv">3</span>, <span class="dv">86</span>, <span class="dv">66</span>, <span class="dv">31</span>, <span class="dv">65</span>, <span class="dv">0</span>, <span class="dv">79</span>, <span class="dv">20</span>, <span class="dv">65</span>, <span class="dv">52</span>, <span class="dv">13</span></span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a>]]</span>
+<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a>capacities <span class="op">=</span> [<span class="dv">850</span>]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</section>
+<section id="문제-해결" class="level3">
+<h3 class="anchored" data-anchor-id="문제-해결">문제 해결</h3>
+<div class="sourceCode" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> ortools.algorithms <span class="im">import</span> pywrapknapsack_solver</span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>solver <span class="op">=</span> pywrapknapsack_solver.KnapsackSolver(</span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>    pywrapknapsack_solver.KnapsackSolver.</span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>    KNAPSACK_MULTIDIMENSION_BRANCH_AND_BOUND_SOLVER, <span class="st">'KnapsackExample'</span>)</span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a>solver.Init(values, weights, capacities)</span>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a>computed_value <span class="op">=</span> solver.Solve()</span>
+<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a>packed_items <span class="op">=</span> []</span>
+<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a>packed_weights <span class="op">=</span> []</span>
+<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a>total_weight <span class="op">=</span> <span class="dv">0</span></span>
+<span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">'Total value ='</span>, computed_value)</span>
+<span id="cb2-13"><a href="#cb2-13" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> i <span class="kw">in</span> <span class="bu">range</span>(<span class="bu">len</span>(values)):</span>
+<span id="cb2-14"><a href="#cb2-14" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> solver.BestSolutionContains(i):</span>
+<span id="cb2-15"><a href="#cb2-15" aria-hidden="true" tabindex="-1"></a>        packed_items.append(i)</span>
+<span id="cb2-16"><a href="#cb2-16" aria-hidden="true" tabindex="-1"></a>        packed_weights.append(weights[<span class="dv">0</span>][i])</span>
+<span id="cb2-17"><a href="#cb2-17" aria-hidden="true" tabindex="-1"></a>        total_weight <span class="op">+=</span> weights[<span class="dv">0</span>][i]</span>
+<span id="cb2-18"><a href="#cb2-18" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-19"><a href="#cb2-19" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">'Total weight:'</span>, total_weight)</span>
+<span id="cb2-20"><a href="#cb2-20" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">'Packed items:'</span>, packed_items)</span>
+<span id="cb2-21"><a href="#cb2-21" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">'Packed_weights:'</span>, packed_weights)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>Total value <span class="op">=</span> <span class="dv">7534</span></span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>Total weight: <span class="dv">850</span></span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>Packed items: [<span class="dv">0</span>, <span class="dv">1</span>, <span class="dv">3</span>, <span class="dv">4</span>, <span class="dv">6</span>, <span class="dv">10</span>, <span class="dv">11</span>, <span class="dv">12</span>, <span class="dv">14</span>, <span class="dv">15</span>, <span class="dv">16</span>, <span class="dv">17</span>, <span class="dv">18</span>, <span class="dv">19</span>, <span class="dv">21</span>, <span class="dv">22</span>, <span class="dv">24</span>, <span class="dv">27</span>, <span class="dv">28</span>, <span class="dv">29</span>, <span class="dv">30</span>, <span class="dv">31</span>,</span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>               <span class="dv">32</span>, <span class="dv">34</span>, <span class="dv">38</span>, <span class="dv">39</span>, <span class="dv">41</span>, <span class="dv">42</span>, <span class="dv">44</span>, <span class="dv">47</span>, <span class="dv">48</span>, <span class="dv">49</span>]</span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>Packed_weights: [<span class="dv">7</span>, <span class="dv">0</span>, <span class="dv">22</span>, <span class="dv">80</span>, <span class="dv">11</span>, <span class="dv">59</span>, <span class="dv">18</span>, <span class="dv">0</span>, <span class="dv">3</span>, <span class="dv">8</span>, <span class="dv">15</span>, <span class="dv">42</span>, <span class="dv">9</span>, <span class="dv">0</span>, <span class="dv">47</span>, <span class="dv">52</span>, <span class="dv">26</span>, <span class="dv">6</span>, <span class="dv">29</span>, <span class="dv">84</span>, <span class="dv">2</span>, <span class="dv">4</span>,</span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>                 <span class="dv">18</span>, <span class="dv">7</span>, <span class="dv">71</span>, <span class="dv">3</span>, <span class="dv">66</span>, <span class="dv">31</span>, <span class="dv">0</span>, <span class="dv">65</span>, <span class="dv">52</span>, <span class="dv">13</span>]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 
 
 </section>

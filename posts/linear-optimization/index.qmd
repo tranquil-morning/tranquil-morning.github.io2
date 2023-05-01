@@ -1,44 +1,38 @@
 ---
-title: "Linear optimization를 활용한 생산계획"
+title: "생산계획"
 author: "Jinwook Chang"
 date: "2023-05-01"
 date-modified: "2023-05-01"
 categories: [DataScience, Optimization, Script]
 ---
 
+![](front.jpg)
+
 ### 개요
 
-ortools를 사용하여 선형 프로그래밍 문제를 해결하는 예제로 간단한 생산 계획 최적화 문제를 살펴보겠습니다. 이 예제에서는 두 가지 제품을 생산하는 공장이 있으며, 각 제품에는 일정한 이익이 있습니다. 공장은 제한된 자원을 사용하여 이익을 최대화하려고 합니다.
+ortools를 사용하여 선형 프로그래밍 문제를 해결하는 예제로 생산 계획 최적화 문제를 살펴보겠습니다.  
+이 예제에서는 두 가지 제품을 생산하는 공장이 있으며, 각 제품에는 일정한 이익이 있습니다.  
+공장은 제한된 자원을 사용하여 이익을 최대화하려고 합니다.
 
 ### 문제 설정
 
-제품 A와 제품 B를 생산할 수 있으며, 각각 $20, $40의 이익을 얻을 수 있습니다.
-제품 A는 자원 1을 3 단위, 자원 2를 2 단위 사용합니다.
-제품 B는 자원 1을 2 단위, 자원 2를 5 단위 사용합니다.
-공장은 자원 1을 30 단위, 자원 2를 40 단위 사용할 수 있습니다.
+* 제품 A와 제품 B를 생산할 수 있으며, 각각 \$20, \$40의 이익을 얻을 수 있습니다.  
+* 제품 A는 자원 1을 3 단위, 자원 2를 2 단위 사용합니다.  
+* 제품 B는 자원 1을 2 단위, 자원 2를 5 단위 사용합니다.  
+* 공장은 자원 1을 30 단위, 자원 2를 40 단위 사용할 수 있습니다.  
+
+
 목표: 이익을 최대화하면서 제한된 자원을 사용하여 제품 A와 B의 최적 생산량을 찾으세요.
 
-이 문제를 파이썬의 ortools 라이브러리를 사용하여 해결해보겠습니다.
+### 문제 해결
 
-### 제약식
-
-$$ Z = 20 x_1 + 40 x_2 $$
-
-$$ 3x_1 + 2x_2 \leq 30 $$
-
-$$ 2x_1 + 5x_2 \leq 40 $$
-
-$$ x1 \meq 0, x2 \meq 0 $$
-
-### 스크립트
-
-```python
+``` python
 from ortools.linear_solver import pywraplp
 
 # 선형 프로그래밍 솔버 생성
 solver = pywraplp.Solver.CreateSolver('GLOP')
 
-# 변수 생성
+# 변수 생성 (정수형의 경우 IntVar)
 product_a = solver.NumVar(0, solver.infinity(), 'Product_A')
 product_b = solver.NumVar(0, solver.infinity(), 'Product_B')
 
@@ -68,10 +62,9 @@ if status == pywraplp.Solver.OPTIMAL:
     print('Product B =', product_b.solution_value())
 else:
     print('The problem does not have an optimal solution.')
-
 ```
 
-```python
+``` python
 Objective value = 345.4545454545455
 Product A = 6.363636363636365
 Product B = 5.454545454545454
