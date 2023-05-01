@@ -1,0 +1,17 @@
+---
+title: "최적화 도구 ortools 가이드"
+author: "Jinwook Chang"
+date: "2023-05-01"
+date-modified: "2023-05-01"
+categories: [DataScience, Optimization]
+draft: true
+---
+
+### ortools란...
+
+`ortools`은 Google의 최적화 도구 모음인 Operations Research Tools의 약자로, 파이썬과 다른 프로그래밍 언어를 위한 최적화 및 수치 계산 라이브러리입니다. 이 라이브러리는 다양한 최적화 문제를 해결할 수 있는 풍부한 기능을 제공하며, 대표적으로 선형 및 정수 프로그래밍, 제약 프로그래밍, 최단 경로, 유량 네트워크, 그래프 알고리즘 등을 포함합니다.
+
+Google의 `ortools`는 공급망 최적화, 스케줄링, 교통 물류, 광고 캠페인 최적화 등과 같은 실제 상황에서의 복잡한 문제를 효과적으로 해결하기 위해 사용됩니다. 이 라이브러리를 사용하면 효율적인 알고리즘을 활용하여 대규모 최적화 문제를 쉽게 해결할 수 있습니다. 파이썬 외에도 C++, C#, Java 등의 언어에서도 사용할 수 있습니다.
+
+* Linear Optimization: [생산 계획 최적화 예제](../linear-optimization)
+* Integer Opitmization
