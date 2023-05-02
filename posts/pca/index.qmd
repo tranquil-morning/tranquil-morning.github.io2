@@ -6,8 +6,8 @@ date-modified: "2023-04-13"
 categories: [DataScience, DimensionReduction, Script]
 ---
 
-|     |     |
-|-----|-----|
+|![](3d_sample.png)|![](2d_result.png)|
+|------------------|------------------|
 
 좌측 3D 모델을 2차원으로 옮긴 모습.
 

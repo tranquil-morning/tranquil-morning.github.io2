@@ -70,10 +70,10 @@ ul.task-list li input[type="checkbox"] {
     }
 
     const options = {
-      valueNames: ['listing-date','listing-title','listing-author','listing-image','listing-description','listing-categories',{ data: ['index'] },{ data: ['categories'] },{ data: ['listing-date-sort'] },{ data: ['listing-file-modified-sort'] }],
-      page: 25,
+      valueNames: ['listing-title','listing-author','listing-date','listing-image','listing-description','listing-categories',{ data: ['index'] },{ data: ['categories'] },{ data: ['listing-date-sort'] },{ data: ['listing-file-modified-sort'] }],
+      page: 18,
     pagination: { item: "<li class='page-item'><a class='page page-link' href='#'></a></li>" },
-      searchColumns: ["listing-date","listing-title","listing-author","listing-image","listing-description","listing-categories"],
+      searchColumns: ["listing-title","listing-author","listing-date","listing-image","listing-description","listing-categories"],
     };
 
     window['quarto-listings'] = window['quarto-listings'] || {};
@@ -173,27 +173,22 @@ ul.task-list li input[type="checkbox"] {
 
 
 
-<div class="quarto-listing quarto-listing-container-default" id="listing-listing">
+<div class="quarto-listing quarto-listing-container-grid" id="listing-listing">
 <div class="listing-actions-group">
     <div class="input-group input-group-sm quarto-listing-filter">
       <span class="input-group-text"><i class="bi bi-search"></i></span>
       <input type="text" class="search form-control" placeholder="Filter">
     </div>
 </div>
-<div class="list quarto-listing-default">
-<div class="quarto-post image-right" data-index="0" data-categories="DataScience,Optimization,Script" data-listing-date-sort="1682866800000" data-listing-file-modified-sort="1682958458116" data-listing-date-modified-sort="1682866800000" data-listing-reading-time-sort="2">
-<div class="thumbnail">
-<p><a href="./posts/knapsack/index.html"> <p class="card-img-top"><img src="posts\knapsack\front.png"  class="thumbnail-image card-img"/></p> </a></p>
-</div>
-<div class="body">
-<a href="./posts/knapsack/index.html">
-<h3 class="no-anchor listing-title">
+<div class="list grid quarto-listing-cols-3">
+<div class="g-col-1" data-index="0" data-categories="DataScience,Optimization,Script" data-listing-date-sort="1682866800000" data-listing-file-modified-sort="1682958458116" data-listing-date-modified-sort="1682866800000" data-listing-reading-time-sort="2">
+<a href="./posts/knapsack/index.html" class="quarto-grid-link">
+<div class="quarto-grid-item card h-100 card-left">
+<p class="card-img-top"><img src="posts\knapsack\front.png" style="height: 150px;"  class="thumbnail-image card-img"/></p>
+<div class="card-body post-contents">
+<h5 class="no-anchor card-title listing-title">
 배낭 문제
-</h3>
-<div class="listing-subtitle">
-
-</div>
-</a>
+</h5>
 <div class="listing-categories">
 <div class="listing-category" onclick="window.quartoListingCategory('DataScience'); return false;">
 DataScience
@@ -205,37 +200,30 @@ Optimization
 Script
 </div>
 </div>
-<a href="./posts/knapsack/index.html">
-<div class="listing-description">
+<div class="card-text listing-description">
 ortools를 사용하여 배낭 문제를 해결하는 예제를 살펴보겠습니다.<br>
 일반적인 애플리케이션은 상자를 배송 트럭에 효율적으로 로드하는 것입니다.
 </div>
-</a>
-</div>
-<div class="metadata">
-<a href="./posts/knapsack/index.html">
-<div class="listing-date">
-May 1, 2023
-</div>
+<div class="card-attribution card-text-small justify">
 <div class="listing-author">
 Jinwook Chang
 </div>
+<div class="listing-date">
+May 1, 2023
+</div>
+</div>
+</div>
+</div>
 </a>
 </div>
-</div>
-<div class="quarto-post image-right" data-index="1" data-categories="DataScience,Optimization,Script" data-listing-date-sort="1682866800000" data-listing-file-modified-sort="1682958382434" data-listing-date-modified-sort="1682866800000" data-listing-reading-time-sort="2">
-<div class="thumbnail">
-<p><a href="./posts/linear-optimization/index.html"> <p class="card-img-top"><img src="posts\linear-optimization\front.jpg"  class="thumbnail-image card-img"/></p> </a></p>
-</div>
-<div class="body">
-<a href="./posts/linear-optimization/index.html">
-<h3 class="no-anchor listing-title">
+<div class="g-col-1" data-index="1" data-categories="DataScience,Optimization,Script" data-listing-date-sort="1682866800000" data-listing-file-modified-sort="1682958382434" data-listing-date-modified-sort="1682866800000" data-listing-reading-time-sort="2">
+<a href="./posts/linear-optimization/index.html" class="quarto-grid-link">
+<div class="quarto-grid-item card h-100 card-left">
+<p class="card-img-top"><img src="posts\linear-optimization\front.jpg" style="height: 150px;"  class="thumbnail-image card-img"/></p>
+<div class="card-body post-contents">
+<h5 class="no-anchor card-title listing-title">
 생산계획
-</h3>
-<div class="listing-subtitle">
-
-</div>
-</a>
+</h5>
 <div class="listing-categories">
 <div class="listing-category" onclick="window.quartoListingCategory('DataScience'); return false;">
 DataScience
@@ -247,38 +235,31 @@ Optimization
 Script
 </div>
 </div>
-<a href="./posts/linear-optimization/index.html">
-<div class="listing-description">
+<div class="card-text listing-description">
 ortools를 사용하여 선형 프로그래밍 문제를 해결하는 예제로 생산 계획 최적화 문제를 살펴보겠습니다.<br>
 이 예제에서는 두 가지 제품을 생산하는 공장이 있으며, 각 제품에는 일정한 이익이 있습니다.<br>
 공장은 제한된 자원을 사용하여 이익을 최대화하려고 합니다.
 </div>
-</a>
-</div>
-<div class="metadata">
-<a href="./posts/linear-optimization/index.html">
-<div class="listing-date">
-May 1, 2023
-</div>
+<div class="card-attribution card-text-small justify">
 <div class="listing-author">
 Jinwook Chang
 </div>
+<div class="listing-date">
+May 1, 2023
+</div>
+</div>
+</div>
+</div>
 </a>
 </div>
-</div>
-<div class="quarto-post image-right" data-index="2" data-categories="DataScience,Statistics" data-listing-date-sort="1682607600000" data-listing-file-modified-sort="1682951967082" data-listing-date-modified-sort="1682607600000" data-listing-reading-time-sort="1">
-<div class="thumbnail">
-<p><a href="./posts/error-metrics/index.html"> <p class="card-img-top"><img src="posts\error-metrics\front.png"  class="thumbnail-image card-img"/></p> </a></p>
-</div>
-<div class="body">
-<a href="./posts/error-metrics/index.html">
-<h3 class="no-anchor listing-title">
+<div class="g-col-1" data-index="2" data-categories="DataScience,Statistics" data-listing-date-sort="1682607600000" data-listing-file-modified-sort="1682951967082" data-listing-date-modified-sort="1682607600000" data-listing-reading-time-sort="1">
+<a href="./posts/error-metrics/index.html" class="quarto-grid-link">
+<div class="quarto-grid-item card h-100 card-left">
+<p class="card-img-top"><img src="posts\error-metrics\front.png" style="height: 150px;"  class="thumbnail-image card-img"/></p>
+<div class="card-body post-contents">
+<h5 class="no-anchor card-title listing-title">
 1종 오류 2종 오류 헷갈리지 않기
-</h3>
-<div class="listing-subtitle">
-
-</div>
-</a>
+</h5>
 <div class="listing-categories">
 <div class="listing-category" onclick="window.quartoListingCategory('DataScience'); return false;">
 DataScience
@@ -287,36 +268,31 @@ DataScience
 Statistics
 </div>
 </div>
-<a href="./posts/error-metrics/index.html">
-<div class="listing-description">
+<div class="card-text listing-description">
 쉽게 설명하자면, 1종 오류는 경솔한 것 / 2종 오류는 답답한 것으로 표현할 수 있습니다.
 </div>
-</a>
-</div>
-<div class="metadata">
-<a href="./posts/error-metrics/index.html">
-<div class="listing-date">
-Apr 28, 2023
-</div>
+<div class="card-attribution card-text-small justify">
 <div class="listing-author">
 Jinwook Chang
 </div>
+<div class="listing-date">
+Apr 28, 2023
+</div>
+</div>
+</div>
+</div>
 </a>
 </div>
-</div>
-<div class="quarto-post image-right" data-index="3" data-categories="AI,GPT" data-listing-date-sort="1682607600000" data-listing-file-modified-sort="1682951254441" data-listing-date-modified-sort="1682607600000" data-listing-reading-time-sort="2">
-<div class="thumbnail">
-<p><a href="./posts/gpt-prompt/index.html"> <img src="./posts/gpt-prompt/image.jpg" class="thumbnail-image"> </a></p>
-</div>
-<div class="body">
-<a href="./posts/gpt-prompt/index.html">
-<h3 class="no-anchor listing-title">
+<div class="g-col-1" data-index="3" data-categories="AI,GPT" data-listing-date-sort="1682607600000" data-listing-file-modified-sort="1682951254441" data-listing-date-modified-sort="1682607600000" data-listing-reading-time-sort="2">
+<a href="./posts/gpt-prompt/index.html" class="quarto-grid-link">
+<div class="quarto-grid-item card h-100 card-left">
+<p class="card-img-top">
+<img src="./posts/gpt-prompt/image.jpg" class="thumbnail-image card-img" style="height: 150px;">
+</p>
+<div class="card-body post-contents">
+<h5 class="no-anchor card-title listing-title">
 GPT 템플릿
-</h3>
-<div class="listing-subtitle">
-
-</div>
-</a>
+</h5>
 <div class="listing-categories">
 <div class="listing-category" onclick="window.quartoListingCategory('AI'); return false;">
 AI
@@ -325,36 +301,29 @@ AI
 GPT
 </div>
 </div>
-<a href="./posts/gpt-prompt/index.html">
-<div class="listing-description">
+<div class="card-text listing-description">
 “Let’s work this out in a step by step way to be sure we have the right answer.”
 </div>
-</a>
-</div>
-<div class="metadata">
-<a href="./posts/gpt-prompt/index.html">
-<div class="listing-date">
-Apr 28, 2023
-</div>
+<div class="card-attribution card-text-small justify">
 <div class="listing-author">
 Jinwook Chang
 </div>
+<div class="listing-date">
+Apr 28, 2023
+</div>
+</div>
+</div>
+</div>
 </a>
 </div>
-</div>
-<div class="quarto-post image-right" data-index="4" data-categories="DataScience,Math" data-listing-date-sort="1682521200000" data-listing-file-modified-sort="1682951254439" data-listing-date-modified-sort="1682521200000" data-listing-reading-time-sort="1">
-<div class="thumbnail">
-<p><a href="./posts/entropy/index.html"> <p class="card-img-top"><img src="posts\entropy\front.png"  class="thumbnail-image card-img"/></p> </a></p>
-</div>
-<div class="body">
-<a href="./posts/entropy/index.html">
-<h3 class="no-anchor listing-title">
+<div class="g-col-1" data-index="4" data-categories="DataScience,Math" data-listing-date-sort="1682521200000" data-listing-file-modified-sort="1682951254439" data-listing-date-modified-sort="1682521200000" data-listing-reading-time-sort="1">
+<a href="./posts/entropy/index.html" class="quarto-grid-link">
+<div class="quarto-grid-item card h-100 card-left">
+<p class="card-img-top"><img src="posts\entropy\front.png" style="height: 150px;"  class="thumbnail-image card-img"/></p>
+<div class="card-body post-contents">
+<h5 class="no-anchor card-title listing-title">
 Entropy 쉽게 이해하기
-</h3>
-<div class="listing-subtitle">
-
-</div>
-</a>
+</h5>
 <div class="listing-categories">
 <div class="listing-category" onclick="window.quartoListingCategory('DataScience'); return false;">
 DataScience
@@ -363,36 +332,29 @@ DataScience
 Math
 </div>
 </div>
-<a href="./posts/entropy/index.html">
-<div class="listing-description">
+<div class="card-text listing-description">
 엔트로피(entropy)는 정보 이론에서 확률 변수의 불확실성을 측정하는 지표입니다. 엔트로피는 어떤 정보를 표현하기 위해 필요한 평균 비트 수를 나타내며, 이를 통해 정보의 복잡성이나 압축 가능성을 파악할 수 있습니다. 높은 엔트로피는 높은 불확실성을 의미하며, 낮은 엔트로피는 낮은 불확실성을 의미합니다.
 </div>
-</a>
-</div>
-<div class="metadata">
-<a href="./posts/entropy/index.html">
-<div class="listing-date">
-Apr 27, 2023
-</div>
+<div class="card-attribution card-text-small justify">
 <div class="listing-author">
 Jinwook Chang
 </div>
+<div class="listing-date">
+Apr 27, 2023
+</div>
+</div>
+</div>
+</div>
 </a>
 </div>
-</div>
-<div class="quarto-post image-right" data-index="5" data-categories="DataScience,Metric" data-listing-date-sort="1682521200000" data-listing-file-modified-sort="1682951254446" data-listing-date-modified-sort="1682521200000" data-listing-reading-time-sort="1">
-<div class="thumbnail">
-<p><a href="./posts/mutual-information/index.html"> <p class="card-img-top"><img src="posts\mutual-information\front.png"  class="thumbnail-image card-img"/></p> </a></p>
-</div>
-<div class="body">
-<a href="./posts/mutual-information/index.html">
-<h3 class="no-anchor listing-title">
+<div class="g-col-1" data-index="5" data-categories="DataScience,Metric" data-listing-date-sort="1682521200000" data-listing-file-modified-sort="1682951254446" data-listing-date-modified-sort="1682521200000" data-listing-reading-time-sort="1">
+<a href="./posts/mutual-information/index.html" class="quarto-grid-link">
+<div class="quarto-grid-item card h-100 card-left">
+<p class="card-img-top"><img src="posts\mutual-information\front.png" style="height: 150px;"  class="thumbnail-image card-img"/></p>
+<div class="card-body post-contents">
+<h5 class="no-anchor card-title listing-title">
 상호 정보량 (Mutual Informaion)
-</h3>
-<div class="listing-subtitle">
-
-</div>
-</a>
+</h5>
 <div class="listing-categories">
 <div class="listing-category" onclick="window.quartoListingCategory('DataScience'); return false;">
 DataScience
@@ -401,36 +363,29 @@ DataScience
 Metric
 </div>
 </div>
-<a href="./posts/mutual-information/index.html">
-<div class="listing-description">
+<div class="card-text listing-description">
 상호 정보량(mutual information, MI)은 정보…
 </div>
-</a>
-</div>
-<div class="metadata">
-<a href="./posts/mutual-information/index.html">
-<div class="listing-date">
-Apr 27, 2023
-</div>
+<div class="card-attribution card-text-small justify">
 <div class="listing-author">
 Jinwook Chang
 </div>
+<div class="listing-date">
+Apr 27, 2023
+</div>
+</div>
+</div>
+</div>
 </a>
 </div>
-</div>
-<div class="quarto-post image-right" data-index="6" data-categories="DataScience,NLP,Script" data-listing-date-sort="1682521200000" data-listing-file-modified-sort="1682951254455" data-listing-date-modified-sort="1682521200000" data-listing-reading-time-sort="2">
-<div class="thumbnail">
-<p><a href="./posts/word-embedding/index.html"> <p class="card-img-top"><img src="posts\word-embedding\parallelogram.png"  class="thumbnail-image card-img"/></p> </a></p>
-</div>
-<div class="body">
-<a href="./posts/word-embedding/index.html">
-<h3 class="no-anchor listing-title">
+<div class="g-col-1" data-index="6" data-categories="DataScience,NLP,Script" data-listing-date-sort="1682521200000" data-listing-file-modified-sort="1682951254455" data-listing-date-modified-sort="1682521200000" data-listing-reading-time-sort="2">
+<a href="./posts/word-embedding/index.html" class="quarto-grid-link">
+<div class="quarto-grid-item card h-100 card-left">
+<p class="card-img-top"><img src="posts\word-embedding\parallelogram.png" style="height: 150px;"  class="thumbnail-image card-img"/></p>
+<div class="card-body post-contents">
+<h5 class="no-anchor card-title listing-title">
 Word Embedding과 Word2Vec
-</h3>
-<div class="listing-subtitle">
-
-</div>
-</a>
+</h5>
 <div class="listing-categories">
 <div class="listing-category" onclick="window.quartoListingCategory('DataScience'); return false;">
 DataScience
@@ -442,36 +397,29 @@ NLP
 Script
 </div>
 </div>
-<a href="./posts/word-embedding/index.html">
-<div class="listing-description">
+<div class="card-text listing-description">
 단어 임베딩은 단어들을 고차원 벡터 공간에 매핑하는 과정입니다. 이렇게 변환된 벡터는…
 </div>
-</a>
+<div class="card-attribution card-text-small justify">
+<div class="listing-author">
+Jinwook Chang
 </div>
-<div class="metadata">
-<a href="./posts/word-embedding/index.html">
 <div class="listing-date">
 Apr 27, 2023
 </div>
-<div class="listing-author">
-Jinwook Chang
+</div>
+</div>
 </div>
 </a>
 </div>
-</div>
-<div class="quarto-post image-right" data-index="7" data-categories="DataScience,Optimization" data-listing-date-sort="1682175600000" data-listing-file-modified-sort="1682951254435" data-listing-date-modified-sort="1682175600000" data-listing-reading-time-sort="1">
-<div class="thumbnail">
-<p><a href="./posts/dual-number/index.html"> <div class="listing-item-img-placeholder card-img-top" >&nbsp;</div> </a></p>
-</div>
-<div class="body">
-<a href="./posts/dual-number/index.html">
-<h3 class="no-anchor listing-title">
+<div class="g-col-1" data-index="7" data-categories="DataScience,Optimization" data-listing-date-sort="1682175600000" data-listing-file-modified-sort="1682951254435" data-listing-date-modified-sort="1682175600000" data-listing-reading-time-sort="1">
+<a href="./posts/dual-number/index.html" class="quarto-grid-link">
+<div class="quarto-grid-item card h-100 card-left">
+<div class="listing-item-img-placeholder card-img-top" style="height: 150px;">&nbsp;</div>
+<div class="card-body post-contents">
+<h5 class="no-anchor card-title listing-title">
 이원수와 전진자동미분
-</h3>
-<div class="listing-subtitle">
-
-</div>
-</a>
+</h5>
 <div class="listing-categories">
 <div class="listing-category" onclick="window.quartoListingCategory('DataScience'); return false;">
 DataScience
@@ -480,71 +428,57 @@ DataScience
 Optimization
 </div>
 </div>
-<a href="./posts/dual-number/index.html">
-<div class="listing-description">
+<div class="card-text listing-description">
 이원수(dual number)는 복소수의 일반화로 볼 수 있는 수 체계입니다. 듀얼 넘버는 다음과 같은 형태로 표현됩니다:
 </div>
-</a>
+<div class="card-attribution card-text-small justify">
+<div class="listing-author">
+Jinwook Chang
 </div>
-<div class="metadata">
-<a href="./posts/dual-number/index.html">
 <div class="listing-date">
 Apr 23, 2023
 </div>
-<div class="listing-author">
-Jinwook Chang
+</div>
+</div>
 </div>
 </a>
 </div>
-</div>
-<div class="quarto-post image-right" data-index="8" data-categories="DataScience" data-listing-date-sort="1682089200000" data-listing-file-modified-sort="1682958524191" data-listing-date-modified-sort="1682089200000" data-listing-reading-time-sort="2">
-<div class="thumbnail">
-<p><a href="./posts/causal-relationship/index.html"> <p class="card-img-top"><img src="posts\causal-relationship\front.png"  class="thumbnail-image card-img"/></p> </a></p>
-</div>
-<div class="body">
-<a href="./posts/causal-relationship/index.html">
-<h3 class="no-anchor listing-title">
+<div class="g-col-1" data-index="8" data-categories="DataScience" data-listing-date-sort="1682089200000" data-listing-file-modified-sort="1682958524191" data-listing-date-modified-sort="1682089200000" data-listing-reading-time-sort="2">
+<a href="./posts/causal-relationship/index.html" class="quarto-grid-link">
+<div class="quarto-grid-item card h-100 card-left">
+<p class="card-img-top"><img src="posts\causal-relationship\front.png" style="height: 150px;"  class="thumbnail-image card-img"/></p>
+<div class="card-body post-contents">
+<h5 class="no-anchor card-title listing-title">
 인과관계의 조건과 탐색
-</h3>
-<div class="listing-subtitle">
-
-</div>
-</a>
+</h5>
 <div class="listing-categories">
 <div class="listing-category" onclick="window.quartoListingCategory('DataScience'); return false;">
 DataScience
 </div>
 </div>
-<a href="./posts/causal-relationship/index.html">
-<div class="listing-description">
+<div class="card-text listing-description">
 영국의 철학자 데이비드 흄이 그의 저서 “인간 지성의 조사”에서 인간 지식의 인과관계를 인식하는데 있어 필요한 세 가지 조건을 제시하였습니다. 조건은 아래와 같습니다 :
 </div>
-</a>
+<div class="card-attribution card-text-small justify">
+<div class="listing-author">
+Jinwook Chang
 </div>
-<div class="metadata">
-<a href="./posts/causal-relationship/index.html">
 <div class="listing-date">
 Apr 22, 2023
 </div>
-<div class="listing-author">
-Jinwook Chang
+</div>
+</div>
 </div>
 </a>
 </div>
-</div>
-<div class="quarto-post image-right" data-index="9" data-categories="DataScience,Clustering,Script" data-listing-date-sort="1681916400000" data-listing-file-modified-sort="1682951254430" data-listing-date-modified-sort="1681916400000" data-listing-reading-time-sort="2">
-<div class="thumbnail">
-<p><a href="./posts/dbscan/index.html"> <p class="card-img-top"><img src="posts\dbscan\dbscan.png"  class="thumbnail-image card-img"/></p> </a></p>
-</div>
-<div class="body">
-<a href="./posts/dbscan/index.html">
-<h3 class="no-anchor listing-title">
+<div class="g-col-1" data-index="9" data-categories="DataScience,Clustering,Script" data-listing-date-sort="1681916400000" data-listing-file-modified-sort="1682951254430" data-listing-date-modified-sort="1681916400000" data-listing-reading-time-sort="2">
+<a href="./posts/dbscan/index.html" class="quarto-grid-link">
+<div class="quarto-grid-item card h-100 card-left">
+<p class="card-img-top"><img src="posts\dbscan\dbscan.png" style="height: 150px;"  class="thumbnail-image card-img"/></p>
+<div class="card-body post-contents">
+<h5 class="no-anchor card-title listing-title">
 DBSCAN
-</h3>
-<div class="listing-subtitle">
-
-</div>
-</a>
+</h5>
 <div class="listing-categories">
 <div class="listing-category" onclick="window.quartoListingCategory('DataScience'); return false;">
 DataScience
@@ -556,36 +490,29 @@ Clustering
 Script
 </div>
 </div>
-<a href="./posts/dbscan/index.html">
-<div class="listing-description">
+<div class="card-text listing-description">
 DBSCAN (Density-Based Spatial Clustering of Applications with Noise)은 밀도 기반의 클러스터링 알고리즘 중 하나로…
 </div>
-</a>
+<div class="card-attribution card-text-small justify">
+<div class="listing-author">
+Jinwook Chang
 </div>
-<div class="metadata">
-<a href="./posts/dbscan/index.html">
 <div class="listing-date">
 Apr 20, 2023
 </div>
-<div class="listing-author">
-Jinwook Chang
+</div>
+</div>
 </div>
 </a>
 </div>
-</div>
-<div class="quarto-post image-right" data-index="10" data-categories="DataScience,EnsembleLearning,Script" data-listing-date-sort="1681743600000" data-listing-file-modified-sort="1682951254442" data-listing-date-modified-sort="1681743600000" data-listing-reading-time-sort="2">
-<div class="thumbnail">
-<p><a href="./posts/gradient-boosting/index.html"> <p class="card-img-top"><img src="posts\gradient-boosting\front.png"  class="thumbnail-image card-img"/></p> </a></p>
-</div>
-<div class="body">
-<a href="./posts/gradient-boosting/index.html">
-<h3 class="no-anchor listing-title">
+<div class="g-col-1" data-index="10" data-categories="DataScience,EnsembleLearning,Script" data-listing-date-sort="1681743600000" data-listing-file-modified-sort="1682951254442" data-listing-date-modified-sort="1681743600000" data-listing-reading-time-sort="2">
+<a href="./posts/gradient-boosting/index.html" class="quarto-grid-link">
+<div class="quarto-grid-item card h-100 card-left">
+<p class="card-img-top"><img src="posts\gradient-boosting\front.png" style="height: 150px;"  class="thumbnail-image card-img"/></p>
+<div class="card-body post-contents">
+<h5 class="no-anchor card-title listing-title">
 Gradient Boosting
-</h3>
-<div class="listing-subtitle">
-
-</div>
-</a>
+</h5>
 <div class="listing-categories">
 <div class="listing-category" onclick="window.quartoListingCategory('DataScience'); return false;">
 DataScience
@@ -597,36 +524,29 @@ EnsembleLearning
 Script
 </div>
 </div>
-<a href="./posts/gradient-boosting/index.html">
-<div class="listing-description">
+<div class="card-text listing-description">
 그래디언트 부스팅(Gradient…
 </div>
-</a>
+<div class="card-attribution card-text-small justify">
+<div class="listing-author">
+Jinwook Chang
 </div>
-<div class="metadata">
-<a href="./posts/gradient-boosting/index.html">
 <div class="listing-date">
 Apr 18, 2023
 </div>
-<div class="listing-author">
-Jinwook Chang
+</div>
+</div>
 </div>
 </a>
 </div>
-</div>
-<div class="quarto-post image-right" data-index="11" data-categories="DataScience,EnsembleLearning,Script" data-listing-date-sort="1681657200000" data-listing-file-modified-sort="1682958545267" data-listing-date-modified-sort="11148678000000" data-listing-reading-time-sort="2">
-<div class="thumbnail">
-<p><a href="./posts/random-forest/index.html"> <p class="card-img-top"><img src="posts\random-forest\front.jpg"  class="thumbnail-image card-img"/></p> </a></p>
-</div>
-<div class="body">
-<a href="./posts/random-forest/index.html">
-<h3 class="no-anchor listing-title">
+<div class="g-col-1" data-index="11" data-categories="DataScience,EnsembleLearning,Script" data-listing-date-sort="1681657200000" data-listing-file-modified-sort="1682958545267" data-listing-date-modified-sort="11148678000000" data-listing-reading-time-sort="2">
+<a href="./posts/random-forest/index.html" class="quarto-grid-link">
+<div class="quarto-grid-item card h-100 card-left">
+<p class="card-img-top"><img src="posts\random-forest\front.jpg" style="height: 150px;"  class="thumbnail-image card-img"/></p>
+<div class="card-body post-contents">
+<h5 class="no-anchor card-title listing-title">
 Random Forest
-</h3>
-<div class="listing-subtitle">
-
-</div>
-</a>
+</h5>
 <div class="listing-categories">
 <div class="listing-category" onclick="window.quartoListingCategory('DataScience'); return false;">
 DataScience
@@ -638,36 +558,29 @@ EnsembleLearning
 Script
 </div>
 </div>
-<a href="./posts/random-forest/index.html">
-<div class="listing-description">
+<div class="card-text listing-description">
 랜덤 포레스트는 배깅(Bagging)의 한 형태로서, 여러 개의 결정 트리를 조합하여 예측 결과를 도출하는 앙상블 기법입니다. 이 방법은 결정 트리의 가장 큰 문제점 중 하나인 과적합(overfitting)을 효과적으로 해결하고, 높은 예측 성능을 보여줍니다.
 </div>
-</a>
+<div class="card-attribution card-text-small justify">
+<div class="listing-author">
+Jinwook Chang
 </div>
-<div class="metadata">
-<a href="./posts/random-forest/index.html">
 <div class="listing-date">
 Apr 17, 2023
 </div>
-<div class="listing-author">
-Jinwook Chang
+</div>
+</div>
 </div>
 </a>
 </div>
-</div>
-<div class="quarto-post image-right" data-index="12" data-categories="DataScience,MainTheme,EnsembleLearning" data-listing-date-sort="1681570800000" data-listing-file-modified-sort="1682958574160" data-listing-date-modified-sort="1681570800000" data-listing-reading-time-sort="2">
-<div class="thumbnail">
-<p><a href="./posts/ensemble-learning/index.html"> <p class="card-img-top"><img src="posts\ensemble-learning\front.png"  class="thumbnail-image card-img"/></p> </a></p>
-</div>
-<div class="body">
-<a href="./posts/ensemble-learning/index.html">
-<h3 class="no-anchor listing-title">
+<div class="g-col-1" data-index="12" data-categories="DataScience,MainTheme,EnsembleLearning" data-listing-date-sort="1681570800000" data-listing-file-modified-sort="1682958574160" data-listing-date-modified-sort="1681570800000" data-listing-reading-time-sort="2">
+<a href="./posts/ensemble-learning/index.html" class="quarto-grid-link">
+<div class="quarto-grid-item card h-100 card-left">
+<p class="card-img-top"><img src="posts\ensemble-learning\front.png" style="height: 150px;"  class="thumbnail-image card-img"/></p>
+<div class="card-body post-contents">
+<h5 class="no-anchor card-title listing-title">
 Ensemble Learning
-</h3>
-<div class="listing-subtitle">
-
-</div>
-</a>
+</h5>
 <div class="listing-categories">
 <div class="listing-category" onclick="window.quartoListingCategory('DataScience'); return false;">
 DataScience
@@ -679,36 +592,29 @@ MainTheme
 EnsembleLearning
 </div>
 </div>
-<a href="./posts/ensemble-learning/index.html">
-<div class="listing-description">
+<div class="card-text listing-description">
 앙상블 학습(Ensemble learning)은 여러 개의 기본 학습…
 </div>
-</a>
-</div>
-<div class="metadata">
-<a href="./posts/ensemble-learning/index.html">
-<div class="listing-date">
-Apr 16, 2023
-</div>
+<div class="card-attribution card-text-small justify">
 <div class="listing-author">
 Jinwook Chang
 </div>
+<div class="listing-date">
+Apr 16, 2023
+</div>
+</div>
+</div>
+</div>
 </a>
 </div>
-</div>
-<div class="quarto-post image-right" data-index="13" data-categories="DataScience,Clustering,Script" data-listing-date-sort="1681570800000" data-listing-file-modified-sort="1682951254444" data-listing-date-modified-sort="1681570800000" data-listing-reading-time-sort="2">
-<div class="thumbnail">
-<p><a href="./posts/k-means/index.html"> <p class="card-img-top"><img src="posts\k-means\k-means.png"  class="thumbnail-image card-img"/></p> </a></p>
-</div>
-<div class="body">
-<a href="./posts/k-means/index.html">
-<h3 class="no-anchor listing-title">
+<div class="g-col-1" data-index="13" data-categories="DataScience,Clustering,Script" data-listing-date-sort="1681570800000" data-listing-file-modified-sort="1682951254444" data-listing-date-modified-sort="1681570800000" data-listing-reading-time-sort="2">
+<a href="./posts/k-means/index.html" class="quarto-grid-link">
+<div class="quarto-grid-item card h-100 card-left">
+<p class="card-img-top"><img src="posts\k-means\k-means.png" style="height: 150px;"  class="thumbnail-image card-img"/></p>
+<div class="card-body post-contents">
+<h5 class="no-anchor card-title listing-title">
 K-means clustering
-</h3>
-<div class="listing-subtitle">
-
-</div>
-</a>
+</h5>
 <div class="listing-categories">
 <div class="listing-category" onclick="window.quartoListingCategory('DataScience'); return false;">
 DataScience
@@ -720,36 +626,29 @@ Clustering
 Script
 </div>
 </div>
-<a href="./posts/k-means/index.html">
-<div class="listing-description">
+<div class="card-text listing-description">
 Centroid Based Clustering 기법 중 하나로, 데이터 포인트들을 K개의 군집으로 나누는 비지도 학습(unsupervised learning) 방법입니다. K-means 알고리즘은 다음과 같은 과정을 거쳐 데이터를 군집화합니다.
 </div>
-</a>
-</div>
-<div class="metadata">
-<a href="./posts/k-means/index.html">
-<div class="listing-date">
-Apr 16, 2023
-</div>
+<div class="card-attribution card-text-small justify">
 <div class="listing-author">
 Jinwook Chang
 </div>
+<div class="listing-date">
+Apr 16, 2023
+</div>
+</div>
+</div>
+</div>
 </a>
 </div>
-</div>
-<div class="quarto-post image-right" data-index="14" data-categories="DataScience,DimensionReduction,Script" data-listing-date-sort="1681570800000" data-listing-file-modified-sort="1682951254453" data-listing-date-modified-sort="1681570800000" data-listing-reading-time-sort="2">
-<div class="thumbnail">
-<p><a href="./posts/t-sne/index.html"> <p class="card-img-top"><img src="posts\t-sne\result.png"  class="thumbnail-image card-img"/></p> </a></p>
-</div>
-<div class="body">
-<a href="./posts/t-sne/index.html">
-<h3 class="no-anchor listing-title">
+<div class="g-col-1" data-index="14" data-categories="DataScience,DimensionReduction,Script" data-listing-date-sort="1681570800000" data-listing-file-modified-sort="1682951254453" data-listing-date-modified-sort="1681570800000" data-listing-reading-time-sort="2">
+<a href="./posts/t-sne/index.html" class="quarto-grid-link">
+<div class="quarto-grid-item card h-100 card-left">
+<p class="card-img-top"><img src="posts\t-sne\result.png" style="height: 150px;"  class="thumbnail-image card-img"/></p>
+<div class="card-body post-contents">
+<h5 class="no-anchor card-title listing-title">
 t-sne
-</h3>
-<div class="listing-subtitle">
-
-</div>
-</a>
+</h5>
 <div class="listing-categories">
 <div class="listing-category" onclick="window.quartoListingCategory('DataScience'); return false;">
 DataScience
@@ -761,36 +660,29 @@ DimensionReduction
 Script
 </div>
 </div>
-<a href="./posts/t-sne/index.html">
-<div class="listing-description">
+<div class="card-text listing-description">
 t-SNE(t-Distributed Stochastic Neighbor Embedding)는 고차원 데이터를 저차원…
 </div>
-</a>
-</div>
-<div class="metadata">
-<a href="./posts/t-sne/index.html">
-<div class="listing-date">
-Apr 16, 2023
-</div>
+<div class="card-attribution card-text-small justify">
 <div class="listing-author">
 Jinwook Chang
 </div>
+<div class="listing-date">
+Apr 16, 2023
+</div>
+</div>
+</div>
+</div>
 </a>
 </div>
-</div>
-<div class="quarto-post image-right" data-index="15" data-categories="DataScience,DimensionReduction,Script" data-listing-date-sort="1681570800000" data-listing-file-modified-sort="1682951254454" data-listing-date-modified-sort="1681570800000" data-listing-reading-time-sort="2">
-<div class="thumbnail">
-<p><a href="./posts/umap/index.html"> <p class="card-img-top"><img src="posts\umap\result.png"  class="thumbnail-image card-img"/></p> </a></p>
-</div>
-<div class="body">
-<a href="./posts/umap/index.html">
-<h3 class="no-anchor listing-title">
+<div class="g-col-1" data-index="15" data-categories="DataScience,DimensionReduction,Script" data-listing-date-sort="1681570800000" data-listing-file-modified-sort="1682951254454" data-listing-date-modified-sort="1681570800000" data-listing-reading-time-sort="2">
+<a href="./posts/umap/index.html" class="quarto-grid-link">
+<div class="quarto-grid-item card h-100 card-left">
+<p class="card-img-top"><img src="posts\umap\result.png" style="height: 150px;"  class="thumbnail-image card-img"/></p>
+<div class="card-body post-contents">
+<h5 class="no-anchor card-title listing-title">
 UMAP
-</h3>
-<div class="listing-subtitle">
-
-</div>
-</a>
+</h5>
 <div class="listing-categories">
 <div class="listing-category" onclick="window.quartoListingCategory('DataScience'); return false;">
 DataScience
@@ -802,36 +694,29 @@ DimensionReduction
 Script
 </div>
 </div>
-<a href="./posts/umap/index.html">
-<div class="listing-description">
+<div class="card-text listing-description">
 UMAP (Uniform Manifold Approximation and Projection)은 고차원 데이터를…
 </div>
-</a>
-</div>
-<div class="metadata">
-<a href="./posts/umap/index.html">
-<div class="listing-date">
-Apr 16, 2023
-</div>
+<div class="card-attribution card-text-small justify">
 <div class="listing-author">
 Jinwook Chang
 </div>
+<div class="listing-date">
+Apr 16, 2023
+</div>
+</div>
+</div>
+</div>
 </a>
 </div>
-</div>
-<div class="quarto-post image-right" data-index="16" data-categories="MainTheme,DataScience,Clustering" data-listing-date-sort="1681484400000" data-listing-file-modified-sort="1682951254428" data-listing-date-modified-sort="1682262000000" data-listing-reading-time-sort="2">
-<div class="thumbnail">
-<p><a href="./posts/clustering/index.html"> <p class="card-img-top"><img src="posts\clustering\front_image.jpg"  class="thumbnail-image card-img"/></p> </a></p>
-</div>
-<div class="body">
-<a href="./posts/clustering/index.html">
-<h3 class="no-anchor listing-title">
+<div class="g-col-1" data-index="16" data-categories="MainTheme,DataScience,Clustering" data-listing-date-sort="1681484400000" data-listing-file-modified-sort="1682951254428" data-listing-date-modified-sort="1682262000000" data-listing-reading-time-sort="2">
+<a href="./posts/clustering/index.html" class="quarto-grid-link">
+<div class="quarto-grid-item card h-100 card-left">
+<p class="card-img-top"><img src="posts\clustering\front_image.jpg" style="height: 150px;"  class="thumbnail-image card-img"/></p>
+<div class="card-body post-contents">
+<h5 class="no-anchor card-title listing-title">
 Clustering
-</h3>
-<div class="listing-subtitle">
-
-</div>
-</a>
+</h5>
 <div class="listing-categories">
 <div class="listing-category" onclick="window.quartoListingCategory('MainTheme'); return false;">
 MainTheme
@@ -843,36 +728,29 @@ DataScience
 Clustering
 </div>
 </div>
-<a href="./posts/clustering/index.html">
-<div class="listing-description">
+<div class="card-text listing-description">
 클러스터링(clustering)은 데이터 마이닝과 머신러닝에서 사용되는 비지도 학습(unsupervised learning) 방법 중 하나입니다. 클러스터링의 목적은 주어진 데이터셋에서 유사한 특성을 가진 데이터 포인트들을 그룹화하는 것입니다. 이렇게 그룹화된…
 </div>
-</a>
-</div>
-<div class="metadata">
-<a href="./posts/clustering/index.html">
-<div class="listing-date">
-Apr 15, 2023
-</div>
+<div class="card-attribution card-text-small justify">
 <div class="listing-author">
 Jinwook Chang
 </div>
+<div class="listing-date">
+Apr 15, 2023
+</div>
+</div>
+</div>
+</div>
 </a>
 </div>
-</div>
-<div class="quarto-post image-right" data-index="17" data-categories="MainTheme,DataScience,DimensionReduction" data-listing-date-sort="1681484400000" data-listing-file-modified-sort="1682951254434" data-listing-date-modified-sort="1682262000000" data-listing-reading-time-sort="2">
-<div class="thumbnail">
-<p><a href="./posts/dimension-reduction/index.html"> <p class="card-img-top"><img src="posts\dimension-reduction\PCA_Projection_Illustration.gif"  class="thumbnail-image card-img"/></p> </a></p>
-</div>
-<div class="body">
-<a href="./posts/dimension-reduction/index.html">
-<h3 class="no-anchor listing-title">
+<div class="g-col-1" data-index="17" data-categories="MainTheme,DataScience,DimensionReduction" data-listing-date-sort="1681484400000" data-listing-file-modified-sort="1682951254434" data-listing-date-modified-sort="1682262000000" data-listing-reading-time-sort="2">
+<a href="./posts/dimension-reduction/index.html" class="quarto-grid-link">
+<div class="quarto-grid-item card h-100 card-left">
+<p class="card-img-top"><img src="posts\dimension-reduction\PCA_Projection_Illustration.gif" style="height: 150px;"  class="thumbnail-image card-img"/></p>
+<div class="card-body post-contents">
+<h5 class="no-anchor card-title listing-title">
 Dimension Reduction (차원 축소)
-</h3>
-<div class="listing-subtitle">
-
-</div>
-</a>
+</h5>
 <div class="listing-categories">
 <div class="listing-category" onclick="window.quartoListingCategory('MainTheme'); return false;">
 MainTheme
@@ -884,36 +762,29 @@ DataScience
 DimensionReduction
 </div>
 </div>
-<a href="./posts/dimension-reduction/index.html">
-<div class="listing-description">
+<div class="card-text listing-description">
 <strong>차원의 저주(curse of dimensionality)</strong>는 고차원 데이터에서 발생하는 여러 문제를 총체적으로 설명하는 용어입니다. 데이터의 차원이 증가할수록, 데이터 포인트 간의 거리가 점점 멀어져서 데이터가 희소해지는 현상이 발생합니다. 이러한 현상은 다음과 같은 문제를 야기합니다:
 </div>
-</a>
-</div>
-<div class="metadata">
-<a href="./posts/dimension-reduction/index.html">
-<div class="listing-date">
-Apr 15, 2023
-</div>
+<div class="card-attribution card-text-small justify">
 <div class="listing-author">
 Jinwook Chang
 </div>
+<div class="listing-date">
+Apr 15, 2023
+</div>
+</div>
+</div>
+</div>
 </a>
 </div>
-</div>
-<div class="quarto-post image-right" data-index="18" data-categories="DataScience,Script" data-listing-date-sort="1681484400000" data-listing-file-modified-sort="1682951254436" data-listing-date-modified-sort="1681484400000" data-listing-reading-time-sort="7">
-<div class="thumbnail">
-<p><a href="./posts/dummy-variables/index.html"> <div class="listing-item-img-placeholder card-img-top" >&nbsp;</div> </a></p>
-</div>
-<div class="body">
-<a href="./posts/dummy-variables/index.html">
-<h3 class="no-anchor listing-title">
+<div class="g-col-1" data-index="18" data-categories="DataScience,Script" data-listing-date-sort="1681484400000" data-listing-file-modified-sort="1682951254436" data-listing-date-modified-sort="1681484400000" data-listing-reading-time-sort="7">
+<a href="./posts/dummy-variables/index.html" class="quarto-grid-link">
+<div class="quarto-grid-item card h-100 card-left">
+<div class="listing-item-img-placeholder card-img-top" style="height: 150px;">&nbsp;</div>
+<div class="card-body post-contents">
+<h5 class="no-anchor card-title listing-title">
 N-1 더미 변수를 활용하는 이유
-</h3>
-<div class="listing-subtitle">
-
-</div>
-</a>
+</h5>
 <div class="listing-categories">
 <div class="listing-category" onclick="window.quartoListingCategory('DataScience'); return false;">
 DataScience
@@ -922,36 +793,29 @@ DataScience
 Script
 </div>
 </div>
-<a href="./posts/dummy-variables/index.html">
-<div class="listing-description">
+<div class="card-text listing-description">
 단순히 생각하였을 때, n개의 더미 변수를 사용할 경우, Spring ~ Winter까지의 열 벡터를 합하면, Intercept 열이 되어, 선형독립을 만족치 못한다. 그렇기에 역행렬이 구해지지 않는 것이 당연하다고 볼 수 있다. 하기 예제로 실제로 그러한지 확인해보자.
 </div>
-</a>
-</div>
-<div class="metadata">
-<a href="./posts/dummy-variables/index.html">
-<div class="listing-date">
-Apr 15, 2023
-</div>
+<div class="card-attribution card-text-small justify">
 <div class="listing-author">
 Jinwook Chang
 </div>
+<div class="listing-date">
+Apr 15, 2023
+</div>
+</div>
+</div>
+</div>
 </a>
 </div>
-</div>
-<div class="quarto-post image-right" data-index="19" data-categories="DataScience,Optimization" data-listing-date-sort="1681484400000" data-listing-file-modified-sort="1682951254453" data-listing-date-modified-sort="1681484400000" data-listing-reading-time-sort="2">
-<div class="thumbnail">
-<p><a href="./posts/regularization/index.html"> <p class="card-img-top"><img src="posts\regularization\front.png"  class="thumbnail-image card-img"/></p> </a></p>
-</div>
-<div class="body">
-<a href="./posts/regularization/index.html">
-<h3 class="no-anchor listing-title">
+<div class="g-col-1" data-index="19" data-categories="DataScience,Optimization" data-listing-date-sort="1681484400000" data-listing-file-modified-sort="1682951254453" data-listing-date-modified-sort="1681484400000" data-listing-reading-time-sort="2">
+<a href="./posts/regularization/index.html" class="quarto-grid-link">
+<div class="quarto-grid-item card h-100 card-left">
+<p class="card-img-top"><img data-src="posts\regularization\front.png" style="height: 150px;"  class="thumbnail-image card-img"/></p>
+<div class="card-body post-contents">
+<h5 class="no-anchor card-title listing-title">
 Regularization (정규화 기법)
-</h3>
-<div class="listing-subtitle">
-
-</div>
-</a>
+</h5>
 <div class="listing-categories">
 <div class="listing-category" onclick="window.quartoListingCategory('DataScience'); return false;">
 DataScience
@@ -960,36 +824,29 @@ DataScience
 Optimization
 </div>
 </div>
-<a href="./posts/regularization/index.html">
-<div class="listing-description">
+<div class="card-text listing-description">
 정규화 기법은 모델의 복잡도를 줄이고 일반화 성능을 향상시키기 위해 사용됩니다. 일반적인 정규화 기법으로는 릿지 회귀(Ridge Regression), 라쏘 회귀(Lasso Regression), 그리고 엘라스틱넷 회귀(Elastic Net Regression)가 있습니다.
 </div>
-</a>
-</div>
-<div class="metadata">
-<a href="./posts/regularization/index.html">
-<div class="listing-date">
-Apr 15, 2023
-</div>
+<div class="card-attribution card-text-small justify">
 <div class="listing-author">
 Jinwook Chang
 </div>
+<div class="listing-date">
+Apr 15, 2023
+</div>
+</div>
+</div>
+</div>
 </a>
 </div>
-</div>
-<div class="quarto-post image-right" data-index="20" data-categories="DataScience,Math" data-listing-date-sort="1681311600000" data-listing-file-modified-sort="1682951254429" data-listing-date-modified-sort="1681311600000" data-listing-reading-time-sort="1">
-<div class="thumbnail">
-<p><a href="./posts/covariance/index.html"> <p class="card-img-top"><img src="posts\covariance\front.png"  class="thumbnail-image card-img"/></p> </a></p>
-</div>
-<div class="body">
-<a href="./posts/covariance/index.html">
-<h3 class="no-anchor listing-title">
+<div class="g-col-1" data-index="20" data-categories="DataScience,Math" data-listing-date-sort="1681311600000" data-listing-file-modified-sort="1682951254429" data-listing-date-modified-sort="1681311600000" data-listing-reading-time-sort="1">
+<a href="./posts/covariance/index.html" class="quarto-grid-link">
+<div class="quarto-grid-item card h-100 card-left">
+<p class="card-img-top"><img data-src="posts\covariance\front.png" style="height: 150px;"  class="thumbnail-image card-img"/></p>
+<div class="card-body post-contents">
+<h5 class="no-anchor card-title listing-title">
 Covariance Matrix
-</h3>
-<div class="listing-subtitle">
-
-</div>
-</a>
+</h5>
 <div class="listing-categories">
 <div class="listing-category" onclick="window.quartoListingCategory('DataScience'); return false;">
 DataScience
@@ -998,36 +855,29 @@ DataScience
 Math
 </div>
 </div>
-<a href="./posts/covariance/index.html">
-<div class="listing-description">
+<div class="card-text listing-description">
 공분산 행렬(covariance matrix)은 변수들 간의 공분산을 요소로 갖는 정방행렬(square matrix)입니다. 공분산은 두 변수가 함께 변하는 정도를 측정하는 값으로, 하나의 변수가 증가할 때 다른 변수가 어떻게 변하는지를 나타냅니다.
 </div>
-</a>
-</div>
-<div class="metadata">
-<a href="./posts/covariance/index.html">
-<div class="listing-date">
-Apr 13, 2023
-</div>
+<div class="card-attribution card-text-small justify">
 <div class="listing-author">
 Jinwook Chang
 </div>
+<div class="listing-date">
+Apr 13, 2023
+</div>
+</div>
+</div>
+</div>
 </a>
 </div>
-</div>
-<div class="quarto-post image-right" data-index="21" data-categories="DataScience,Clustering,Script" data-listing-date-sort="1681311600000" data-listing-file-modified-sort="1682951254443" data-listing-date-modified-sort="1681311600000" data-listing-reading-time-sort="2">
-<div class="thumbnail">
-<p><a href="./posts/hierarchical/index.html"> <p class="card-img-top"><img src="posts\hierarchical\dendrogram.png"  class="thumbnail-image card-img"/></p> </a></p>
-</div>
-<div class="body">
-<a href="./posts/hierarchical/index.html">
-<h3 class="no-anchor listing-title">
+<div class="g-col-1" data-index="21" data-categories="DataScience,Clustering,Script" data-listing-date-sort="1681311600000" data-listing-file-modified-sort="1682951254443" data-listing-date-modified-sort="1681311600000" data-listing-reading-time-sort="2">
+<a href="./posts/hierarchical/index.html" class="quarto-grid-link">
+<div class="quarto-grid-item card h-100 card-left">
+<p class="card-img-top"><img data-src="posts\hierarchical\dendrogram.png" style="height: 150px;"  class="thumbnail-image card-img"/></p>
+<div class="card-body post-contents">
+<h5 class="no-anchor card-title listing-title">
 Hierarchical Clustering
-</h3>
-<div class="listing-subtitle">
-
-</div>
-</a>
+</h5>
 <div class="listing-categories">
 <div class="listing-category" onclick="window.quartoListingCategory('DataScience'); return false;">
 DataScience
@@ -1039,36 +889,29 @@ Clustering
 Script
 </div>
 </div>
-<a href="./posts/hierarchical/index.html">
-<div class="listing-description">
+<div class="card-text listing-description">
 데이터 포인트 간의 거리를 기반으로 클러스터를 형성하는데, 처음에는 각 데이터 포인트가 하나의 클러스터로 간주되며 가장 가까운 클러스터끼리 병합하는 과정을 반복하면서 최종적으로 하나의 클러스터로 합쳐집니다. 계층적 클러스터링은 덴드로그램(dendrogram)을 사용하여 클러스터 구조를 시각화할 수 있습니다.
 </div>
-</a>
-</div>
-<div class="metadata">
-<a href="./posts/hierarchical/index.html">
-<div class="listing-date">
-Apr 13, 2023
-</div>
+<div class="card-attribution card-text-small justify">
 <div class="listing-author">
 Jinwook Chang
 </div>
+<div class="listing-date">
+Apr 13, 2023
+</div>
+</div>
+</div>
+</div>
 </a>
 </div>
-</div>
-<div class="quarto-post image-right" data-index="22" data-categories="DataScience,DimensionReduction,Script" data-listing-date-sort="1681311600000" data-listing-file-modified-sort="1682958611118" data-listing-date-modified-sort="1681311600000" data-listing-reading-time-sort="2">
-<div class="thumbnail">
-<p><a href="./posts/pca/index.html"> <div class="listing-item-img-placeholder card-img-top" >&nbsp;</div> </a></p>
-</div>
-<div class="body">
-<a href="./posts/pca/index.html">
-<h3 class="no-anchor listing-title">
+<div class="g-col-1" data-index="22" data-categories="DataScience,DimensionReduction,Script" data-listing-date-sort="1681311600000" data-listing-file-modified-sort="1682988750323" data-listing-date-modified-sort="1681311600000" data-listing-reading-time-sort="2">
+<a href="./posts/pca/index.html" class="quarto-grid-link">
+<div class="quarto-grid-item card h-100 card-left">
+<p class="card-img-top"><img data-src="posts\pca\3d_sample.png" style="height: 150px;"  class="thumbnail-image card-img"/></p>
+<div class="card-body post-contents">
+<h5 class="no-anchor card-title listing-title">
 Principal Component Analysis
-</h3>
-<div class="listing-subtitle">
-
-</div>
-</a>
+</h5>
 <div class="listing-categories">
 <div class="listing-category" onclick="window.quartoListingCategory('DataScience'); return false;">
 DataScience
@@ -1080,36 +923,29 @@ DimensionReduction
 Script
 </div>
 </div>
-<a href="./posts/pca/index.html">
-<div class="listing-description">
+<div class="card-text listing-description">
 좌측 3D 모델을 2차원으로 옮긴 모습.
 </div>
-</a>
-</div>
-<div class="metadata">
-<a href="./posts/pca/index.html">
-<div class="listing-date">
-Apr 13, 2023
-</div>
+<div class="card-attribution card-text-small justify">
 <div class="listing-author">
 Jinwook Chang
 </div>
+<div class="listing-date">
+Apr 13, 2023
+</div>
+</div>
+</div>
+</div>
 </a>
 </div>
-</div>
-<div class="quarto-post image-right" data-index="23" data-categories="DataScience,Optimization,Script" data-listing-date-sort="1680966000000" data-listing-file-modified-sort="1682951254424" data-listing-date-modified-sort="1680966000000" data-listing-reading-time-sort="2">
-<div class="thumbnail">
-<p><a href="./posts/alpha-max-plus-beta-min/index.html"> <p class="card-img-top"><img src="posts\alpha-max-plus-beta-min\Untitled.png"  class="thumbnail-image card-img"/></p> </a></p>
-</div>
-<div class="body">
-<a href="./posts/alpha-max-plus-beta-min/index.html">
-<h3 class="no-anchor listing-title">
+<div class="g-col-1" data-index="23" data-categories="DataScience,Optimization,Script" data-listing-date-sort="1680966000000" data-listing-file-modified-sort="1682951254424" data-listing-date-modified-sort="1680966000000" data-listing-reading-time-sort="2">
+<a href="./posts/alpha-max-plus-beta-min/index.html" class="quarto-grid-link">
+<div class="quarto-grid-item card h-100 card-left">
+<p class="card-img-top"><img data-src="posts\alpha-max-plus-beta-min\Untitled.png" style="height: 150px;"  class="thumbnail-image card-img"/></p>
+<div class="card-body post-contents">
+<h5 class="no-anchor card-title listing-title">
 Alpha max plus Beta min (Fast 2D Eculedian Distance)
-</h3>
-<div class="listing-subtitle">
-
-</div>
-</a>
+</h5>
 <div class="listing-categories">
 <div class="listing-category" onclick="window.quartoListingCategory('DataScience'); return false;">
 DataScience
@@ -1121,36 +957,29 @@ Optimization
 Script
 </div>
 </div>
-<a href="./posts/alpha-max-plus-beta-min/index.html">
-<div class="listing-description">
+<div class="card-text listing-description">
 Alpha max plus Beta min 알고리즘은 두 제곱의 합의 제곱근을 고속으로 근사하는 방법입니다. 이 계산은 직각 삼각형의 빗변 길이를 구하거나, 2차원 벡터의 놈, 또는 실수와 허수부를 가진 복소수 z = a + bi의 크기를 구하는 데 사용되는 유용한 기능입니다.
 </div>
-</a>
-</div>
-<div class="metadata">
-<a href="./posts/alpha-max-plus-beta-min/index.html">
-<div class="listing-date">
-Apr 9, 2023
-</div>
+<div class="card-attribution card-text-small justify">
 <div class="listing-author">
 Jinwook Chang
 </div>
+<div class="listing-date">
+Apr 9, 2023
+</div>
+</div>
+</div>
+</div>
 </a>
 </div>
-</div>
-<div class="quarto-post image-right" data-index="24" data-categories="DataScience,Script" data-listing-date-sort="1680966000000" data-listing-file-modified-sort="1682951254426" data-listing-date-modified-sort="1680966000000" data-listing-reading-time-sort="3">
-<div class="thumbnail">
-<p><a href="./posts/benfords-law/index.html"> <p class="card-img-top"><img src="posts\benfords-law\Rozklad_benforda.svg.png"  class="thumbnail-image card-img"/></p> </a></p>
-</div>
-<div class="body">
-<a href="./posts/benfords-law/index.html">
-<h3 class="no-anchor listing-title">
+<div class="g-col-1" data-index="24" data-categories="DataScience,Script" data-listing-date-sort="1680966000000" data-listing-file-modified-sort="1682951254426" data-listing-date-modified-sort="1680966000000" data-listing-reading-time-sort="3">
+<a href="./posts/benfords-law/index.html" class="quarto-grid-link">
+<div class="quarto-grid-item card h-100 card-left">
+<p class="card-img-top"><img data-src="posts\benfords-law\Rozklad_benforda.svg.png" style="height: 150px;"  class="thumbnail-image card-img"/></p>
+<div class="card-body post-contents">
+<h5 class="no-anchor card-title listing-title">
 Benford’s Law
-</h3>
-<div class="listing-subtitle">
-
-</div>
-</a>
+</h5>
 <div class="listing-categories">
 <div class="listing-category" onclick="window.quartoListingCategory('DataScience'); return false;">
 DataScience
@@ -1159,36 +988,29 @@ DataScience
 Script
 </div>
 </div>
-<a href="./posts/benfords-law/index.html">
-<div class="listing-description">
+<div class="card-text listing-description">
 벤포드의 법칙(Benford’s…
 </div>
-</a>
-</div>
-<div class="metadata">
-<a href="./posts/benfords-law/index.html">
-<div class="listing-date">
-Apr 9, 2023
-</div>
+<div class="card-attribution card-text-small justify">
 <div class="listing-author">
 Jinwook Chang
 </div>
+<div class="listing-date">
+Apr 9, 2023
+</div>
+</div>
+</div>
+</div>
 </a>
 </div>
-</div>
-<div class="quarto-post image-right" data-index="25" data-categories="DataScience,NLP,Script" data-listing-date-sort="1680966000000" data-listing-file-modified-sort="1682951254456" data-listing-date-modified-sort="1680966000000" data-listing-reading-time-sort="2">
-<div class="thumbnail">
-<p><a href="./posts/zifs-law/index.html"> <p class="card-img-top"><img data-src="posts\zifs-law\front.jpg"  class="thumbnail-image card-img"/></p> </a></p>
-</div>
-<div class="body">
-<a href="./posts/zifs-law/index.html">
-<h3 class="no-anchor listing-title">
+<div class="g-col-1" data-index="25" data-categories="DataScience,NLP,Script" data-listing-date-sort="1680966000000" data-listing-file-modified-sort="1682951254456" data-listing-date-modified-sort="1680966000000" data-listing-reading-time-sort="2">
+<a href="./posts/zifs-law/index.html" class="quarto-grid-link">
+<div class="quarto-grid-item card h-100 card-left">
+<p class="card-img-top"><img data-src="posts\zifs-law\front.jpg" style="height: 150px;"  class="thumbnail-image card-img"/></p>
+<div class="card-body post-contents">
+<h5 class="no-anchor card-title listing-title">
 Zipf’s Law (단어 사용의 분포)
-</h3>
-<div class="listing-subtitle">
-
-</div>
-</a>
+</h5>
 <div class="listing-categories">
 <div class="listing-category" onclick="window.quartoListingCategory('DataScience'); return false;">
 DataScience
@@ -1200,22 +1022,20 @@ NLP
 Script
 </div>
 </div>
-<a href="./posts/zifs-law/index.html">
-<div class="listing-description">
+<div class="card-text listing-description">
 …
 </div>
-</a>
-</div>
-<div class="metadata">
-<a href="./posts/zifs-law/index.html">
-<div class="listing-date">
-Apr 9, 2023
-</div>
+<div class="card-attribution card-text-small justify">
 <div class="listing-author">
 Jinwook Chang
 </div>
-</a>
+<div class="listing-date">
+Apr 9, 2023
 </div>
+</div>
+</div>
+</div>
+</a>
 </div>
 </div>
 <div class="listing-no-matching d-none">
