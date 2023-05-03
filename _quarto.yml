@@ -4,6 +4,7 @@ project:
 
 website:
   title: "Note of myself"
+  google-analytics: "G-D7YERGZ04Y"
   navbar:
     right:
       - about.qmd
