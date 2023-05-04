@@ -2,6 +2,7 @@
   {
     "listing": "/index.html",
     "items": [
+      "/posts/dl-simple-linear-regression/index.html",
       "/posts/knapsack-n-bags/index.html",
       "/posts/knapsack/index.html",
       "/posts/linear-optimization/index.html",
