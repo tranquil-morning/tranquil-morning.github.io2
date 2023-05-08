@@ -1,0 +1,79 @@
+---
+title: "켈리 기준"
+author: "Jinwook Chang"
+date: "2023-05-08"
+date-modified: "2023-05-08"
+categories: [DataScience, Script, Optimization]
+---
+
+### 켈리 기준이란..
+
+켈리 기준(Kelly Criterion)은 투자와 도박에서 최적의 배당을 결정하기 위한 공식입니다. 이 공식은 1956년에 John Larry Kelly Jr.에 의해 개발되었습니다. 켈리 기준의 목표는 장기적인 자본 가치 증가를 최대화하는 배당금을 찾는 것입니다.
+
+켈리 공식은 다음과 같습니다:
+
+$$ f* = \frac{p}{a} - \frac{q}{b} $$
+
+여기서:
+
+$f*$는 최적의 배당 비율을 나타냅니다.  
+$a$는 순손해률입니다.  
+$b$는 순이익률입니다.  
+$p$는 이길 확률입니다.  
+$q$는 질 확률이며, $(1 - p)$로 계산할 수 있습니다.  
+
+켈리 기준은 투자자가 얼마나 많은 돈을 투자하거나 얼마나 많은 돈을 배팅해야 하는지 결정하는 데 도움이 됩니다. 이 공식을 사용하면 장기적으로 수익을 극대화하고 리스크를 최소화할 수 있습니다. 
+
+### 켈리 기준 유도
+
+$$ r = (1+fb)^p \times (1-fa)^q $$
+
+위의 식에 로그를 취하면,
+
+$$ logr = p log(1+fb) + q log(1 - fa) $$
+
+위의 식을 f에 대해 미분하면,
+
+$$ 0 = \frac{pb}{(1+fb)} - \frac{qa}{(1-fa)}$$
+
+$$ pb \cdot (1-fa) = qa \cdot (1+fb) $$
+
+이를 정리하면, 하기와 같이 켈리 기준식이 나옵니다.
+
+$$ f* = \frac{p}{a} - \frac{q}{b} $$
+
+### 예시
+
+승률이 60%인 게임에서 이기면 내기 금액만큼 벌고, 지면 내기 금액 모두를 잃는 게임을 가정해봅시다.
+
+켈리 기준에 따르면, 전체 금액의 20%을 투자 하였을 때 수익을 극대화 할 수 있습니다.
+
+그렇다면, 1000원의 초기자금으로 1000번 게임했을 때, 전체 금액의 10% ~ 100%까지 투자하였을 경우의 기대 수익을 시뮬레이션해보도록 하겠습니다.
+
+
+```{r}
+set.seed(42)
+
+num_games <- 1000
+bet_ratio <- seq(0.1,1,by = 0.1)
+result <- numeric(10)
+
+for(r in 1:10){
+ratio <- bet_ratio[r]
+money <- 1000
+for(i in 1:num_games){
+    random_number <- runif(1)
+    if(random_number <0.6) {
+        money <- money + (money*ratio)
+    } else {
+        money <- money - (money*ratio)
+    }
+}
+
+result[r] <- money
+}
+
+print(result)
+```
+
+시뮬레이션에서도 볼 수 있듯이, 20%의 비율로 배팅하였을 때 가장 큰 수익을 얻을 수 있음을 알수 있습니다.
