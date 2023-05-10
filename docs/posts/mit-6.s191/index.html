@@ -7,9 +7,9 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 <meta name="author" content="Jinwook Chang">
-<meta name="dcterms.date" content="2023-05-04">
+<meta name="dcterms.date" content="2023-05-10">
 
-<title>Note of myself - 딥러닝을 위한 Simple Linear Regression</title>
+<title>Note of myself - (2023) MIT 6.S191 Deep Learning</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -21,40 +21,6 @@ ul.task-list li input[type="checkbox"] {
   width: 0.8em;
   margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
   vertical-align: middle;
-}
-/* CSS for syntax highlighting */
-pre > code.sourceCode { white-space: pre; position: relative; }
-pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
-pre > code.sourceCode > span:empty { height: 1.2em; }
-.sourceCode { overflow: visible; }
-code.sourceCode > span { color: inherit; text-decoration: inherit; }
-div.sourceCode { margin: 1em 0; }
-pre.sourceCode { margin: 0; }
-@media screen {
-div.sourceCode { overflow: auto; }
-}
-@media print {
-pre > code.sourceCode { white-space: pre-wrap; }
-pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
-}
-pre.numberSource code
-  { counter-reset: source-line 0; }
-pre.numberSource code > span
-  { position: relative; left: -4em; counter-increment: source-line; }
-pre.numberSource code > span > a:first-child::before
-  { content: counter(source-line);
-    position: relative; left: -1em; text-align: right; vertical-align: baseline;
-    border: none; display: inline-block;
-    -webkit-touch-callout: none; -webkit-user-select: none;
-    -khtml-user-select: none; -moz-user-select: none;
-    -ms-user-select: none; user-select: none;
-    padding: 0 4px; width: 4em;
-  }
-pre.numberSource { margin-left: 3em;  padding-left: 4px; }
-div.sourceCode
-  {   }
-@media screen {
-pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
 }
 </style>
 
@@ -104,8 +70,6 @@ gtag('js', new Date());
 gtag('config', 'G-D7YERGZ04Y', { 'anonymize_ip': true});
 </script>
 
-  <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
-  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
 
 <link rel="stylesheet" href="../../styles.css">
 </head>
@@ -157,12 +121,10 @@ gtag('config', 'G-D7YERGZ04Y', { 'anonymize_ip': true});
 <header id="title-block-header" class="quarto-title-block default page-columns page-full">
   <div class="quarto-title-banner page-columns page-full">
     <div class="quarto-title column-body">
-      <h1 class="title">딥러닝을 위한 Simple Linear Regression</h1>
+      <h1 class="title">(2023) MIT 6.S191 Deep Learning</h1>
                                 <div class="quarto-categories">
                 <div class="quarto-category">DataScience</div>
-                <div class="quarto-category">Regression</div>
                 <div class="quarto-category">DeepLearning</div>
-                <div class="quarto-category">Script</div>
               </div>
                   </div>
   </div>
@@ -180,14 +142,14 @@ gtag('config', 'G-D7YERGZ04Y', { 'anonymize_ip': true});
       <div>
       <div class="quarto-title-meta-heading">Published</div>
       <div class="quarto-title-meta-contents">
-        <p class="date">May 4, 2023</p>
+        <p class="date">May 10, 2023</p>
       </div>
     </div>
     
       <div>
       <div class="quarto-title-meta-heading">Modified</div>
       <div class="quarto-title-meta-contents">
-        <p class="date-modified">May 4, 2023</p>
+        <p class="date-modified">May 10, 2023</p>
       </div>
     </div>
       
@@ -204,73 +166,16 @@ gtag('config', 'G-D7YERGZ04Y', { 'anonymize_ip': true});
 
 
 
-<p>하기와 같이 공부한 시간과 성적의 데이터가 있을 때, 시간을 통해 성적를 예측하고자 합니다. 두 변수의 관계가 선형적이라 가정할 때, 하기의 파란색 선과 같이 점수를 가장 잘 예측하는 선을 찾는 것이 이번 포스트의 목적입니다.</p>
-<div class="cell">
-<div class="cell-output cell-output-stdout">
-<pre><code># A tibble: 4 × 2
-  hours score
-  &lt;dbl&gt; &lt;dbl&gt;
-1    10    90
-2     9    80
-3     3    50
-4     2    30</code></pre>
-</div>
-</div>
-<div class="cell">
-<div class="cell-output-display">
-<p><img src="index_files/figure-html/plot1-1.png" class="img-fluid" width="672"></p>
-</div>
-</div>
-<p>위의 선을 다음과 같은 식으로 표기하도록 해봅시다.</p>
-<p><span class="math display">\[ H(x) = Wx + b \]</span> 이 선과 실제 데이터의 오차는 하기와 같이 표기할 수 있습니다.</p>
-<p><span class="math display">\[ cost(W,b) = \frac{1}{m}\sum_{i=1}^{m}(H(x^{(i)}) - y^{(i)})^2 \]</span></p>
-<p>여기서 우리의 목적은 cost(오차)를 최소화 할 수 있는 W,b의 쌍을 찾는 것입니다. 오차를 최소화 하는 값을 찾기 위해, Gradient Descent를 통해 확인해보도록 하겠습니다.</p>
+<p>2023년 MIT에서 강의된 6.S191 강좌의 Lab의이해를 돕기위해 작성되었습니다. Lab에 대해서는 <a href="https://github.com/aamini/introtodeeplearning/">이곳</a>에서 확인가능하며,<br>
+해당 강좌는 <a href="https://www.youtube.com/playlist?list=PLtBw6njQRU-rwp5__7C0oIVt26ZgjG9NI">여기</a>서 확인가능합니다.</p>
 <ol type="1">
-<li>초기 값 W,b에 대한 각각의 편미분 값을 구합니다.</li>
-<li>편미분 값에 learning rate <span class="math inline">\(\alpha\)</span>를 곱해줍니다.</li>
-<li>W, b에 곱해준 값을 뺀 후 W, b 값을 업데이트 합니다.</li>
-<li>cost가 만족할만한 수준이 될 때 까지 1 ~ 3을 반복합니다.</li>
+<li><a href="../intro-to-tensorflow">Lab1-Part1 Intro to Tensorflow</a></li>
+<li><a href="../music-generation">Lab1-Part2 Music Generation</a></li>
+<li><a href="">Lab2-Part1 MNIST</a></li>
+<li><a href="">Lab2-Part2 Face Detection</a></li>
+<li><a href="">Lab3-Part1 Introduction Caspa</a></li>
+<li><a href="">Lab3-Part2 Bias and Uncertainty</a></li>
 </ol>
-<p><span class="math display">\[ W := W - \alpha\frac{\partial}{\partial W}cost(W,b) \]</span> <span class="math display">\[ b := b - \alpha\frac{\partial}{\partial b}cost(W,b) \]</span> 예시 데이터를 아래의 스크립트를 통해 <span class="math inline">\(Wx + b\)</span>를 구해보도록 하겠습니다.</p>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="co"># 필요한 라이브러리 불러오기</span></span>
-<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span>
-<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(glue)</span>
-<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a><span class="co"># Gradient Descent 함수 정의</span></span>
-<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>gradient_descent_simple_lr <span class="ot">&lt;-</span> <span class="cf">function</span>(X, y, <span class="at">alpha =</span> <span class="fl">0.005</span>, <span class="at">iterations =</span> <span class="dv">3000</span>) {</span>
-<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a>  m <span class="ot">&lt;-</span> <span class="fu">length</span>(X)</span>
-<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a>  b <span class="ot">&lt;-</span> <span class="fu">runif</span>(<span class="dv">1</span>) <span class="co"># 절편 초기화</span></span>
-<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a>  w <span class="ot">&lt;-</span> <span class="fu">runif</span>(<span class="dv">1</span>) <span class="co"># 가중치 초기화</span></span>
-<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a>  </span>
-<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a>  <span class="cf">for</span> (i <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span>iterations) {</span>
-<span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a>    y_hat <span class="ot">&lt;-</span> w <span class="sc">*</span> X <span class="sc">+</span> b</span>
-<span id="cb2-13"><a href="#cb2-13" aria-hidden="true" tabindex="-1"></a>    error <span class="ot">&lt;-</span> y <span class="sc">-</span> y_hat</span>
-<span id="cb2-14"><a href="#cb2-14" aria-hidden="true" tabindex="-1"></a>    b_gradient <span class="ot">&lt;-</span> <span class="fu">sum</span>(error) <span class="sc">*</span> (<span class="sc">-</span><span class="dv">2</span> <span class="sc">/</span> m)</span>
-<span id="cb2-15"><a href="#cb2-15" aria-hidden="true" tabindex="-1"></a>    w_gradient <span class="ot">&lt;-</span> <span class="fu">sum</span>(error <span class="sc">*</span> X) <span class="sc">*</span> (<span class="sc">-</span><span class="dv">2</span> <span class="sc">/</span> m)</span>
-<span id="cb2-16"><a href="#cb2-16" aria-hidden="true" tabindex="-1"></a>    b <span class="ot">&lt;-</span> b <span class="sc">-</span> alpha <span class="sc">*</span> b_gradient</span>
-<span id="cb2-17"><a href="#cb2-17" aria-hidden="true" tabindex="-1"></a>    w <span class="ot">&lt;-</span> w <span class="sc">-</span> alpha <span class="sc">*</span> w_gradient</span>
-<span id="cb2-18"><a href="#cb2-18" aria-hidden="true" tabindex="-1"></a>  }</span>
-<span id="cb2-19"><a href="#cb2-19" aria-hidden="true" tabindex="-1"></a>  </span>
-<span id="cb2-20"><a href="#cb2-20" aria-hidden="true" tabindex="-1"></a>  <span class="fu">return</span>(<span class="fu">list</span>(<span class="st">"b"</span> <span class="ot">=</span> b, <span class="st">"W"</span> <span class="ot">=</span> w))</span>
-<span id="cb2-21"><a href="#cb2-21" aria-hidden="true" tabindex="-1"></a>}</span>
-<span id="cb2-22"><a href="#cb2-22" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-23"><a href="#cb2-23" aria-hidden="true" tabindex="-1"></a><span class="co"># Gradient Descent 실행</span></span>
-<span id="cb2-24"><a href="#cb2-24" aria-hidden="true" tabindex="-1"></a>result <span class="ot">&lt;-</span> <span class="fu">gradient_descent_simple_lr</span>(example<span class="sc">$</span>hours, example<span class="sc">$</span>score)</span>
-<span id="cb2-25"><a href="#cb2-25" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-26"><a href="#cb2-26" aria-hidden="true" tabindex="-1"></a><span class="co"># 결과 출력</span></span>
-<span id="cb2-27"><a href="#cb2-27" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-28"><a href="#cb2-28" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span>(<span class="fu">glue</span>(<span class="st">"절편 : {result$b} </span><span class="sc">\n</span><span class="st">가중치 : {result$W}"</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>절편 : 22.8894921206597 
-가중치 : 6.60130678294047</code></pre>
-</div>
-<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>mod <span class="ot">&lt;-</span> <span class="fu">lm</span>(score <span class="sc">~</span> hours, example)</span>
-<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span>(mod<span class="sc">$</span>coefficients)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>22.9 6.6</code></pre>
-</div>
-</div>
 
 
 

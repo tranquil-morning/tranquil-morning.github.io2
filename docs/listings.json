@@ -2,6 +2,8 @@
   {
     "listing": "/index.html",
     "items": [
+      "/posts/intro-to-tensorflow/index.html",
+      "/posts/mit-6.s191/index.html",
       "/posts/kelly-criterion/index.html",
       "/posts/dl-multi-variables-linear-regression/index.html",
       "/posts/dl-simple-linear-regression/index.html",

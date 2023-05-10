@@ -1,0 +1,18 @@
+---
+title: "(2023) MIT 6.S191 Deep Learning"
+author: "Jinwook Chang"
+date: "2023-05-10"
+date-modified: "2023-05-10"
+categories: [DataScience, DeepLearning]
+---
+
+2023년 MIT에서 강의된 6.S191 강좌의 Lab의이해를 돕기위해 작성되었습니다.
+Lab에 대해서는 [이곳](https://github.com/aamini/introtodeeplearning/)에서 확인가능하며,  
+해당 강좌는 [여기](https://www.youtube.com/playlist?list=PLtBw6njQRU-rwp5__7C0oIVt26ZgjG9NI)서 확인가능합니다.
+
+1. [Lab1-Part1 Intro to Tensorflow](../intro-to-tensorflow)
+2. [Lab1-Part2 Music Generation](../music-generation)
+3. [Lab2-Part1 MNIST]()
+4. [Lab2-Part2 Face Detection]()
+5. [Lab3-Part1 Introduction Caspa]()
+6. [Lab3-Part2 Bias and Uncertainty]()
