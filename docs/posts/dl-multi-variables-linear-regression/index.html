@@ -263,10 +263,10 @@ x1, x2, x3 는 quiz1, quiz2, midterm의 점수 (행 벡터) w1, w2, w3 는 quiz1
 <span id="cb2-28"><a href="#cb2-28" aria-hidden="true" tabindex="-1"></a><span class="st">quiz2 : {result[3,]}</span></span>
 <span id="cb2-29"><a href="#cb2-29" aria-hidden="true" tabindex="-1"></a><span class="st">midterm : {result[4,]}"</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>절편 : 0.622163484428753
-quiz1 : 0.452707524024104
-quiz2 : 0.525627914161855
-midterm : 1.01605264457251</code></pre>
+<pre><code>절편 : 0.616439443438877
+quiz1 : 1.79538749134914
+quiz2 : 0.628151238241493
+midterm : -0.405326284524674</code></pre>
 </div>
 <div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span>(<span class="st">"예측: </span><span class="sc">\n</span><span class="st">"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
@@ -275,11 +275,11 @@ midterm : 1.01605264457251</code></pre>
 <div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(<span class="fu">cbind</span>(<span class="dv">1</span>,<span class="fu">as.matrix</span>(example[,<span class="sc">-</span><span class="dv">4</span>])) <span class="sc">%*%</span> result)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>        final
-[1,] 151.9240
-[2,] 185.5042
-[3,] 180.1900
-[4,] 197.1989
-[5,] 139.4849</code></pre>
+[1,] 151.5324
+[2,] 184.3588
+[3,] 181.0883
+[4,] 193.9998
+[5,] 144.7649</code></pre>
 </div>
 <div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span>(<span class="st">"실제: </span><span class="sc">\n</span><span class="st">"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">

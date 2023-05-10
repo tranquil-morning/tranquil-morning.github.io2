@@ -1,5 +1,5 @@
 ---
-title: "(2023) MIT 6.S191 01 Intro to TensorFlow"
+title: "2023 MIT 6.S191 01 Intro to TensorFlow"
 author: "Jinwook Chang"
 date: "2023-05-10"
 date-modified: "2023-05-10"
