@@ -4,10 +4,9 @@ author: "Jinwook Chang"
 date: "2023-05-11"
 date-modified: "2023-05-11"
 categories: [DataScience, DeepLearning, Script]
-draft: true
 ---
 
-2023년 MIT에서 강의된 6.S191 강좌의 Lab의이해를 돕기위해 작성되었습니다.
+2023년 MIT에서 강의된 6.S191 강좌의 Lab의이해를 돕기위해 작성되었습니다.  
 Lab에 대해서는 [이곳](https://github.com/aamini/introtodeeplearning/)에서 확인가능하며,  
 해당 강좌는 [여기](https://www.youtube.com/playlist?list=PLtBw6njQRU-rwp5__7C0oIVt26ZgjG9NI)서 확인가능합니다.
 
