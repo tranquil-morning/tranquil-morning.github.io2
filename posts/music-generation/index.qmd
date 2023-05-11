@@ -7,8 +7,7 @@ categories: [DataScience, DeepLearning, Script]
 ---
 
 2023년 MIT에서 강의된 6.S191 강좌의 Lab의이해를 돕기위해 작성되었습니다.  
-Lab에 대해서는 [이곳](https://github.com/aamini/introtodeeplearning/)에서 확인가능하며,  
-해당 강좌는 [여기](https://www.youtube.com/playlist?list=PLtBw6njQRU-rwp5__7C0oIVt26ZgjG9NI)서 확인가능합니다.
+Lab에 대해서는 [이곳](https://github.com/aamini/introtodeeplearning/)에서 확인가능하며, 해당 강좌는 [여기](https://www.youtube.com/playlist?list=PLtBw6njQRU-rwp5__7C0oIVt26ZgjG9NI)서 확인가능합니다.
 
 1. [Lab1-Part1 Intro to Tensorflow](../intro-to-tensorflow)
 2. [Lab1-Part2 Music Generation](../music-generation)
@@ -377,6 +376,8 @@ for iter in tqdm(range(num_training_iterations)):
 model.save_weights(checkpoint_prefix)
 ```
 
+![](train_result.png)
+
 이제 새로운 음악을 만들어보도록 합시다.
 우선 `batch_size`를 1로 줄여 새로운 모델을 불러옵니다.
 
@@ -454,8 +455,6 @@ generated_text = generate_text(model, start_string="X", generation_length=1000)
 generated_songs = mdl.lab1.extract_song_snippet(generated_text)
 
 ```
-
-![](train_result.png)
 
 <audio controls>
   <source src="https://github.com/tranquil-morning/tranquil-morning.github.io/raw/main/others/gen_song.wav">

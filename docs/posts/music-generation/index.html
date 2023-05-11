@@ -202,8 +202,7 @@ gtag('config', 'G-D7YERGZ04Y', { 'anonymize_ip': true});
 
 
 <p>2023년 MIT에서 강의된 6.S191 강좌의 Lab의이해를 돕기위해 작성되었습니다.<br>
-Lab에 대해서는 <a href="https://github.com/aamini/introtodeeplearning/">이곳</a>에서 확인가능하며,<br>
-해당 강좌는 <a href="https://www.youtube.com/playlist?list=PLtBw6njQRU-rwp5__7C0oIVt26ZgjG9NI">여기</a>서 확인가능합니다.</p>
+Lab에 대해서는 <a href="https://github.com/aamini/introtodeeplearning/">이곳</a>에서 확인가능하며, 해당 강좌는 <a href="https://www.youtube.com/playlist?list=PLtBw6njQRU-rwp5__7C0oIVt26ZgjG9NI">여기</a>서 확인가능합니다.</p>
 <ol type="1">
 <li><a href="../intro-to-tensorflow">Lab1-Part1 Intro to Tensorflow</a></li>
 <li><a href="../music-generation">Lab1-Part2 Music Generation</a></li>
@@ -496,6 +495,7 @@ RNN을 이용해 ABC 기보법을 훈련하여 노래를 생성해보도록 합�
 <span id="cb19-51"><a href="#cb19-51" aria-hidden="true" tabindex="-1"></a>    </span>
 <span id="cb19-52"><a href="#cb19-52" aria-hidden="true" tabindex="-1"></a><span class="co"># Save the trained model and the weights</span></span>
 <span id="cb19-53"><a href="#cb19-53" aria-hidden="true" tabindex="-1"></a>model.save_weights(checkpoint_prefix)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p><img src="train_result.png" class="img-fluid"></p>
 <p>이제 새로운 음악을 만들어보도록 합시다. 우선 <code>batch_size</code>를 1로 줄여 새로운 모델을 불러옵니다.</p>
 <div class="sourceCode" id="cb20"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a>model <span class="op">=</span> build_model(vocab_size, embedding_dim, rnn_units, batch_size<span class="op">=</span><span class="dv">1</span>) <span class="co"># </span><span class="al">TODO</span></span>
 <span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a></span>
@@ -558,7 +558,6 @@ RNN을 이용해 ABC 기보법을 훈련하여 노래를 생성해보도록 합�
 <span id="cb22-35"><a href="#cb22-35" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb22-36"><a href="#cb22-36" aria-hidden="true" tabindex="-1"></a>generated_text <span class="op">=</span> generate_text(model, start_string<span class="op">=</span><span class="st">"X"</span>, generation_length<span class="op">=</span><span class="dv">1000</span>)</span>
 <span id="cb22-37"><a href="#cb22-37" aria-hidden="true" tabindex="-1"></a>generated_songs <span class="op">=</span> mdl.lab1.extract_song_snippet(generated_text)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<p><img src="train_result.png" class="img-fluid"></p>
 <audio controls="">
 <source src="https://github.com/tranquil-morning/tranquil-morning.github.io/raw/main/others/gen_song.wav">
 </audio>
