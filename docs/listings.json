@@ -2,6 +2,7 @@
   {
     "listing": "/index.html",
     "items": [
+      "/posts/mnist/index.html",
       "/posts/music-generation/index.html",
       "/posts/intro-to-tensorflow/index.html",
       "/posts/mit-6s191/index.html",

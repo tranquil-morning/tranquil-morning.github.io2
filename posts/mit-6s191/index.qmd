@@ -13,7 +13,7 @@ Lab에 대해서는 [이곳](https://github.com/aamini/introtodeeplearning/)에�
 
 1. [Lab1-Part1 Intro to Tensorflow](../intro-to-tensorflow)
 2. [Lab1-Part2 Music Generation](../music-generation)
-3. [Lab2-Part1 MNIST]()
-4. [Lab2-Part2 Face Detection]()
+3. [Lab2-Part1 MNIST](../mnist)
+4. [Lab2-Part2 Face Detection](../face-detection)
 5. [Lab3-Part1 Introduction Caspa]()
 6. [Lab3-Part2 Bias and Uncertainty]()
