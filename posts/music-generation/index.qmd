@@ -1,0 +1,463 @@
+---
+title: "2023 MIT 6.S191 02 Music Generation with RNNs"
+author: "Jinwook Chang"
+date: "2023-05-11"
+date-modified: "2023-05-11"
+categories: [DataScience, DeepLearning, Script]
+draft: true
+---
+
+2023년 MIT에서 강의된 6.S191 강좌의 Lab의이해를 돕기위해 작성되었습니다.
+Lab에 대해서는 [이곳](https://github.com/aamini/introtodeeplearning/)에서 확인가능하며,  
+해당 강좌는 [여기](https://www.youtube.com/playlist?list=PLtBw6njQRU-rwp5__7C0oIVt26ZgjG9NI)서 확인가능합니다.
+
+1. [Lab1-Part1 Intro to Tensorflow](../intro-to-tensorflow)
+2. [Lab1-Part2 Music Generation](../music-generation)
+3. [Lab2-Part1 MNIST]()
+4. [Lab2-Part2 Face Detection]()
+5. [Lab3-Part1 Introduction Caspa]()
+6. [Lab3-Part2 Bias and Uncertainty]()
+
+
+### 2.1 Dependencies
+
+우선, 본 과제를 위한 라이브러리를 설치하도록 하겠습니다
+
+```python
+# Import Tensorflow 2.0
+%tensorflow_version 2.x
+import tensorflow as tf 
+
+# Download and import the MIT Introduction to Deep Learning package
+!pip install mitdeeplearning
+import mitdeeplearning as mdl
+
+# Import all remaining packages
+import numpy as np
+import os
+import time
+import functools
+from IPython import display as ipythondisplay
+from tqdm import tqdm
+!apt-get install abcmidi timidity > /dev/null 2>&1
+
+# Check that we are using a GPU, if not switch runtimes
+#   using Runtime > Change Runtime Type > GPU
+assert len(tf.config.list_physical_devices('GPU')) > 0
+```
+
+### 2.2 데이터
+
+[ABC 기보법](https://ko.wikipedia.org/wiki/ABC_%EA%B8%B0%EB%B3%B4%EB%B2%95)으로 구성된 아일랜드 포크 음악의 데이터를 이용하여 본 과제를 진행하겠습니다.
+
+```python
+# Download the dataset
+songs = mdl.lab1.load_training_data()
+
+# Print one of the songs to inspect it in greater detail!
+example_song = songs[0]
+print("\nExample song: ")
+print(example_song)
+```
+
+```python
+Found 817 songs in text
+
+Example song: 
+X:1
+T:Alexander's
+Z: id:dc-hornpipe-1
+M:C|
+L:1/8
+K:D Major
+(3ABc|dAFA DFAd|fdcd FAdf|gfge fefd|(3efe (3dcB A2 (3ABc|!
+dAFA DFAd|fdcd FAdf|gfge fefd|(3efe dc d2:|!
+AG|FAdA FAdA|GBdB GBdB|Acec Acec|dfaf gecA|!
+FAdA FAdA|GBdB GBdB|Aceg fefd|(3efe dc d2:|!
+```
+
+ABC 기보법을 음악파일로 변환 후 실행시켜 봅시다.
+
+```python
+mdl.lab1.play_song(example_song)
+```
+
+<audio controls>
+  <source src="https://github.com/tranquil-morning/tranquil-morning.github.io/raw/main/others/sample.wav">
+</audio>
+
+한가지 유념해야할 부분은 이 데이터가 단순히 음악의 노트만을 포함한 것이 아니라 노래 제목, 키, 템포까지 포함하고 있다는 것입니다. 이러한 다양한 문자열들이 학습에 있어서 어떠한 영향을 미칠까요? 이 텍스트 데이터를 숫자로 표현하기 위한 기법도 이번 과제에서 함께 알아봅시다.
+
+```python
+# Join our list of song strings into a single string containing all songs
+songs_joined = "\n\n".join(songs) 
+
+# Find all unique characters in the joined string
+vocab = sorted(set(songs_joined))
+print("There are", len(vocab), "unique characters in the dataset")
+```
+
+```python
+There are 83 unique characters in the dataset
+```
+
+### 2.3 데이터 프리 프로세싱
+
+우리는 RNN을 훈련시켜 ABC 기보법의 패턴을 학습하고자 합니다.  
+그리고 이 모델을 활용하여 새로운 음악을 만들 것입니다.
+
+이를 고려한다면, 우리가 모델에서 얻고자 하는 것은, 문자 열이 주어졌을 때 다음 문자가 무엇인가에 대한 것입니다.  
+
+RNN 모델을 훈련시키기 앞서 텍스트 데이터를 숫자로 표현해보겠습니다.  
+이를 위해 두 개의 lookup table을 만듭니다.  
+하나는 83개의 character를 number로, 다른 하나는 number를 다시 character로 변환해주는 테이블입니다.  
+
+```python
+### Define numerical representation of text ###
+
+# Create a mapping from character to unique index.
+# For example, to get the index of the character "d", 
+#   we can evaluate `char2idx["d"]`.  
+char2idx = {u:i for i, u in enumerate(vocab)}
+
+# Create a mapping from indices to characters. This is
+#   the inverse of char2idx and allows us to convert back
+#   from unique index to the character in our vocabulary.
+idx2char = np.array(vocab)
+```
+
+이제 각 문자들은 하기와 같이 숫자와 매칭됩니다.
+
+```python
+{
+  '\n':   0,
+  ' ' :   1,
+  '!' :   2,
+  '"' :   3,
+  '#' :   4,
+  "'" :   5,
+  '(' :   6,
+  ')' :   7,
+  ',' :   8,
+  '-' :   9,
+  '.' :  10,
+  '/' :  11,
+  '0' :  12,
+  '1' :  13,
+  '2' :  14,
+  '3' :  15,
+  '4' :  16,
+  '5' :  17,
+  '6' :  18,
+  '7' :  19,
+  ...
+}
+```
+
+이제 각 노래를 숫자로 변환시켜봅시다.
+
+```python
+### Vectorize the songs string ###
+def vectorize_string(string):
+  result = []
+  for c in string:
+    result.append(char2idx[c])
+  result = np.array(result)
+  return result  
+
+vectorized_songs = vectorize_string(songs_joined)
+```
+
+```python
+'X:1\nT:Alex' ---- characters mapped to int ----> [49 22 13  0 45 22 26 67 60 79]
+```
+
+데이터 셋을 숫자로 변경하였으니, training example과 target을 정해봅시다.  
+우리는 RNN에 `seq_length` 만큼의 input을 넣고 `seq_length + 1` 까지의 숫자를 예측해야 합니다.  
+
+예를 들어 `seq_length` 가 4일 때 "hell"이라는 단어가 input이 되면, "ello"를 예측하는 것입니다.  
+
+```python
+### Batch definition to create training examples ###
+
+def get_batch(vectorized_songs, seq_length, batch_size):
+  # the length of the vectorized songs string
+  n = vectorized_songs.shape[0] - 1
+  # randomly choose the starting indices for the examples in the training batch
+  idx = np.random.choice(n-seq_length, batch_size)
+
+  input_batch = [vectorized_songs[i : i+seq_length] for i in idx]
+  output_batch = [vectorized_songs[i+1 : i+seq_length+1] for i in idx]
+
+
+  # x_batch, y_batch provide the true inputs and targets for network training
+  x_batch = np.reshape(input_batch, [batch_size, seq_length])
+  y_batch = np.reshape(output_batch, [batch_size, seq_length])
+  return x_batch, y_batch
+```
+
+### 2.4 RNN 모델
+
+이제 RNN 모델을 훈련할 모든 준비가 완료되었습니다!  
+RNN을 이용해 ABC 기보법을 훈련하여 노래를 생성해보도록 합시다.  
+
+우리가 사용할 Layer들은 다음과 같습니다:
+
+* tf.keras.layers.Embedding: 각 문자의 숫자를 차원이 있는 벡터에 매핑하는 학습 가능한 조회 테이블로 구성된 입력 레이어입니다.
+
+* tf.keras.layers.LSTM: 크기가 있는 LSTM 네트워크입니다. 
+
+* tf.keras.layers.Dense: 출력이 있는 출력 레이어입니다.
+
+![](lstm_unrolled-01-01.png)
+
+```python
+def LSTM(rnn_units): 
+  return tf.keras.layers.LSTM(
+    rnn_units, 
+    return_sequences=True, 
+    recurrent_initializer='glorot_uniform',
+    recurrent_activation='sigmoid',
+    stateful=True,
+  )
+
+### Defining the RNN Model ###
+
+'''TODO: Add LSTM and Dense layers to define the RNN model using the Sequential API.'''
+def build_model(vocab_size, embedding_dim, rnn_units, batch_size):
+  model = tf.keras.Sequential([
+    # Layer 1: Embedding layer to transform indices into dense vectors 
+    #   of a fixed embedding size
+    tf.keras.layers.Embedding(vocab_size, embedding_dim, batch_input_shape=[batch_size, None]),
+
+    # Layer 2: LSTM with `rnn_units` number of units. 
+    # TODO: Call the LSTM function defined above to add this layer.
+    LSTM(rnn_units),
+
+    # Layer 3: Dense (fully-connected) layer that transforms the LSTM output
+    #   into the vocabulary size. 
+    # TODO: Add the Dense layer.
+    tf.keras.layers.Dense(vocab_size)
+  ])
+
+  return model
+
+# Build a simple model with default hyperparameters. You will get the 
+#   chance to change these later.
+model = build_model(len(vocab), embedding_dim=256, rnn_units=1024, batch_size=32)
+```
+
+```python
+model.summary()
+```
+
+```python
+Model: "sequential"
+_________________________________________________________________
+ Layer (type)                Output Shape              Param #   
+=================================================================
+ embedding (Embedding)       (32, None, 256)           21248     
+                                                                 
+ lstm (LSTM)                 (32, None, 1024)          5246976   
+                                                                 
+ dense (Dense)               (32, None, 83)            85075     
+                                                                 
+=================================================================
+Total params: 5,353,299
+Trainable params: 5,353,299
+Non-trainable params: 0
+_________________________________________________________________
+```
+
+```python
+x, y = get_batch(vectorized_songs, seq_length=100, batch_size=32)
+pred = model(x)
+print("Input shape:      ", x.shape, " # (batch_size, sequence_length)")
+print("Prediction shape: ", pred.shape, "# (batch_size, sequence_length, vocab_size)")
+```
+
+```python
+Input shape:       (32, 100)  # (batch_size, sequence_length)
+Prediction shape:  (32, 100, 83) # (batch_size, sequence_length, vocab_size)
+```
+
+이제 모델 훈련을 위한 Loss 함수를 정의해보겠습니다.
+이 모델은 multi label을 예측하는 classification 모델입니다.  
+이런 경우 tensorflow에서 `sparase_categorical_crossentropy`를 사용하는 것이 적절합니다.
+
+```python
+### Defining the loss function ###
+
+def compute_loss(labels, logits):
+  loss = tf.keras.losses.sparse_categorical_crossentropy(labels, logits, from_logits=True)
+  return loss
+
+example_batch_loss = compute_loss(y, pred)
+
+print("Prediction shape: ", pred.shape, " # (batch_size, sequence_length, vocab_size)") 
+print("scalar_loss:      ", example_batch_loss.numpy().mean())
+```
+
+모델 학습을 위한 Hyperparameter를 세팅해 봅시다.
+
+```python
+### Hyperparameter setting and optimization ###
+
+# Optimization parameters:
+num_training_iterations = 2000  # Increase this to train longer
+batch_size = 4  # Experiment between 1 and 64
+seq_length = 100  # Experiment between 50 and 500
+learning_rate = 5e-3  # Experiment between 1e-5 and 1e-1
+
+# Model parameters: 
+vocab_size = len(vocab)
+embedding_dim = 256 
+rnn_units = 1024  # Experiment between 1 and 2048
+
+# Checkpoint location: 
+checkpoint_dir = './training_checkpoints'
+checkpoint_prefix = os.path.join(checkpoint_dir, "my_ckpt")
+```
+
+이제 train을 시작해봅시다.
+이번 과제에서는 `Adam` 옵티마이저와 `tf.GradientTape`를 활용합니다.
+
+```python
+### Define optimizer and training operation ###
+
+
+model = build_model(vocab_size, embedding_dim, rnn_units, batch_size)
+
+
+optimizer = tf.keras.optimizers.Adam(learning_rate)
+
+@tf.function
+def train_step(x, y): 
+  # Use tf.GradientTape()
+  with tf.GradientTape() as tape:
+  
+    y_hat = model(x)
+  
+    loss = compute_loss(y,y_hat)
+
+  # Now, compute the gradients 
+  '''TODO: complete the function call for gradient computation. 
+      Remember that we want the gradient of the loss with respect all 
+      of the model parameters. 
+      HINT: use `model.trainable_variables` to get a list of all model
+      parameters.'''
+  grads = tape.gradient(loss, model.trainable_variables)
+  
+  # Apply the gradients to the optimizer so it can update the model accordingly
+  optimizer.apply_gradients(zip(grads, model.trainable_variables))
+  return loss
+
+##################
+# Begin training!#
+##################
+
+history = []
+plotter = mdl.util.PeriodicPlotter(sec=2, xlabel='Iterations', ylabel='Loss')
+if hasattr(tqdm, '_instances'): tqdm._instances.clear() # clear if it exists
+
+for iter in tqdm(range(num_training_iterations)):
+
+  # Grab a batch and propagate it through the network
+  x_batch, y_batch = get_batch(vectorized_songs, seq_length, batch_size)
+  loss = train_step(x_batch, y_batch)
+
+  # Update the progress bar
+  history.append(loss.numpy().mean())
+  plotter.plot(history)
+
+  # Update the model with the changed weights!
+  if iter % 100 == 0:     
+    model.save_weights(checkpoint_prefix)
+    
+# Save the trained model and the weights
+model.save_weights(checkpoint_prefix)
+```
+
+이제 새로운 음악을 만들어보도록 합시다.
+우선 `batch_size`를 1로 줄여 새로운 모델을 불러옵니다.
+
+```python
+model = build_model(vocab_size, embedding_dim, rnn_units, batch_size=1) # TODO
+
+# Restore the model weights for the last checkpoint after training
+model.load_weights(tf.train.latest_checkpoint(checkpoint_dir))
+model.build(tf.TensorShape([1, None]))
+
+model.summary()
+
+```
+
+```python
+Model: "sequential_4"
+_________________________________________________________________
+ Layer (type)                Output Shape              Param #   
+=================================================================
+ embedding_4 (Embedding)     (1, None, 256)            21248     
+                                                                 
+ lstm_4 (LSTM)               (1, None, 1024)           5246976   
+                                                                 
+ dense_4 (Dense)             (1, None, 83)             85075     
+                                                                 
+=================================================================
+Total params: 5,353,299
+Trainable params: 5,353,299
+Non-trainable params: 0
+_________________________________________________________________
+```
+
+이제 prediction을 해보도록 하겠습니다.
+
+![](lstm_inference.png)
+
+
+```python
+### Prediction of a generated song ###
+
+def generate_text(model, start_string, generation_length=1000):
+  # Evaluation step (generating ABC text using the learned RNN model)
+
+  # convert the start string to numbers (vectorize)
+  input_eval = [char2idx[s] for s in start_string]
+  input_eval = tf.expand_dims(input_eval, 0)
+
+  # Empty string to store our results
+  text_generated = []
+
+  # Here batch size == 1
+  model.reset_states()
+  tqdm._instances.clear()
+
+  for i in tqdm(range(generation_length)):
+      # evaluate the inputs and generate the next character predictions
+      predictions = model(input_eval)
+      
+      # Remove the batch dimension
+      predictions = tf.squeeze(predictions, 0)
+      
+      # use a multinomial distribution to sample'''
+      predicted_id = tf.random.categorical(predictions, num_samples=1)[-1,0].numpy()
+      
+      # Pass the prediction along with the previous hidden state
+      #   as the next inputs to the model
+      input_eval = tf.expand_dims([predicted_id], 0)
+      
+      # add the predicted character to the generated text!
+      text_generated.append(idx2char[predicted_id]) 
+    
+  return (start_string + ''.join(text_generated))
+
+generated_text = generate_text(model, start_string="X", generation_length=1000)
+generated_songs = mdl.lab1.extract_song_snippet(generated_text)
+
+```
+
+![](train_result.png)
+
+<audio controls>
+  <source src="https://github.com/tranquil-morning/tranquil-morning.github.io/raw/main/others/gen_song.wav">
+</audio>
