@@ -253,11 +253,11 @@ print(prediction)
 print("Label of this digit is:", test_labels[0])
 plt.imshow(test_images[0,:,:,0], cmap=plt.cm.binary)
 ```
-![](perdiction-example.png)
+![](prediction-example.png)
 
 좀 더 다양한 결과들을 확인해보겠습니다.
 
-![](perdiction-examples.png)
+![](prediction-examples.png)
 
 ### 1.4 GradientTape를 사용한 CNN
 
