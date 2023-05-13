@@ -344,7 +344,7 @@ Lab에 대해서는 <a href="https://github.com/aamini/introtodeeplearning/">이
 <p>VAE를 통해 이루고자 하는 목표는 얼굴 훈련 데이터에 대한 기본 잠재 공간의 표현을 학습하는 모델을 훈련하는 것입니다.<br>
 이렇게 학습된 표현은 데이터에서 어떤 특징이 과소 표현되거나 과대 표현되는지에 대한 정보를 제공합니다.</p>
 <p>VAE는 인코더-디코더 구조를 사용하여 입력 데이터의 잠재적 표현을 학습합니다. 컴퓨터 비전의 맥락에서 인코더 네트워크는 입력 이미지를 받아 평균과 표준 편차로 정의된 일련의 변수로 인코딩한 다음 이러한 매개 변수로 정의된 분포에서 샘플링된 잠재 변수 집합을 생성합니다. 그런 다음 디코더 네트워크는 이러한 변수를 ’디코딩’하여 원본 이미지의 재구성을 생성하고, 이 재구성은 학습 중에 모델이 어떤 잠재 변수를 학습하는 것이 중요한지 식별하는 데 사용됩니다.</p>
-<p><img src="vae.png" class="img-fluid"></p>
+<p><img src="vae.jpg" class="img-fluid"></p>
 <p>먼저 VAE의 Loss 함수에 대해 생각해 봅시다. 위의 그림에서와 같이 VAE는 정규 분포로 가정한 평균과 표준 편차를 학습하고, 이를 통해 기존의 이미지와 흡사한 이미지를 출력합니다. Loss는 이 두가지를 만족하기위해 Latent Loss와 Reconstruction Loss를 함께 최적화합니다.</p>
 <p>Latent Loss는 VAE에서 학습된 분포가 정규분포에 가깝도록 학습합니다. 정규 분포와의 차이를 구하기 위해 <a href="../kl-divergence">Kullback-Leibler Divergence</a>를 이용합니다. 쿨백-라이블러에 대한 내용은 링크를 참조 부탁드립니다.</p>
 <p><span class="math display">\[L_{KL}(\mu, \sigma) = \frac{1}{2}\sum_{j=0}^{k-1} (\sigma_j + \mu_j^2 - 1 - \log{\sigma_j})\]</span></p>
