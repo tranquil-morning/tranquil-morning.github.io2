@@ -19,7 +19,7 @@ Lab에 대해서는 [이곳](https://github.com/aamini/introtodeeplearning/)에�
 
 이번 과제에서는 Facial Detection System을 구성하고 이 모델에 Bias가 어떻게 구성되어있는지 확인해보겠습니다.
 
-```
+```python
 # Import Tensorflow 2.0
 %tensorflow_version 2.x
 import tensorflow as tf
@@ -47,7 +47,7 @@ import mitdeeplearning as mdl
 
 먼저 데이터를 다운받고 확인해봅시다.
 
-```
+```python
 # Get the training data: both images from CelebA and ImageNet
 path_to_training_data = tf.keras.utils.get_file('train_face.h5', 'https://www.dropbox.com/s/hlz8atheyozp1yx/train_face.h5?dl=1')
 # Instantiate a TrainingDatasetLoader using the downloaded dataset
@@ -64,7 +64,7 @@ loader = mdl.lab2.TrainingDatasetLoader(path_to_training_data)
 
 먼저 CNN 구조로 얼굴 인식 모델을 작성하겠습니다.
 
-```
+```python
 ### Define the CNN model ###
 
 n_filters = 12 # base number of convolutional filters
@@ -98,7 +98,7 @@ def make_standard_classifier(n_outputs=1):
 standard_classifier = make_standard_classifier()
 ```
 
-```
+```python
 ### Train the standard CNN ###
 
 # Training hyperparameters
@@ -140,7 +140,7 @@ for epoch in range(num_epochs):
 
 이제 모델을 평가해보겠습니다.
 
-```
+```python
 ### Evaluation of standard CNN ###
 
 # TRAINING DATA
@@ -193,7 +193,7 @@ $$L_{x}{(x,\hat{x})} = ||x-\hat{x}||_1$$
 
 $$L_{VAE} = c\cdot L_{KL} + L_{x}{(x,\hat{x})}$$
 
-```
+```python
 ### Defining the VAE loss function ###
 
 ''' Function to calculate VAE loss given:
@@ -231,7 +231,7 @@ $$z = \mu + e^{\left(\frac{1}{2} \cdot \log{\Sigma}\right)}\circ \epsilon$$
 
 여기서 μ는 평균이고 Σ는 공분산 행렬입니다. 이를 통해 VAE의 손실 함수를 깔끔하게 정의하고, 무작위로 샘플링된 잠재 변수를 생성하고, 역전파를 통해 학습할 수 있습니다
 
-```
+```python
 ### VAE Sampling ###
 
 """Sample latent variables via reparameterization with an isotropic unit Gaussian.
@@ -272,7 +272,7 @@ SS-VAE의 Loss 함수를 정의해보겠습니다.
 
 $$L_{total} = L_y(y,\hat{y}) + {I}_f(y)\Big[L_{VAE}\Big]$$
 
-```
+```python
 ### Loss function for SS-VAE ###
 
 """Loss function for SS-VAE.
@@ -311,7 +311,7 @@ def ss_vae_loss_function(x, x_pred, y, y_logit, mu, logsigma):
 
 이제 모델을 구성해보도록 합시다
 
-```
+```python
 ### Define the decoder portion of the SS-VAE ###
 
 def make_face_decoder_network(n_filters=12):
@@ -339,7 +339,7 @@ def make_face_decoder_network(n_filters=12):
   return decoder
   ```
 
-  ```
+  ```python
   ### Defining and creating the SS-VAE ###
 
 class SS_VAE(tf.keras.Model):
@@ -397,7 +397,7 @@ class SS_VAE(tf.keras.Model):
 ss_vae = SS_VAE(latent_dim=32)
 ```
 
-```
+```python
 ### Training the SS-VAE ###
 
 # Hyperparameters
@@ -465,7 +465,7 @@ SS-VAE를 훈련하려면 VAE 재구성 손실과 지도 분류 손실이 모두
 
 그렇다면 재구성 하기 힘든 결과일수록 학습이 덜 된 이미지라고 할 수 있겠죠. 즉, 재구성 손실이 높은 이미지들의 특징을 확인하여 우리가 훈련한 모델의 어떠한 부분이 부족한지 알 수 있습니다.
 
-```
+```python
 ### Linking model performance to uncertainty and bias
 
 # Load a random sample of 5000 faces from our dataset and compute the model performance on them

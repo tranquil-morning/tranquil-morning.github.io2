@@ -22,6 +22,40 @@ ul.task-list li input[type="checkbox"] {
   margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
   vertical-align: middle;
 }
+/* CSS for syntax highlighting */
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
 </style>
 
 
@@ -180,20 +214,20 @@ Lab에 대해서는 <a href="https://github.com/aamini/introtodeeplearning/">이
 <li><a href="">Lab3-Part2 Bias and Uncertainty</a></li>
 </ol>
 <p>이번 과제에서는 Facial Detection System을 구성하고 이 모델에 Bias가 어떻게 구성되어있는지 확인해보겠습니다.</p>
-<pre><code># Import Tensorflow 2.0
-%tensorflow_version 2.x
-import tensorflow as tf
-
-import IPython
-import functools
-import matplotlib.pyplot as plt
-import numpy as np
-from tqdm import tqdm
-
-
-# Download and import the MIT Introduction to Deep Learning package
-!pip install mitdeeplearning
-import mitdeeplearning as mdl</code></pre>
+<div class="sourceCode" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Import Tensorflow 2.0</span></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="op">%</span>tensorflow_version <span class="fl">2.</span><span class="er">x</span></span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> tensorflow <span class="im">as</span> tf</span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> IPython</span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> functools</span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> matplotlib.pyplot <span class="im">as</span> plt</span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> tqdm <span class="im">import</span> tqdm</span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a><span class="co"># Download and import the MIT Introduction to Deep Learning package</span></span>
+<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a><span class="op">!</span>pip install mitdeeplearning</span>
+<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> mitdeeplearning <span class="im">as</span> mdl</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <section id="dataset" class="level3">
 <h3 class="anchored" data-anchor-id="dataset">4.1 Dataset</h3>
 <p>얼굴 인식 모델을 만들기 위해, 두가지 데이터를 사용할 것입니다:</p>
@@ -203,10 +237,10 @@ import mitdeeplearning as mdl</code></pre>
 </ol>
 <p>이 데이터를 통해 이미지가 얼굴인지 아닌지 맞추는 binary classification 모델을 만들도록 하겠습니다.</p>
 <p>먼저 데이터를 다운받고 확인해봅시다.</p>
-<pre><code># Get the training data: both images from CelebA and ImageNet
-path_to_training_data = tf.keras.utils.get_file('train_face.h5', 'https://www.dropbox.com/s/hlz8atheyozp1yx/train_face.h5?dl=1')
-# Instantiate a TrainingDatasetLoader using the downloaded dataset
-loader = mdl.lab2.TrainingDatasetLoader(path_to_training_data)</code></pre>
+<div class="sourceCode" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Get the training data: both images from CelebA and ImageNet</span></span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>path_to_training_data <span class="op">=</span> tf.keras.utils.get_file(<span class="st">'train_face.h5'</span>, <span class="st">'https://www.dropbox.com/s/hlz8atheyozp1yx/train_face.h5?dl=1'</span>)</span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Instantiate a TrainingDatasetLoader using the downloaded dataset</span></span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>loader <span class="op">=</span> mdl.lab2.TrainingDatasetLoader(path_to_training_data)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <p><img src="data-example.png" class="img-fluid"></p>
 <p>얼굴 인식 모델에서 Bias라 하면 어떤 것을 뜻할까요?<br>
 특정 성별 인종에 대한 분류기의 작동이 미흡하거나, 안경과 같은 악세서리를 착용했을 때 작동이 미흡한 경우를 뜻할 것입니다.<br>
@@ -215,83 +249,83 @@ loader = mdl.lab2.TrainingDatasetLoader(path_to_training_data)</code></pre>
 <section id="cnn-model" class="level3">
 <h3 class="anchored" data-anchor-id="cnn-model">4.2 CNN Model</h3>
 <p>먼저 CNN 구조로 얼굴 인식 모델을 작성하겠습니다.</p>
-<pre><code>### Define the CNN model ###
-
-n_filters = 12 # base number of convolutional filters
-
-'''Function to define a standard CNN model'''
-def make_standard_classifier(n_outputs=1):
-  Conv2D = functools.partial(tf.keras.layers.Conv2D, padding='same', activation='relu')
-  BatchNormalization = tf.keras.layers.BatchNormalization
-  Flatten = tf.keras.layers.Flatten
-  Dense = functools.partial(tf.keras.layers.Dense, activation='relu')
-
-  model = tf.keras.Sequential([ 
-    Conv2D(filters=1*n_filters, kernel_size=5,  strides=2),
-    BatchNormalization(),
-    
-    Conv2D(filters=2*n_filters, kernel_size=5,  strides=2),
-    BatchNormalization(),
-
-    Conv2D(filters=4*n_filters, kernel_size=3,  strides=2),
-    BatchNormalization(),
-
-    Conv2D(filters=6*n_filters, kernel_size=3,  strides=2),
-    BatchNormalization(),
-
-    Flatten(),
-    Dense(512),
-    Dense(n_outputs, activation=None),
-  ])
-  return model
-
-standard_classifier = make_standard_classifier()</code></pre>
-<pre><code>### Train the standard CNN ###
-
-# Training hyperparameters
-batch_size = 32
-num_epochs = 2  # keep small to run faster
-learning_rate = 5e-4
-
-optimizer = tf.keras.optimizers.Adam(learning_rate) # define our optimizer
-loss_history = mdl.util.LossHistory(smoothing_factor=0.99) # to record loss evolution
-plotter = mdl.util.PeriodicPlotter(sec=2, scale='semilogy')
-if hasattr(tqdm, '_instances'): tqdm._instances.clear() # clear if it exists
-
-@tf.function
-def standard_train_step(x, y):
-  with tf.GradientTape() as tape:
-    # feed the images into the model
-    logits = standard_classifier(x) 
-    # Compute the loss
-    loss = tf.nn.sigmoid_cross_entropy_with_logits(labels=y, logits=logits)
-
-  # Backpropagation
-  grads = tape.gradient(loss, standard_classifier.trainable_variables)
-  optimizer.apply_gradients(zip(grads, standard_classifier.trainable_variables))
-  return loss
-
-# The training loop!
-for epoch in range(num_epochs):
-  for idx in tqdm(range(loader.get_train_size()//batch_size)):
-    # Grab a batch of training data and propagate through the network
-    x, y = loader.get_batch(batch_size)
-    loss = standard_train_step(x, y)
-
-    # Record the loss and plot the evolution of the loss as a function of training
-    loss_history.append(loss.numpy().mean())
-    plotter.plot(loss_history.get())</code></pre>
+<div class="sourceCode" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="co">### Define the CNN model </span><span class="al">###</span></span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>n_filters <span class="op">=</span> <span class="dv">12</span> <span class="co"># base number of convolutional filters</span></span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a><span class="co">'''Function to define a standard CNN model'''</span></span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> make_standard_classifier(n_outputs<span class="op">=</span><span class="dv">1</span>):</span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a>  Conv2D <span class="op">=</span> functools.partial(tf.keras.layers.Conv2D, padding<span class="op">=</span><span class="st">'same'</span>, activation<span class="op">=</span><span class="st">'relu'</span>)</span>
+<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a>  BatchNormalization <span class="op">=</span> tf.keras.layers.BatchNormalization</span>
+<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a>  Flatten <span class="op">=</span> tf.keras.layers.Flatten</span>
+<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a>  Dense <span class="op">=</span> functools.partial(tf.keras.layers.Dense, activation<span class="op">=</span><span class="st">'relu'</span>)</span>
+<span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-12"><a href="#cb3-12" aria-hidden="true" tabindex="-1"></a>  model <span class="op">=</span> tf.keras.Sequential([ </span>
+<span id="cb3-13"><a href="#cb3-13" aria-hidden="true" tabindex="-1"></a>    Conv2D(filters<span class="op">=</span><span class="dv">1</span><span class="op">*</span>n_filters, kernel_size<span class="op">=</span><span class="dv">5</span>,  strides<span class="op">=</span><span class="dv">2</span>),</span>
+<span id="cb3-14"><a href="#cb3-14" aria-hidden="true" tabindex="-1"></a>    BatchNormalization(),</span>
+<span id="cb3-15"><a href="#cb3-15" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb3-16"><a href="#cb3-16" aria-hidden="true" tabindex="-1"></a>    Conv2D(filters<span class="op">=</span><span class="dv">2</span><span class="op">*</span>n_filters, kernel_size<span class="op">=</span><span class="dv">5</span>,  strides<span class="op">=</span><span class="dv">2</span>),</span>
+<span id="cb3-17"><a href="#cb3-17" aria-hidden="true" tabindex="-1"></a>    BatchNormalization(),</span>
+<span id="cb3-18"><a href="#cb3-18" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-19"><a href="#cb3-19" aria-hidden="true" tabindex="-1"></a>    Conv2D(filters<span class="op">=</span><span class="dv">4</span><span class="op">*</span>n_filters, kernel_size<span class="op">=</span><span class="dv">3</span>,  strides<span class="op">=</span><span class="dv">2</span>),</span>
+<span id="cb3-20"><a href="#cb3-20" aria-hidden="true" tabindex="-1"></a>    BatchNormalization(),</span>
+<span id="cb3-21"><a href="#cb3-21" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-22"><a href="#cb3-22" aria-hidden="true" tabindex="-1"></a>    Conv2D(filters<span class="op">=</span><span class="dv">6</span><span class="op">*</span>n_filters, kernel_size<span class="op">=</span><span class="dv">3</span>,  strides<span class="op">=</span><span class="dv">2</span>),</span>
+<span id="cb3-23"><a href="#cb3-23" aria-hidden="true" tabindex="-1"></a>    BatchNormalization(),</span>
+<span id="cb3-24"><a href="#cb3-24" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-25"><a href="#cb3-25" aria-hidden="true" tabindex="-1"></a>    Flatten(),</span>
+<span id="cb3-26"><a href="#cb3-26" aria-hidden="true" tabindex="-1"></a>    Dense(<span class="dv">512</span>),</span>
+<span id="cb3-27"><a href="#cb3-27" aria-hidden="true" tabindex="-1"></a>    Dense(n_outputs, activation<span class="op">=</span><span class="va">None</span>),</span>
+<span id="cb3-28"><a href="#cb3-28" aria-hidden="true" tabindex="-1"></a>  ])</span>
+<span id="cb3-29"><a href="#cb3-29" aria-hidden="true" tabindex="-1"></a>  <span class="cf">return</span> model</span>
+<span id="cb3-30"><a href="#cb3-30" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-31"><a href="#cb3-31" aria-hidden="true" tabindex="-1"></a>standard_classifier <span class="op">=</span> make_standard_classifier()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="co">### Train the standard CNN </span><span class="al">###</span></span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Training hyperparameters</span></span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>batch_size <span class="op">=</span> <span class="dv">32</span></span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>num_epochs <span class="op">=</span> <span class="dv">2</span>  <span class="co"># keep small to run faster</span></span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a>learning_rate <span class="op">=</span> <span class="fl">5e-4</span></span>
+<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a>optimizer <span class="op">=</span> tf.keras.optimizers.Adam(learning_rate) <span class="co"># define our optimizer</span></span>
+<span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a>loss_history <span class="op">=</span> mdl.util.LossHistory(smoothing_factor<span class="op">=</span><span class="fl">0.99</span>) <span class="co"># to record loss evolution</span></span>
+<span id="cb4-10"><a href="#cb4-10" aria-hidden="true" tabindex="-1"></a>plotter <span class="op">=</span> mdl.util.PeriodicPlotter(sec<span class="op">=</span><span class="dv">2</span>, scale<span class="op">=</span><span class="st">'semilogy'</span>)</span>
+<span id="cb4-11"><a href="#cb4-11" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span> <span class="bu">hasattr</span>(tqdm, <span class="st">'_instances'</span>): tqdm._instances.clear() <span class="co"># clear if it exists</span></span>
+<span id="cb4-12"><a href="#cb4-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-13"><a href="#cb4-13" aria-hidden="true" tabindex="-1"></a><span class="at">@tf.function</span></span>
+<span id="cb4-14"><a href="#cb4-14" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> standard_train_step(x, y):</span>
+<span id="cb4-15"><a href="#cb4-15" aria-hidden="true" tabindex="-1"></a>  <span class="cf">with</span> tf.GradientTape() <span class="im">as</span> tape:</span>
+<span id="cb4-16"><a href="#cb4-16" aria-hidden="true" tabindex="-1"></a>    <span class="co"># feed the images into the model</span></span>
+<span id="cb4-17"><a href="#cb4-17" aria-hidden="true" tabindex="-1"></a>    logits <span class="op">=</span> standard_classifier(x) </span>
+<span id="cb4-18"><a href="#cb4-18" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Compute the loss</span></span>
+<span id="cb4-19"><a href="#cb4-19" aria-hidden="true" tabindex="-1"></a>    loss <span class="op">=</span> tf.nn.sigmoid_cross_entropy_with_logits(labels<span class="op">=</span>y, logits<span class="op">=</span>logits)</span>
+<span id="cb4-20"><a href="#cb4-20" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-21"><a href="#cb4-21" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Backpropagation</span></span>
+<span id="cb4-22"><a href="#cb4-22" aria-hidden="true" tabindex="-1"></a>  grads <span class="op">=</span> tape.gradient(loss, standard_classifier.trainable_variables)</span>
+<span id="cb4-23"><a href="#cb4-23" aria-hidden="true" tabindex="-1"></a>  optimizer.apply_gradients(<span class="bu">zip</span>(grads, standard_classifier.trainable_variables))</span>
+<span id="cb4-24"><a href="#cb4-24" aria-hidden="true" tabindex="-1"></a>  <span class="cf">return</span> loss</span>
+<span id="cb4-25"><a href="#cb4-25" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-26"><a href="#cb4-26" aria-hidden="true" tabindex="-1"></a><span class="co"># The training loop!</span></span>
+<span id="cb4-27"><a href="#cb4-27" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> epoch <span class="kw">in</span> <span class="bu">range</span>(num_epochs):</span>
+<span id="cb4-28"><a href="#cb4-28" aria-hidden="true" tabindex="-1"></a>  <span class="cf">for</span> idx <span class="kw">in</span> tqdm(<span class="bu">range</span>(loader.get_train_size()<span class="op">//</span>batch_size)):</span>
+<span id="cb4-29"><a href="#cb4-29" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Grab a batch of training data and propagate through the network</span></span>
+<span id="cb4-30"><a href="#cb4-30" aria-hidden="true" tabindex="-1"></a>    x, y <span class="op">=</span> loader.get_batch(batch_size)</span>
+<span id="cb4-31"><a href="#cb4-31" aria-hidden="true" tabindex="-1"></a>    loss <span class="op">=</span> standard_train_step(x, y)</span>
+<span id="cb4-32"><a href="#cb4-32" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-33"><a href="#cb4-33" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Record the loss and plot the evolution of the loss as a function of training</span></span>
+<span id="cb4-34"><a href="#cb4-34" aria-hidden="true" tabindex="-1"></a>    loss_history.append(loss.numpy().mean())</span>
+<span id="cb4-35"><a href="#cb4-35" aria-hidden="true" tabindex="-1"></a>    plotter.plot(loss_history.get())</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <p><img src="cnn-loss.png" class="img-fluid"></p>
 <p>이제 모델을 평가해보겠습니다.</p>
-<pre><code>### Evaluation of standard CNN ###
-
-# TRAINING DATA
-# Evaluate on a subset of CelebA+Imagenet
-(batch_x, batch_y) = loader.get_batch(5000)
-y_pred_standard = tf.round(tf.nn.sigmoid(standard_classifier.predict(batch_x)))
-acc_standard = tf.reduce_mean(tf.cast(tf.equal(batch_y, y_pred_standard), tf.float32))
-
-print("Standard CNN accuracy on (potentially biased) training set: {:.4f}".format(acc_standard.numpy()))</code></pre>
+<div class="sourceCode" id="cb5"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="co">### Evaluation of standard CNN </span><span class="al">###</span></span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a><span class="co"># TRAINING DATA</span></span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Evaluate on a subset of CelebA+Imagenet</span></span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>(batch_x, batch_y) <span class="op">=</span> loader.get_batch(<span class="dv">5000</span>)</span>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a>y_pred_standard <span class="op">=</span> tf.<span class="bu">round</span>(tf.nn.sigmoid(standard_classifier.predict(batch_x)))</span>
+<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a>acc_standard <span class="op">=</span> tf.reduce_mean(tf.cast(tf.equal(batch_y, y_pred_standard), tf.float32))</span>
+<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"Standard CNN accuracy on (potentially biased) training set: </span><span class="sc">{:.4f}</span><span class="st">"</span>.<span class="bu">format</span>(acc_standard.numpy()))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <pre><code>Standard CNN accuracy on (potentially biased) training set: 0.9976</code></pre>
 </section>
 <section id="bias-조사하기" class="level3">
@@ -317,56 +351,56 @@ print("Standard CNN accuracy on (potentially biased) training set: {:.4f}".forma
 <p>Reconsruction Loss는 단순히 만들어진 결과 이미지와 인풋 이미지의 차이의 절대값으로 정의합니다.</p>
 <p><span class="math display">\[L_{x}{(x,\hat{x})} = ||x-\hat{x}||_1\]</span></p>
 <p><span class="math display">\[L_{VAE} = c\cdot L_{KL} + L_{x}{(x,\hat{x})}\]</span></p>
-<pre><code>### Defining the VAE loss function ###
-
-''' Function to calculate VAE loss given:
-      an input x, 
-      reconstructed output x_recon, 
-      encoded means mu, 
-      encoded log of standard deviation logsigma, 
-      weight parameter for the latent loss kl_weight
-'''
-def vae_loss_function(x, x_recon, mu, logsigma, kl_weight=0.0005):
-  # TODO: Define the latent loss. Note this is given in the equation for L_{KL}
-  # in the text block directly above
-  latent_loss = 0.5 * tf.reduce_sum(tf.exp(logsigma) + tf.square(mu) - 1.0 - logsigma, axis=1)
-
-  # TODO: Define the reconstruction loss as the mean absolute pixel-wise 
-  # difference between the input and reconstruction. Hint: you'll need to 
-  # use tf.reduce_mean, and supply an axis argument which specifies which 
-  # dimensions to reduce over. For example, reconstruction loss needs to average 
-  # over the height, width, and channel image dimensions.
-  # https://www.tensorflow.org/api_docs/python/tf/math/reduce_mean
-  reconstruction_loss = tf.reduce_mean(tf.abs(x-x_recon), axis=(1,2,3))
-
-  # TODO: Define the VAE loss. Note this is given in the equation for L_{VAE}
-  # in the text block directly above
-  vae_loss = kl_weight * latent_loss + reconstruction_loss
-  
-  return vae_loss</code></pre>
+<div class="sourceCode" id="cb7"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="co">### Defining the VAE loss function </span><span class="al">###</span></span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a><span class="co">''' Function to calculate VAE loss given:</span></span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a><span class="co">      an input x, </span></span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a><span class="co">      reconstructed output x_recon, </span></span>
+<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a><span class="co">      encoded means mu, </span></span>
+<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a><span class="co">      encoded log of standard deviation logsigma, </span></span>
+<span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a><span class="co">      weight parameter for the latent loss kl_weight</span></span>
+<span id="cb7-9"><a href="#cb7-9" aria-hidden="true" tabindex="-1"></a><span class="co">'''</span></span>
+<span id="cb7-10"><a href="#cb7-10" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> vae_loss_function(x, x_recon, mu, logsigma, kl_weight<span class="op">=</span><span class="fl">0.0005</span>):</span>
+<span id="cb7-11"><a href="#cb7-11" aria-hidden="true" tabindex="-1"></a>  <span class="co"># </span><span class="al">TODO</span><span class="co">: Define the latent loss. Note this is given in the equation for L_{KL}</span></span>
+<span id="cb7-12"><a href="#cb7-12" aria-hidden="true" tabindex="-1"></a>  <span class="co"># in the text block directly above</span></span>
+<span id="cb7-13"><a href="#cb7-13" aria-hidden="true" tabindex="-1"></a>  latent_loss <span class="op">=</span> <span class="fl">0.5</span> <span class="op">*</span> tf.reduce_sum(tf.exp(logsigma) <span class="op">+</span> tf.square(mu) <span class="op">-</span> <span class="fl">1.0</span> <span class="op">-</span> logsigma, axis<span class="op">=</span><span class="dv">1</span>)</span>
+<span id="cb7-14"><a href="#cb7-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-15"><a href="#cb7-15" aria-hidden="true" tabindex="-1"></a>  <span class="co"># </span><span class="al">TODO</span><span class="co">: Define the reconstruction loss as the mean absolute pixel-wise </span></span>
+<span id="cb7-16"><a href="#cb7-16" aria-hidden="true" tabindex="-1"></a>  <span class="co"># difference between the input and reconstruction. Hint: you'll need to </span></span>
+<span id="cb7-17"><a href="#cb7-17" aria-hidden="true" tabindex="-1"></a>  <span class="co"># use tf.reduce_mean, and supply an axis argument which specifies which </span></span>
+<span id="cb7-18"><a href="#cb7-18" aria-hidden="true" tabindex="-1"></a>  <span class="co"># dimensions to reduce over. For example, reconstruction loss needs to average </span></span>
+<span id="cb7-19"><a href="#cb7-19" aria-hidden="true" tabindex="-1"></a>  <span class="co"># over the height, width, and channel image dimensions.</span></span>
+<span id="cb7-20"><a href="#cb7-20" aria-hidden="true" tabindex="-1"></a>  <span class="co"># https://www.tensorflow.org/api_docs/python/tf/math/reduce_mean</span></span>
+<span id="cb7-21"><a href="#cb7-21" aria-hidden="true" tabindex="-1"></a>  reconstruction_loss <span class="op">=</span> tf.reduce_mean(tf.<span class="bu">abs</span>(x<span class="op">-</span>x_recon), axis<span class="op">=</span>(<span class="dv">1</span>,<span class="dv">2</span>,<span class="dv">3</span>))</span>
+<span id="cb7-22"><a href="#cb7-22" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-23"><a href="#cb7-23" aria-hidden="true" tabindex="-1"></a>  <span class="co"># </span><span class="al">TODO</span><span class="co">: Define the VAE loss. Note this is given in the equation for L_{VAE}</span></span>
+<span id="cb7-24"><a href="#cb7-24" aria-hidden="true" tabindex="-1"></a>  <span class="co"># in the text block directly above</span></span>
+<span id="cb7-25"><a href="#cb7-25" aria-hidden="true" tabindex="-1"></a>  vae_loss <span class="op">=</span> kl_weight <span class="op">*</span> latent_loss <span class="op">+</span> reconstruction_loss</span>
+<span id="cb7-26"><a href="#cb7-26" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb7-27"><a href="#cb7-27" aria-hidden="true" tabindex="-1"></a>  <span class="cf">return</span> vae_loss</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <p>이제 샘플링과 reparameterization에 대해 알아보겠습니다.<br>
 VAE는 학습된 잠재 변수를 샘플링하기 위해 “재파라미터화 트릭”을 사용합니다.<br>
 VAE 인코더는 각 잠재 변수에 대해 단일 실수 벡터를 생성하는 대신 가우스 분포를 대략 따르도록 제약된 평균 벡터와 표준편차 벡터를 생성합니다. 그런 다음 가우스 분포에서 노이즈 값 ϵ를 샘플링한 다음 표준 편차에 따라 스케일링하고 평균을 다시 추가하여 결과를 샘플링된 잠재 벡터로 출력합니다. 이를 ϵ∼N(0,(I))을 샘플링하는 잠재 변수 z에 대해 공식화하면 다음과 같습니다:</p>
 <p><span class="math display">\[z = \mu + e^{\left(\frac{1}{2} \cdot \log{\Sigma}\right)}\circ \epsilon\]</span></p>
 <p>여기서 μ는 평균이고 Σ는 공분산 행렬입니다. 이를 통해 VAE의 손실 함수를 깔끔하게 정의하고, 무작위로 샘플링된 잠재 변수를 생성하고, 역전파를 통해 학습할 수 있습니다</p>
-<pre><code>### VAE Sampling ###
-
-"""Sample latent variables via reparameterization with an isotropic unit Gaussian.
-# Arguments
-    z_mean, z_logsigma (tensor): mean and log of standard deviation of latent distribution (Q(z|X))
-# Returns
-    z (tensor): sampled latent vector
-"""
-def sampling(z_mean, z_logsigma):
-  # By default, random.normal is "standard" (ie. mean=0 and std=1.0)
-  batch, latent_dim = z_mean.shape
-  epsilon = tf.random.normal(shape=(batch, latent_dim))
-
-  # TODO: Define the reparameterization computation!
-  # Note the equation is given in the text block immediately above.
-  z = z_mean + tf.math.exp(0.5 * z_logsigma) * epsilon
-  
-  return z</code></pre>
+<div class="sourceCode" id="cb8"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="co">### VAE Sampling </span><span class="al">###</span></span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a><span class="co">"""Sample latent variables via reparameterization with an isotropic unit Gaussian.</span></span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Arguments</span></span>
+<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a><span class="co">    z_mean, z_logsigma (tensor): mean and log of standard deviation of latent distribution (Q(z|X))</span></span>
+<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a><span class="co"># Returns</span></span>
+<span id="cb8-7"><a href="#cb8-7" aria-hidden="true" tabindex="-1"></a><span class="co">    z (tensor): sampled latent vector</span></span>
+<span id="cb8-8"><a href="#cb8-8" aria-hidden="true" tabindex="-1"></a><span class="co">"""</span></span>
+<span id="cb8-9"><a href="#cb8-9" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> sampling(z_mean, z_logsigma):</span>
+<span id="cb8-10"><a href="#cb8-10" aria-hidden="true" tabindex="-1"></a>  <span class="co"># By default, random.normal is "standard" (ie. mean=0 and std=1.0)</span></span>
+<span id="cb8-11"><a href="#cb8-11" aria-hidden="true" tabindex="-1"></a>  batch, latent_dim <span class="op">=</span> z_mean.shape</span>
+<span id="cb8-12"><a href="#cb8-12" aria-hidden="true" tabindex="-1"></a>  epsilon <span class="op">=</span> tf.random.normal(shape<span class="op">=</span>(batch, latent_dim))</span>
+<span id="cb8-13"><a href="#cb8-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-14"><a href="#cb8-14" aria-hidden="true" tabindex="-1"></a>  <span class="co"># </span><span class="al">TODO</span><span class="co">: Define the reparameterization computation!</span></span>
+<span id="cb8-15"><a href="#cb8-15" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Note the equation is given in the text block immediately above.</span></span>
+<span id="cb8-16"><a href="#cb8-16" aria-hidden="true" tabindex="-1"></a>  z <span class="op">=</span> z_mean <span class="op">+</span> tf.math.exp(<span class="fl">0.5</span> <span class="op">*</span> z_logsigma) <span class="op">*</span> epsilon</span>
+<span id="cb8-17"><a href="#cb8-17" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb8-18"><a href="#cb8-18" aria-hidden="true" tabindex="-1"></a>  <span class="cf">return</span> z</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </section>
 <section id="semi-supervised-variational-autoencoder-ss-vae" class="level3">
 <h3 class="anchored" data-anchor-id="semi-supervised-variational-autoencoder-ss-vae">Semi-Supervised Variational Autoencoder (SS-VAE)</h3>
@@ -378,204 +412,203 @@ def sampling(z_mean, z_logsigma):
 <p>SS-VAE의 Loss 함수를 정의해보겠습니다. 기존 VAE와 달리 Classificaion이 추가되었기에 이에 대한 Loss 함수가 추가되어야 합니다. 또한 이미지가 얼굴일 때만 VAE의 Loss가 계산되어야 할 것입니다.</p>
 <p>즉, classification loss <span class="math inline">\(L_y\)</span>, VAE loss <span class="math inline">\({I}_f(y)\Big[L_{VAE}\Big]\)</span>가 필요하며, <span class="math inline">\({I}_f(y)\)</span> 는 1 일 때 얼굴, 0일 때 얼굴이 아는 다른 이미지여야 합니다.</p>
 <p><span class="math display">\[L_{total} = L_y(y,\hat{y}) + {I}_f(y)\Big[L_{VAE}\Big]\]</span></p>
-<pre><code>### Loss function for SS-VAE ###
-
-"""Loss function for SS-VAE.
-# Arguments
-    x: true input x
-    x_pred: reconstructed x
-    y: true label (face or not face)
-    y_logit: predicted labels
-    mu: mean of latent distribution (Q(z|X))
-    logsigma: log of standard deviation of latent distribution (Q(z|X))
-# Returns
-    total_loss: SS-VAE total loss
-    classification_loss: SS-VAE classification loss
-"""
-def ss_vae_loss_function(x, x_pred, y, y_logit, mu, logsigma):
-
-  # TODO: call the relevant function to obtain VAE loss, defined earlier in the lab
-  vae_loss = vae_loss_function(x, x_pred, mu, logsigma) # TODO
-
-  # TODO: define the classification loss using sigmoid_cross_entropy
-  # https://www.tensorflow.org/api_docs/python/tf/nn/sigmoid_cross_entropy_with_logits
-  classification_loss = tf.nn.sigmoid_cross_entropy_with_logits(labels=y, logits=y_logit) # TODO
-
-  # Use the training data labels to create variable face_indicator:
-  #   indicator that reflects which training data are images of faces
-  face_indicator = tf.cast(tf.equal(y, 1), tf.float32)
-
-  # TODO: define the SS-VAE total loss! Use tf.reduce_mean to average over all
-  # samples
-  total_loss = tf.reduce_mean(
-      classification_loss + 
-      face_indicator * vae_loss
-  )
-  return total_loss, classification_loss, vae_loss</code></pre>
+<div class="sourceCode" id="cb9"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="co">### Loss function for SS-VAE </span><span class="al">###</span></span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a><span class="co">"""Loss function for SS-VAE.</span></span>
+<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Arguments</span></span>
+<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a><span class="co">    x: true input x</span></span>
+<span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a><span class="co">    x_pred: reconstructed x</span></span>
+<span id="cb9-7"><a href="#cb9-7" aria-hidden="true" tabindex="-1"></a><span class="co">    y: true label (face or not face)</span></span>
+<span id="cb9-8"><a href="#cb9-8" aria-hidden="true" tabindex="-1"></a><span class="co">    y_logit: predicted labels</span></span>
+<span id="cb9-9"><a href="#cb9-9" aria-hidden="true" tabindex="-1"></a><span class="co">    mu: mean of latent distribution (Q(z|X))</span></span>
+<span id="cb9-10"><a href="#cb9-10" aria-hidden="true" tabindex="-1"></a><span class="co">    logsigma: log of standard deviation of latent distribution (Q(z|X))</span></span>
+<span id="cb9-11"><a href="#cb9-11" aria-hidden="true" tabindex="-1"></a><span class="co"># Returns</span></span>
+<span id="cb9-12"><a href="#cb9-12" aria-hidden="true" tabindex="-1"></a><span class="co">    total_loss: SS-VAE total loss</span></span>
+<span id="cb9-13"><a href="#cb9-13" aria-hidden="true" tabindex="-1"></a><span class="co">    classification_loss: SS-VAE classification loss</span></span>
+<span id="cb9-14"><a href="#cb9-14" aria-hidden="true" tabindex="-1"></a><span class="co">"""</span></span>
+<span id="cb9-15"><a href="#cb9-15" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> ss_vae_loss_function(x, x_pred, y, y_logit, mu, logsigma):</span>
+<span id="cb9-16"><a href="#cb9-16" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-17"><a href="#cb9-17" aria-hidden="true" tabindex="-1"></a>  <span class="co"># </span><span class="al">TODO</span><span class="co">: call the relevant function to obtain VAE loss, defined earlier in the lab</span></span>
+<span id="cb9-18"><a href="#cb9-18" aria-hidden="true" tabindex="-1"></a>  vae_loss <span class="op">=</span> vae_loss_function(x, x_pred, mu, logsigma) <span class="co"># </span><span class="al">TODO</span></span>
+<span id="cb9-19"><a href="#cb9-19" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-20"><a href="#cb9-20" aria-hidden="true" tabindex="-1"></a>  <span class="co"># </span><span class="al">TODO</span><span class="co">: define the classification loss using sigmoid_cross_entropy</span></span>
+<span id="cb9-21"><a href="#cb9-21" aria-hidden="true" tabindex="-1"></a>  <span class="co"># https://www.tensorflow.org/api_docs/python/tf/nn/sigmoid_cross_entropy_with_logits</span></span>
+<span id="cb9-22"><a href="#cb9-22" aria-hidden="true" tabindex="-1"></a>  classification_loss <span class="op">=</span> tf.nn.sigmoid_cross_entropy_with_logits(labels<span class="op">=</span>y, logits<span class="op">=</span>y_logit) <span class="co"># </span><span class="al">TODO</span></span>
+<span id="cb9-23"><a href="#cb9-23" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-24"><a href="#cb9-24" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Use the training data labels to create variable face_indicator:</span></span>
+<span id="cb9-25"><a href="#cb9-25" aria-hidden="true" tabindex="-1"></a>  <span class="co">#   indicator that reflects which training data are images of faces</span></span>
+<span id="cb9-26"><a href="#cb9-26" aria-hidden="true" tabindex="-1"></a>  face_indicator <span class="op">=</span> tf.cast(tf.equal(y, <span class="dv">1</span>), tf.float32)</span>
+<span id="cb9-27"><a href="#cb9-27" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-28"><a href="#cb9-28" aria-hidden="true" tabindex="-1"></a>  <span class="co"># </span><span class="al">TODO</span><span class="co">: define the SS-VAE total loss! Use tf.reduce_mean to average over all</span></span>
+<span id="cb9-29"><a href="#cb9-29" aria-hidden="true" tabindex="-1"></a>  <span class="co"># samples</span></span>
+<span id="cb9-30"><a href="#cb9-30" aria-hidden="true" tabindex="-1"></a>  total_loss <span class="op">=</span> tf.reduce_mean(</span>
+<span id="cb9-31"><a href="#cb9-31" aria-hidden="true" tabindex="-1"></a>      classification_loss <span class="op">+</span> </span>
+<span id="cb9-32"><a href="#cb9-32" aria-hidden="true" tabindex="-1"></a>      face_indicator <span class="op">*</span> vae_loss</span>
+<span id="cb9-33"><a href="#cb9-33" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb9-34"><a href="#cb9-34" aria-hidden="true" tabindex="-1"></a>  <span class="cf">return</span> total_loss, classification_loss, vae_loss</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <p>이제 모델을 구성해보도록 합시다</p>
-<pre><code>### Define the decoder portion of the SS-VAE ###
-
-def make_face_decoder_network(n_filters=12):
-
-  # Functionally define the different layer types we will use
-  Conv2DTranspose = functools.partial(tf.keras.layers.Conv2DTranspose, padding='same', activation='relu')
-  BatchNormalization = tf.keras.layers.BatchNormalization
-  Flatten = tf.keras.layers.Flatten
-  Dense = functools.partial(tf.keras.layers.Dense, activation='relu')
-  Reshape = tf.keras.layers.Reshape
-
-  # Build the decoder network using the Sequential API
-  decoder = tf.keras.Sequential([
-    # Transform to pre-convolutional generation
-    Dense(units=4*4*6*n_filters),  # 4x4 feature maps (with 6N occurances)
-    Reshape(target_shape=(4, 4, 6*n_filters)),
-
-    # Upscaling convolutions (inverse of encoder)
-    Conv2DTranspose(filters=4*n_filters, kernel_size=3,  strides=2),
-    Conv2DTranspose(filters=2*n_filters, kernel_size=3,  strides=2),
-    Conv2DTranspose(filters=1*n_filters, kernel_size=5,  strides=2),
-    Conv2DTranspose(filters=3, kernel_size=5,  strides=2),
-  ])
-
-  return decoder</code></pre>
-<pre><code>### Defining and creating the SS-VAE ###
-
-class SS_VAE(tf.keras.Model):
-def __init__(self, latent_dim):
-  super(SS_VAE, self).__init__()
-  self.latent_dim = latent_dim
-
-  # Define the number of outputs for the encoder. Recall that we have 
-  # `latent_dim` latent variables, as well as a supervised output for the 
-  # classification.
-  num_encoder_dims = 2*self.latent_dim + 1
-
-  self.encoder = make_standard_classifier(num_encoder_dims)
-  self.decoder = make_face_decoder_network()
-
-# function to feed images into encoder, encode the latent space, and output
-#   classification probability 
-def encode(self, x):
-  # encoder output
-  encoder_output = self.encoder(x)
-
-  # classification prediction
-  y_logit = tf.expand_dims(encoder_output[:, 0], -1)
-  # latent variable distribution parameters
-  z_mean = encoder_output[:, 1:self.latent_dim+1] 
-  z_logsigma = encoder_output[:, self.latent_dim+1:]
-
-  return y_logit, z_mean, z_logsigma
-
-# Decode the latent space and output reconstruction
-def decode(self, z):
-  # TODO: use the decoder (self.decoder) to output the reconstruction
-  reconstruction = self.decoder(z) # TODO
-  return reconstruction
-
-# The call function will be used to pass inputs x through the core VAE
-def call(self, x): 
-  # Encode input to a prediction and latent space
-  y_logit, z_mean, z_logsigma = self.encode(x)
-
-  # TODO: call the sampling function that you created above using 
-  #       z_mean and z_logsigma
-  z = sampling(z_mean, z_logsigma) # TODO
-
-  # TODO: reconstruction
-  recon = self.decode(z) # TODO
-  
-  return y_logit, z_mean, z_logsigma, recon
-
-# Predict face or not face logit for given input x
-def predict(self, x):
-  y_logit, z_mean, z_logsigma = self.encode(x)
-  return y_logit
-
-ss_vae = SS_VAE(latent_dim=32)</code></pre>
-<pre><code>### Training the SS-VAE ###
-
-# Hyperparameters
-batch_size = 32
-learning_rate = 5e-4
-latent_dim = 32
-
-# SS-VAE needs slightly more epochs to train since its more complex than 
-# the standard classifier so we use 6 instead of 2
-num_epochs = 6
-
-# instantiate a new SS-VAE model and optimizer
-ss_vae = SS_VAE(latent_dim)
-optimizer = tf.keras.optimizers.Adam(learning_rate)
-
-# To define the training operation, we will use tf.function which is a powerful tool 
-#   that lets us turn a Python function into a TensorFlow computation graph.
-@tf.function
-def ss_vae_train_step(x, y):
-
-  with tf.GradientTape() as tape:
-    # Feed input x into ss_vae. Note that this is using the SS_VAE call function!
-    y_logit, z_mean, z_logsigma, x_recon = ss_vae(x)
-
-    '''TODO: call the SS_VAE loss function to compute the loss'''
-    loss, class_loss, _ = ss_vae_loss_function(x, x_recon, y, y_logit, z_mean, z_logsigma) # TODO
-  
-  '''TODO: use the GradientTape.gradient method to compute the gradients.
-     Hint: this is with respect to the trainable_variables of the SS_VAE.'''
-  grads = tape.gradient(loss, ss_vae.trainable_variables) # TODO
-
-  # apply gradients to variables
-  optimizer.apply_gradients(zip(grads, ss_vae.trainable_variables))
-  return loss
-
-# get training faces from data loader
-all_faces = loader.get_all_train_faces()
-
-if hasattr(tqdm, '_instances'): tqdm._instances.clear() # clear if it exists
-
-# The training loop -- outer loop iterates over the number of epochs
-for i in range(num_epochs):
-
-  IPython.display.clear_output(wait=True)
-  print("Starting epoch {}/{}".format(i+1, num_epochs))
-  
-  # get a batch of training data and compute the training step
-  for j in tqdm(range(loader.get_train_size() // batch_size)):
-    # load a batch of data
-    (x, y) = loader.get_batch(batch_size)
-    # loss optimization
-    loss = ss_vae_train_step(x, y)
-    
-    # plot the progress every 200 steps
-    if j % 500 == 0: 
-      mdl.util.plot_sample(x, y, ss_vae)
-</code></pre>
+<div class="sourceCode" id="cb10"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="co">### Define the decoder portion of the SS-VAE </span><span class="al">###</span></span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> make_face_decoder_network(n_filters<span class="op">=</span><span class="dv">12</span>):</span>
+<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Functionally define the different layer types we will use</span></span>
+<span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a>  Conv2DTranspose <span class="op">=</span> functools.partial(tf.keras.layers.Conv2DTranspose, padding<span class="op">=</span><span class="st">'same'</span>, activation<span class="op">=</span><span class="st">'relu'</span>)</span>
+<span id="cb10-7"><a href="#cb10-7" aria-hidden="true" tabindex="-1"></a>  BatchNormalization <span class="op">=</span> tf.keras.layers.BatchNormalization</span>
+<span id="cb10-8"><a href="#cb10-8" aria-hidden="true" tabindex="-1"></a>  Flatten <span class="op">=</span> tf.keras.layers.Flatten</span>
+<span id="cb10-9"><a href="#cb10-9" aria-hidden="true" tabindex="-1"></a>  Dense <span class="op">=</span> functools.partial(tf.keras.layers.Dense, activation<span class="op">=</span><span class="st">'relu'</span>)</span>
+<span id="cb10-10"><a href="#cb10-10" aria-hidden="true" tabindex="-1"></a>  Reshape <span class="op">=</span> tf.keras.layers.Reshape</span>
+<span id="cb10-11"><a href="#cb10-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-12"><a href="#cb10-12" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Build the decoder network using the Sequential API</span></span>
+<span id="cb10-13"><a href="#cb10-13" aria-hidden="true" tabindex="-1"></a>  decoder <span class="op">=</span> tf.keras.Sequential([</span>
+<span id="cb10-14"><a href="#cb10-14" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Transform to pre-convolutional generation</span></span>
+<span id="cb10-15"><a href="#cb10-15" aria-hidden="true" tabindex="-1"></a>    Dense(units<span class="op">=</span><span class="dv">4</span><span class="op">*</span><span class="dv">4</span><span class="op">*</span><span class="dv">6</span><span class="op">*</span>n_filters),  <span class="co"># 4x4 feature maps (with 6N occurances)</span></span>
+<span id="cb10-16"><a href="#cb10-16" aria-hidden="true" tabindex="-1"></a>    Reshape(target_shape<span class="op">=</span>(<span class="dv">4</span>, <span class="dv">4</span>, <span class="dv">6</span><span class="op">*</span>n_filters)),</span>
+<span id="cb10-17"><a href="#cb10-17" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-18"><a href="#cb10-18" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Upscaling convolutions (inverse of encoder)</span></span>
+<span id="cb10-19"><a href="#cb10-19" aria-hidden="true" tabindex="-1"></a>    Conv2DTranspose(filters<span class="op">=</span><span class="dv">4</span><span class="op">*</span>n_filters, kernel_size<span class="op">=</span><span class="dv">3</span>,  strides<span class="op">=</span><span class="dv">2</span>),</span>
+<span id="cb10-20"><a href="#cb10-20" aria-hidden="true" tabindex="-1"></a>    Conv2DTranspose(filters<span class="op">=</span><span class="dv">2</span><span class="op">*</span>n_filters, kernel_size<span class="op">=</span><span class="dv">3</span>,  strides<span class="op">=</span><span class="dv">2</span>),</span>
+<span id="cb10-21"><a href="#cb10-21" aria-hidden="true" tabindex="-1"></a>    Conv2DTranspose(filters<span class="op">=</span><span class="dv">1</span><span class="op">*</span>n_filters, kernel_size<span class="op">=</span><span class="dv">5</span>,  strides<span class="op">=</span><span class="dv">2</span>),</span>
+<span id="cb10-22"><a href="#cb10-22" aria-hidden="true" tabindex="-1"></a>    Conv2DTranspose(filters<span class="op">=</span><span class="dv">3</span>, kernel_size<span class="op">=</span><span class="dv">5</span>,  strides<span class="op">=</span><span class="dv">2</span>),</span>
+<span id="cb10-23"><a href="#cb10-23" aria-hidden="true" tabindex="-1"></a>  ])</span>
+<span id="cb10-24"><a href="#cb10-24" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-25"><a href="#cb10-25" aria-hidden="true" tabindex="-1"></a>  <span class="cf">return</span> decoder</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode" id="cb11"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="co">### Defining and creating the SS-VAE </span><span class="al">###</span></span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a><span class="kw">class</span> SS_VAE(tf.keras.Model):</span>
+<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> <span class="fu">__init__</span>(<span class="va">self</span>, latent_dim):</span>
+<span id="cb11-5"><a href="#cb11-5" aria-hidden="true" tabindex="-1"></a>  <span class="bu">super</span>(SS_VAE, <span class="va">self</span>).<span class="fu">__init__</span>()</span>
+<span id="cb11-6"><a href="#cb11-6" aria-hidden="true" tabindex="-1"></a>  <span class="va">self</span>.latent_dim <span class="op">=</span> latent_dim</span>
+<span id="cb11-7"><a href="#cb11-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-8"><a href="#cb11-8" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Define the number of outputs for the encoder. Recall that we have </span></span>
+<span id="cb11-9"><a href="#cb11-9" aria-hidden="true" tabindex="-1"></a>  <span class="co"># `latent_dim` latent variables, as well as a supervised output for the </span></span>
+<span id="cb11-10"><a href="#cb11-10" aria-hidden="true" tabindex="-1"></a>  <span class="co"># classification.</span></span>
+<span id="cb11-11"><a href="#cb11-11" aria-hidden="true" tabindex="-1"></a>  num_encoder_dims <span class="op">=</span> <span class="dv">2</span><span class="op">*</span><span class="va">self</span>.latent_dim <span class="op">+</span> <span class="dv">1</span></span>
+<span id="cb11-12"><a href="#cb11-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-13"><a href="#cb11-13" aria-hidden="true" tabindex="-1"></a>  <span class="va">self</span>.encoder <span class="op">=</span> make_standard_classifier(num_encoder_dims)</span>
+<span id="cb11-14"><a href="#cb11-14" aria-hidden="true" tabindex="-1"></a>  <span class="va">self</span>.decoder <span class="op">=</span> make_face_decoder_network()</span>
+<span id="cb11-15"><a href="#cb11-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-16"><a href="#cb11-16" aria-hidden="true" tabindex="-1"></a><span class="co"># function to feed images into encoder, encode the latent space, and output</span></span>
+<span id="cb11-17"><a href="#cb11-17" aria-hidden="true" tabindex="-1"></a><span class="co">#   classification probability </span></span>
+<span id="cb11-18"><a href="#cb11-18" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> encode(<span class="va">self</span>, x):</span>
+<span id="cb11-19"><a href="#cb11-19" aria-hidden="true" tabindex="-1"></a>  <span class="co"># encoder output</span></span>
+<span id="cb11-20"><a href="#cb11-20" aria-hidden="true" tabindex="-1"></a>  encoder_output <span class="op">=</span> <span class="va">self</span>.encoder(x)</span>
+<span id="cb11-21"><a href="#cb11-21" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-22"><a href="#cb11-22" aria-hidden="true" tabindex="-1"></a>  <span class="co"># classification prediction</span></span>
+<span id="cb11-23"><a href="#cb11-23" aria-hidden="true" tabindex="-1"></a>  y_logit <span class="op">=</span> tf.expand_dims(encoder_output[:, <span class="dv">0</span>], <span class="op">-</span><span class="dv">1</span>)</span>
+<span id="cb11-24"><a href="#cb11-24" aria-hidden="true" tabindex="-1"></a>  <span class="co"># latent variable distribution parameters</span></span>
+<span id="cb11-25"><a href="#cb11-25" aria-hidden="true" tabindex="-1"></a>  z_mean <span class="op">=</span> encoder_output[:, <span class="dv">1</span>:<span class="va">self</span>.latent_dim<span class="op">+</span><span class="dv">1</span>] </span>
+<span id="cb11-26"><a href="#cb11-26" aria-hidden="true" tabindex="-1"></a>  z_logsigma <span class="op">=</span> encoder_output[:, <span class="va">self</span>.latent_dim<span class="op">+</span><span class="dv">1</span>:]</span>
+<span id="cb11-27"><a href="#cb11-27" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-28"><a href="#cb11-28" aria-hidden="true" tabindex="-1"></a>  <span class="cf">return</span> y_logit, z_mean, z_logsigma</span>
+<span id="cb11-29"><a href="#cb11-29" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-30"><a href="#cb11-30" aria-hidden="true" tabindex="-1"></a><span class="co"># Decode the latent space and output reconstruction</span></span>
+<span id="cb11-31"><a href="#cb11-31" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> decode(<span class="va">self</span>, z):</span>
+<span id="cb11-32"><a href="#cb11-32" aria-hidden="true" tabindex="-1"></a>  <span class="co"># </span><span class="al">TODO</span><span class="co">: use the decoder (self.decoder) to output the reconstruction</span></span>
+<span id="cb11-33"><a href="#cb11-33" aria-hidden="true" tabindex="-1"></a>  reconstruction <span class="op">=</span> <span class="va">self</span>.decoder(z) <span class="co"># </span><span class="al">TODO</span></span>
+<span id="cb11-34"><a href="#cb11-34" aria-hidden="true" tabindex="-1"></a>  <span class="cf">return</span> reconstruction</span>
+<span id="cb11-35"><a href="#cb11-35" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-36"><a href="#cb11-36" aria-hidden="true" tabindex="-1"></a><span class="co"># The call function will be used to pass inputs x through the core VAE</span></span>
+<span id="cb11-37"><a href="#cb11-37" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> call(<span class="va">self</span>, x): </span>
+<span id="cb11-38"><a href="#cb11-38" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Encode input to a prediction and latent space</span></span>
+<span id="cb11-39"><a href="#cb11-39" aria-hidden="true" tabindex="-1"></a>  y_logit, z_mean, z_logsigma <span class="op">=</span> <span class="va">self</span>.encode(x)</span>
+<span id="cb11-40"><a href="#cb11-40" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-41"><a href="#cb11-41" aria-hidden="true" tabindex="-1"></a>  <span class="co"># </span><span class="al">TODO</span><span class="co">: call the sampling function that you created above using </span></span>
+<span id="cb11-42"><a href="#cb11-42" aria-hidden="true" tabindex="-1"></a>  <span class="co">#       z_mean and z_logsigma</span></span>
+<span id="cb11-43"><a href="#cb11-43" aria-hidden="true" tabindex="-1"></a>  z <span class="op">=</span> sampling(z_mean, z_logsigma) <span class="co"># </span><span class="al">TODO</span></span>
+<span id="cb11-44"><a href="#cb11-44" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-45"><a href="#cb11-45" aria-hidden="true" tabindex="-1"></a>  <span class="co"># </span><span class="al">TODO</span><span class="co">: reconstruction</span></span>
+<span id="cb11-46"><a href="#cb11-46" aria-hidden="true" tabindex="-1"></a>  recon <span class="op">=</span> <span class="va">self</span>.decode(z) <span class="co"># </span><span class="al">TODO</span></span>
+<span id="cb11-47"><a href="#cb11-47" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb11-48"><a href="#cb11-48" aria-hidden="true" tabindex="-1"></a>  <span class="cf">return</span> y_logit, z_mean, z_logsigma, recon</span>
+<span id="cb11-49"><a href="#cb11-49" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-50"><a href="#cb11-50" aria-hidden="true" tabindex="-1"></a><span class="co"># Predict face or not face logit for given input x</span></span>
+<span id="cb11-51"><a href="#cb11-51" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> predict(<span class="va">self</span>, x):</span>
+<span id="cb11-52"><a href="#cb11-52" aria-hidden="true" tabindex="-1"></a>  y_logit, z_mean, z_logsigma <span class="op">=</span> <span class="va">self</span>.encode(x)</span>
+<span id="cb11-53"><a href="#cb11-53" aria-hidden="true" tabindex="-1"></a>  <span class="cf">return</span> y_logit</span>
+<span id="cb11-54"><a href="#cb11-54" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-55"><a href="#cb11-55" aria-hidden="true" tabindex="-1"></a>ss_vae <span class="op">=</span> SS_VAE(latent_dim<span class="op">=</span><span class="dv">32</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode" id="cb12"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="co">### Training the SS-VAE </span><span class="al">###</span></span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Hyperparameters</span></span>
+<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a>batch_size <span class="op">=</span> <span class="dv">32</span></span>
+<span id="cb12-5"><a href="#cb12-5" aria-hidden="true" tabindex="-1"></a>learning_rate <span class="op">=</span> <span class="fl">5e-4</span></span>
+<span id="cb12-6"><a href="#cb12-6" aria-hidden="true" tabindex="-1"></a>latent_dim <span class="op">=</span> <span class="dv">32</span></span>
+<span id="cb12-7"><a href="#cb12-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-8"><a href="#cb12-8" aria-hidden="true" tabindex="-1"></a><span class="co"># SS-VAE needs slightly more epochs to train since its more complex than </span></span>
+<span id="cb12-9"><a href="#cb12-9" aria-hidden="true" tabindex="-1"></a><span class="co"># the standard classifier so we use 6 instead of 2</span></span>
+<span id="cb12-10"><a href="#cb12-10" aria-hidden="true" tabindex="-1"></a>num_epochs <span class="op">=</span> <span class="dv">6</span></span>
+<span id="cb12-11"><a href="#cb12-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-12"><a href="#cb12-12" aria-hidden="true" tabindex="-1"></a><span class="co"># instantiate a new SS-VAE model and optimizer</span></span>
+<span id="cb12-13"><a href="#cb12-13" aria-hidden="true" tabindex="-1"></a>ss_vae <span class="op">=</span> SS_VAE(latent_dim)</span>
+<span id="cb12-14"><a href="#cb12-14" aria-hidden="true" tabindex="-1"></a>optimizer <span class="op">=</span> tf.keras.optimizers.Adam(learning_rate)</span>
+<span id="cb12-15"><a href="#cb12-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-16"><a href="#cb12-16" aria-hidden="true" tabindex="-1"></a><span class="co"># To define the training operation, we will use tf.function which is a powerful tool </span></span>
+<span id="cb12-17"><a href="#cb12-17" aria-hidden="true" tabindex="-1"></a><span class="co">#   that lets us turn a Python function into a TensorFlow computation graph.</span></span>
+<span id="cb12-18"><a href="#cb12-18" aria-hidden="true" tabindex="-1"></a><span class="at">@tf.function</span></span>
+<span id="cb12-19"><a href="#cb12-19" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> ss_vae_train_step(x, y):</span>
+<span id="cb12-20"><a href="#cb12-20" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-21"><a href="#cb12-21" aria-hidden="true" tabindex="-1"></a>  <span class="cf">with</span> tf.GradientTape() <span class="im">as</span> tape:</span>
+<span id="cb12-22"><a href="#cb12-22" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Feed input x into ss_vae. Note that this is using the SS_VAE call function!</span></span>
+<span id="cb12-23"><a href="#cb12-23" aria-hidden="true" tabindex="-1"></a>    y_logit, z_mean, z_logsigma, x_recon <span class="op">=</span> ss_vae(x)</span>
+<span id="cb12-24"><a href="#cb12-24" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-25"><a href="#cb12-25" aria-hidden="true" tabindex="-1"></a>    <span class="co">'''TODO: call the SS_VAE loss function to compute the loss'''</span></span>
+<span id="cb12-26"><a href="#cb12-26" aria-hidden="true" tabindex="-1"></a>    loss, class_loss, _ <span class="op">=</span> ss_vae_loss_function(x, x_recon, y, y_logit, z_mean, z_logsigma) <span class="co"># </span><span class="al">TODO</span></span>
+<span id="cb12-27"><a href="#cb12-27" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb12-28"><a href="#cb12-28" aria-hidden="true" tabindex="-1"></a>  <span class="co">'''TODO: use the GradientTape.gradient method to compute the gradients.</span></span>
+<span id="cb12-29"><a href="#cb12-29" aria-hidden="true" tabindex="-1"></a><span class="co">     Hint: this is with respect to the trainable_variables of the SS_VAE.'''</span></span>
+<span id="cb12-30"><a href="#cb12-30" aria-hidden="true" tabindex="-1"></a>  grads <span class="op">=</span> tape.gradient(loss, ss_vae.trainable_variables) <span class="co"># </span><span class="al">TODO</span></span>
+<span id="cb12-31"><a href="#cb12-31" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-32"><a href="#cb12-32" aria-hidden="true" tabindex="-1"></a>  <span class="co"># apply gradients to variables</span></span>
+<span id="cb12-33"><a href="#cb12-33" aria-hidden="true" tabindex="-1"></a>  optimizer.apply_gradients(<span class="bu">zip</span>(grads, ss_vae.trainable_variables))</span>
+<span id="cb12-34"><a href="#cb12-34" aria-hidden="true" tabindex="-1"></a>  <span class="cf">return</span> loss</span>
+<span id="cb12-35"><a href="#cb12-35" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-36"><a href="#cb12-36" aria-hidden="true" tabindex="-1"></a><span class="co"># get training faces from data loader</span></span>
+<span id="cb12-37"><a href="#cb12-37" aria-hidden="true" tabindex="-1"></a>all_faces <span class="op">=</span> loader.get_all_train_faces()</span>
+<span id="cb12-38"><a href="#cb12-38" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-39"><a href="#cb12-39" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span> <span class="bu">hasattr</span>(tqdm, <span class="st">'_instances'</span>): tqdm._instances.clear() <span class="co"># clear if it exists</span></span>
+<span id="cb12-40"><a href="#cb12-40" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-41"><a href="#cb12-41" aria-hidden="true" tabindex="-1"></a><span class="co"># The training loop -- outer loop iterates over the number of epochs</span></span>
+<span id="cb12-42"><a href="#cb12-42" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> i <span class="kw">in</span> <span class="bu">range</span>(num_epochs):</span>
+<span id="cb12-43"><a href="#cb12-43" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-44"><a href="#cb12-44" aria-hidden="true" tabindex="-1"></a>  IPython.display.clear_output(wait<span class="op">=</span><span class="va">True</span>)</span>
+<span id="cb12-45"><a href="#cb12-45" aria-hidden="true" tabindex="-1"></a>  <span class="bu">print</span>(<span class="st">"Starting epoch </span><span class="sc">{}</span><span class="st">/</span><span class="sc">{}</span><span class="st">"</span>.<span class="bu">format</span>(i<span class="op">+</span><span class="dv">1</span>, num_epochs))</span>
+<span id="cb12-46"><a href="#cb12-46" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb12-47"><a href="#cb12-47" aria-hidden="true" tabindex="-1"></a>  <span class="co"># get a batch of training data and compute the training step</span></span>
+<span id="cb12-48"><a href="#cb12-48" aria-hidden="true" tabindex="-1"></a>  <span class="cf">for</span> j <span class="kw">in</span> tqdm(<span class="bu">range</span>(loader.get_train_size() <span class="op">//</span> batch_size)):</span>
+<span id="cb12-49"><a href="#cb12-49" aria-hidden="true" tabindex="-1"></a>    <span class="co"># load a batch of data</span></span>
+<span id="cb12-50"><a href="#cb12-50" aria-hidden="true" tabindex="-1"></a>    (x, y) <span class="op">=</span> loader.get_batch(batch_size)</span>
+<span id="cb12-51"><a href="#cb12-51" aria-hidden="true" tabindex="-1"></a>    <span class="co"># loss optimization</span></span>
+<span id="cb12-52"><a href="#cb12-52" aria-hidden="true" tabindex="-1"></a>    loss <span class="op">=</span> ss_vae_train_step(x, y)</span>
+<span id="cb12-53"><a href="#cb12-53" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb12-54"><a href="#cb12-54" aria-hidden="true" tabindex="-1"></a>    <span class="co"># plot the progress every 200 steps</span></span>
+<span id="cb12-55"><a href="#cb12-55" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> j <span class="op">%</span> <span class="dv">500</span> <span class="op">==</span> <span class="dv">0</span>: </span>
+<span id="cb12-56"><a href="#cb12-56" aria-hidden="true" tabindex="-1"></a>      mdl.util.plot_sample(x, y, ss_vae)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </section>
 <section id="ss-vae를-활용하여-bias-발견하기" class="level3">
 <h3 class="anchored" data-anchor-id="ss-vae를-활용하여-bias-발견하기">SS-VAE를 활용하여 bias 발견하기</h3>
 <p>이제 SS-VAE의 학습을 모두 마쳤으니, bias를 발견해봅시다.<br>
 SS-VAE를 훈련하려면 VAE 재구성 손실과 지도 분류 손실이 모두 필요했습니다. VAE 재구성 손실은 모델이 특정 입력 데이터를 얼마나 잘 처리할 수 있는지를 반영하며, 재구성 손실이 높을수록 모델이 특정 예제를 학습하기가 더 어려워집니다.</p>
 <p>그렇다면 재구성 하기 힘든 결과일수록 학습이 덜 된 이미지라고 할 수 있겠죠. 즉, 재구성 손실이 높은 이미지들의 특징을 확인하여 우리가 훈련한 모델의 어떠한 부분이 부족한지 알 수 있습니다.</p>
-<pre><code>### Linking model performance to uncertainty and bias
-
-# Load a random sample of 5000 faces from our dataset and compute the model performance on them
-(x, y) = loader.get_batch(5000, only_faces=True)
-y_logit, z_mean, z_logsigma, x_recon = ss_vae(x)
-loss, class_loss, vae_loss = ss_vae_loss_function(x, x_recon, y, y_logit, z_mean, z_logsigma)
-
-# Sort the results by the vae loss scores
-vae_loss = vae_loss.numpy()
-ind = np.argsort(vae_loss, axis=None)
-
-# Plot the 25 samples with the highest and lowest reconstruction losses
-fig, ax = plt.subplots(1, 2, figsize=(16, 8))
-ax[0].imshow(mdl.util.create_grid_of_images(x[ind[:25]]))
-ax[0].set_title("Samples with the lowest reconstruction loss \n" + 
-                f"Average recon loss: {np.mean(vae_loss[ind[:25]]):.2f}")
-
-ax[1].imshow(mdl.util.create_grid_of_images(x[ind[-25:]]))
-ax[1].set_title("Samples with the highest reconstruction loss \n" + 
-                f"Average recon loss: {np.mean(vae_loss[ind[-25:]]):.2f}");</code></pre>
+<div class="sourceCode" id="cb13"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="co">### Linking model performance to uncertainty and bias</span></span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Load a random sample of 5000 faces from our dataset and compute the model performance on them</span></span>
+<span id="cb13-4"><a href="#cb13-4" aria-hidden="true" tabindex="-1"></a>(x, y) <span class="op">=</span> loader.get_batch(<span class="dv">5000</span>, only_faces<span class="op">=</span><span class="va">True</span>)</span>
+<span id="cb13-5"><a href="#cb13-5" aria-hidden="true" tabindex="-1"></a>y_logit, z_mean, z_logsigma, x_recon <span class="op">=</span> ss_vae(x)</span>
+<span id="cb13-6"><a href="#cb13-6" aria-hidden="true" tabindex="-1"></a>loss, class_loss, vae_loss <span class="op">=</span> ss_vae_loss_function(x, x_recon, y, y_logit, z_mean, z_logsigma)</span>
+<span id="cb13-7"><a href="#cb13-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-8"><a href="#cb13-8" aria-hidden="true" tabindex="-1"></a><span class="co"># Sort the results by the vae loss scores</span></span>
+<span id="cb13-9"><a href="#cb13-9" aria-hidden="true" tabindex="-1"></a>vae_loss <span class="op">=</span> vae_loss.numpy()</span>
+<span id="cb13-10"><a href="#cb13-10" aria-hidden="true" tabindex="-1"></a>ind <span class="op">=</span> np.argsort(vae_loss, axis<span class="op">=</span><span class="va">None</span>)</span>
+<span id="cb13-11"><a href="#cb13-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-12"><a href="#cb13-12" aria-hidden="true" tabindex="-1"></a><span class="co"># Plot the 25 samples with the highest and lowest reconstruction losses</span></span>
+<span id="cb13-13"><a href="#cb13-13" aria-hidden="true" tabindex="-1"></a>fig, ax <span class="op">=</span> plt.subplots(<span class="dv">1</span>, <span class="dv">2</span>, figsize<span class="op">=</span>(<span class="dv">16</span>, <span class="dv">8</span>))</span>
+<span id="cb13-14"><a href="#cb13-14" aria-hidden="true" tabindex="-1"></a>ax[<span class="dv">0</span>].imshow(mdl.util.create_grid_of_images(x[ind[:<span class="dv">25</span>]]))</span>
+<span id="cb13-15"><a href="#cb13-15" aria-hidden="true" tabindex="-1"></a>ax[<span class="dv">0</span>].set_title(<span class="st">"Samples with the lowest reconstruction loss </span><span class="ch">\n</span><span class="st">"</span> <span class="op">+</span> </span>
+<span id="cb13-16"><a href="#cb13-16" aria-hidden="true" tabindex="-1"></a>                <span class="ss">f"Average recon loss: </span><span class="sc">{</span>np<span class="sc">.</span>mean(vae_loss[ind[:<span class="dv">25</span>]])<span class="sc">:.2f}</span><span class="ss">"</span>)</span>
+<span id="cb13-17"><a href="#cb13-17" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-18"><a href="#cb13-18" aria-hidden="true" tabindex="-1"></a>ax[<span class="dv">1</span>].imshow(mdl.util.create_grid_of_images(x[ind[<span class="op">-</span><span class="dv">25</span>:]]))</span>
+<span id="cb13-19"><a href="#cb13-19" aria-hidden="true" tabindex="-1"></a>ax[<span class="dv">1</span>].set_title(<span class="st">"Samples with the highest reconstruction loss </span><span class="ch">\n</span><span class="st">"</span> <span class="op">+</span> </span>
+<span id="cb13-20"><a href="#cb13-20" aria-hidden="true" tabindex="-1"></a>                <span class="ss">f"Average recon loss: </span><span class="sc">{</span>np<span class="sc">.</span>mean(vae_loss[ind[<span class="op">-</span><span class="dv">25</span>:]])<span class="sc">:.2f}</span><span class="ss">"</span>)<span class="op">;</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <p><img src="reconstruction-loss.png" class="img-fluid"></p>
 <p>이제 우리는 어떠한 이미지가 재구성 손실이 높은지, 낮은지 확인할 수 있습니다.<br>
 각 경우에 대해 특징을 발견하실 수 있나요?</p>
