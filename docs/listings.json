@@ -2,6 +2,7 @@
   {
     "listing": "/index.html",
     "items": [
+      "/posts/compare-kld-chi/index.html",
       "/posts/bias-diagnose/index.html",
       "/posts/kl-divergence/index.html",
       "/posts/mnist/index.html",
