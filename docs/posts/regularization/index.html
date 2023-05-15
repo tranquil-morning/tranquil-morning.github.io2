@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 <meta name="author" content="Jinwook Chang">
-<meta name="dcterms.date" content="2023-04-15">
+<meta name="dcterms.date" content="2023-05-15">
 
 <title>Note of myself - Regularization (정규화 기법)</title>
 <style>
@@ -179,7 +179,7 @@ gtag('config', 'G-D7YERGZ04Y', { 'anonymize_ip': true});
       <div>
       <div class="quarto-title-meta-heading">Published</div>
       <div class="quarto-title-meta-contents">
-        <p class="date">April 15, 2023</p>
+        <p class="date">May 15, 2023</p>
       </div>
     </div>
     
@@ -219,14 +219,6 @@ gtag('config', 'G-D7YERGZ04Y', { 'anonymize_ip': true});
 <p><span class="math inline">\(\lambda_2\)</span>는 Ridge Regression을 위한 L2 Norm의 hyperparameter이며,<br>
 <span class="math inline">\(\lambda_1\)</span>는 Lasso Regression을 위한 L1 Norm의 hyperparameter입니다.</p>
 <p><img src="front.png" class="img-fluid"> [출처] <a href="https://www.datacamp.com/tutorial/tutorial-lasso-ridge-regression">Lasso and Ridge Regression in Python Tutorial | DataCamp</a></p>
-<p>L2 규제화는 계수 공간에서 원 혹은 타원형의 등고선을 형성하며,<br>
-이는 오차를 최소화하는 최적의 해가 L2 규제화 원의 경계에 존재하게 됩니다.</p>
-<p>L2 규제화는 계수를 제한하지만, 이것이 완전히 0이 될 확률은 매우 낮습니다.<br>
-이는 L2 규제화 원의 경계가 축에 정확히 정렬되지 않기 때문입니다.</p>
-<p>반면에 L1 규제화는 계수 공간에서 마름모 모양의 등고선을 형성합니다.<br>
-이 마름모의 모서리는 축에 정렬되어 있습니다.<br>
-그로 인해 최적의 해가 축(즉, 계수가 0인 위치)에 위치할 확률이 높아집니다.<br>
-따라서 L1 규제화는 계수를 완전히 0으로 만드는 효과가 있습니다.</p>
 </section>
 <section id="정규화-기법의-예시" class="level3">
 <h3 class="anchored" data-anchor-id="정규화-기법의-예시">정규화 기법의 예시</h3>

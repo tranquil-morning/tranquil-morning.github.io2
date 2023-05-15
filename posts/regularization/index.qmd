@@ -1,7 +1,7 @@
 ---
 title: "Regularization (정규화 기법)"
 author: "Jinwook Chang"
-date: "2023-04-15"
+date: "2023-05-15"
 date-modified: "2023-05-15"
 categories: [DataScience,Statistics,Script]
 ---
@@ -28,16 +28,6 @@ $\lambda_1$는 Lasso Regression을 위한 L1 Norm의 hyperparameter입니다.
 ![](front.png)
 [출처] [Lasso and Ridge Regression in Python Tutorial | DataCamp](https://www.datacamp.com/tutorial/tutorial-lasso-ridge-regression)
 
-L2 규제화는 계수 공간에서 원 혹은 타원형의 등고선을 형성하며,  
-이는 오차를 최소화하는 최적의 해가 L2 규제화 원의 경계에 존재하게 됩니다.  
-
-L2 규제화는 계수를 제한하지만, 이것이 완전히 0이 될 확률은 매우 낮습니다.  
-이는 L2 규제화 원의 경계가 축에 정확히 정렬되지 않기 때문입니다.
-
-반면에 L1 규제화는 계수 공간에서 마름모 모양의 등고선을 형성합니다.  
-이 마름모의 모서리는 축에 정렬되어 있습니다.  
-그로 인해 최적의 해가 축(즉, 계수가 0인 위치)에 위치할 확률이 높아집니다.  
-따라서 L1 규제화는 계수를 완전히 0으로 만드는 효과가 있습니다.
 
 ### 정규화 기법의 예시
 

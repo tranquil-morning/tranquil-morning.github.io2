@@ -2,6 +2,7 @@
   {
     "listing": "/index.html",
     "items": [
+      "/posts/regularization/index.html",
       "/posts/compare-kld-chi/index.html",
       "/posts/bias-diagnose/index.html",
       "/posts/kl-divergence/index.html",
@@ -32,7 +33,6 @@
       "/posts/clustering/index.html",
       "/posts/dimension-reduction/index.html",
       "/posts/dummy-variables/index.html",
-      "/posts/regularization/index.html",
       "/posts/covariance/index.html",
       "/posts/hierarchical/index.html",
       "/posts/pca/index.html",
