@@ -1,0 +1,212 @@
+---
+title: "Principles of Prompting 2"
+author: "Jinwook Chang"
+date: "2023-05-17"
+date-modified: "2023-05-17"
+categories: [AI, GPT]
+---
+
+![](../../others/prompt.png)
+
+[DeepLearning.AI](https://www.deeplearning.ai/)에서 제공하는 ChatGPT Prompt 강좌를 요약한 글입니다.
+실제 OpenAI 개발자가 진행하는 강좌이기에, 단순히 이용자의 경험과 감으로 제공되는 prompt 보다 나을 것으로 예상하여 정리합니다.
+
+모든 예시는 GPT 4.0 API로 작성되었습니다.
+
+목차 :
+
+* 프롬프팅의 원칙
+  + [명확하고 구체적인 지침 작성](gpt-principles-of-prompting-1)
+  + [모델에게 생각할 시간 주기](../gpt-principles-of-prompting-2)
+* [프롬프트 개발하기](../gpt-iterative-prompt-development)
+* GPT 기능 활용
+  + [Summarizing](../gpt-summarize/)
+  + [Inferring](../gpt-inferring/)
+  + [Transfroming](../gpt-transforming/)
+  + [Expanding](../gpt-expanding)
+* [GPT를 활용한 Chatbot 작성](../gpt-building-chatbot)
+
+이번 문서에서는 프롬프트 작성의 2 원칙과 원칙에 따라 작성하기 위한 몇 가지 팁을 소개하도록 하겠습니다.
+
+## 프롬프트 원칙
+- 원칙 1: **명확하고 구체적인 지침을 작성하세요**.
+- 원칙 2: **모델에게 생각할 시간을 주세요**.
+
+### 모델에게 생각할 시간을 주는 요령
+
+#### 1. 모델에게 과제 수행을 위한 단계를 제공하세요
+
+단순히 주어진 문장을 프랑스어로 요약 후, 문장의 등장인물이 누구였는지 묻는 것 보다,  
+요약 -> 번역 -> 인물 찾기라는 절차를 제공하여 더 정확한 결과를 얻을 수 있습니다.
+
+```s
+User
+Perform the following actions: 
+1 - Summarize the following text wrapped by <>\
+with 1 sentence.
+2 - Translate the summary into French.
+3 - List each name in the French summary.
+4 - Output a json object that contains the following \
+keys: french_summary, num_names.
+
+Separate your answers with line breaks.
+
+<In a charming village, siblings Jack and Jill set out on \ 
+a quest to fetch water from a hilltop \ 
+well. As they climbed, singing joyfully, misfortune \ 
+struck—Jack tripped on a stone and tumbled \ 
+down the hill, with Jill following suit. \ 
+Though slightly battered, the pair returned home to \ 
+comforting embraces. Despite the mishap, \ 
+their adventurous spirits remained undimmed, and they \ 
+continued exploring with delight.>
+```
+
+```s
+ChatGPT
+1 - Sentence summary:
+In a charming village, siblings Jack and Jill went on a quest to fetch water from a hilltop well,
+but they tripped and fell, yet despite this mishap, their adventurous spirits remained undeterred.
+
+2 - French translation:
+Dans un charmant village, les frères et sœurs Jack et Jill sont partis en quête pour chercher de l'eau à un puits en haut d'une colline, 
+mais ils ont trébuché et sont tombés, cependant, malgré cet incident, leur esprit aventureux est resté indéfectible.
+
+3 - Names in the French summary:
+
+Jack
+Jill
+4 - JSON output:
+
+```
+
+```json
+
+{
+  "french_summary": "Dans un charmant village, les frères et sœurs Jack et Jill sont partis en quête pour chercher de l'eau à un puits en haut d'une colline, mais ils ont trébuché et sont tombés, cependant, malgré cet incident, leur esprit aventureux est resté indéfectible.",
+  "num_names": 2
+}
+```
+
+#### 2. 결론을 내리기 전에 모델 스스로 해결책을 찾도록 지시하세요
+
+GPT는 언어생성 모델이기에 수학 문제에는 매우 취약한 결과를 보입니다.
+
+```s
+User
+Determine if the student's solution is correct or not.
+
+Question:
+I'm building a solar power installation and I need \
+ help working out the financials. 
+- Land costs $100 / square foot
+- I can buy solar panels for $250 / square foot
+- I negotiated a contract for maintenance that will cost \ 
+me a flat $100k per year, and an additional $10 / square \
+foot
+What is the total cost for the first year of operations 
+as a function of the number of square feet.
+
+Student's Solution:
+Let x be the size of the installation in square feet.
+Costs:
+1. Land cost: 100x
+2. Solar panel cost: 250x
+3. Maintenance cost: 100,000 + 100x
+Total cost: 100x + 250x + 100,000 + 100x = 450x + 100,000
+```
+
+```s
+ChatGPT
+The student's solution is correct.
+The total cost for the first year of operations is indeed 450x + 100,000,
+where x is the size of the installation in square feet.
+The student correctly included all costs: land, solar panels, and maintenance.
+```
+
+위의 사례와 같이, Maintenance Cost가 $100000 + 10x$가 올바른 답임에도 불구하고,  
+제가 제공한 프롬프트가 올바른 정답이라고 답하고 있습니다.  
+
+모델에게 우선 답을 찾고, 제가 제공한 답과 비교하게 함으로서 이를 예방할 수 있습니다.
+
+```s
+Your task is to determine if the student's solution \
+is correct or not.
+To solve the problem do the following:
+- First, work out your own solution to the problem. 
+- Then compare your solution to the student's solution \ 
+and evaluate if the student's solution is correct or not. 
+Don't decide if the student's solution is correct until 
+you have done the problem yourself.
+
+Use the following format:
+Question:
+
+<question here>
+
+Student's solution:
+
+<student's solution here>
+
+Actual solution:
+
+<steps to work out the solution and your solution here>
+
+Is the student's solution the same as actual solution \
+just calculated:
+
+<yes or no>
+
+Student grade:
+
+<correct or incorrect>
+
+
+Question:
+
+<I'm building a solar power installation and I need help \
+working out the financials. 
+- Land costs $100 / square foot
+- I can buy solar panels for $250 / square foot
+- I negotiated a contract for maintenance that will cost \
+me a flat $100k per year, and an additional $10 / square \
+foot
+What is the total cost for the first year of operations \
+as a function of the number of square feet.>
+
+Student's solution:
+
+<Let x be the size of the installation in square feet.
+Costs:
+1. Land cost: 100x
+2. Solar panel cost: 250x
+3. Maintenance cost: 100,000 + 100x
+Total cost: 100x + 250x + 100,000 + 100x = 450x + 100,000>
+
+Actual solution:
+```
+
+```s
+ChatGPT
+
+Let's denote the size of the installation in square feet as x.
+
+Costs:
+1. Land cost: $100 * x
+2. Solar panel cost: $250 * x
+3. Maintenance cost: $100,000 + $10 * x
+
+So, the total cost for the first year of operations is:
+Land cost + Solar panel cost + Maintenance cost
+
+Therefore, we have:
+Total cost = $100 * x + $250 * x + $100,000 + $10 * x
+           = $360 * x + $100,000
+           
+Is the student's solution the same as actual solution just calculated:
+No
+
+Student grade:
+Incorrect
+```
+

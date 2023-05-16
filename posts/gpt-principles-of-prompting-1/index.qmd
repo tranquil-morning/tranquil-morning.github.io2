@@ -1,0 +1,197 @@
+---
+title: "Principles of Prompting 1"
+author: "Jinwook Chang"
+date: "2023-05-16"
+date-modified: "2023-05-16"
+categories: [AI, GPT]
+---
+
+![](../../others/prompt.png)
+
+
+[DeepLearning.AI](https://www.deeplearning.ai/)에서 제공하는 ChatGPT Prompt 강좌를 요약한 글입니다.
+실제 OpenAI 개발자가 진행하는 강좌이기에, 단순히 이용자의 경험과 감으로 제공되는 prompt 보다 나을 것으로 예상하여 정리합니다.
+
+모든 예시는 GPT 4.0 API로 작성되었습니다.
+
+목차 :
+
+* 프롬프팅의 원칙
+  + [명확하고 구체적인 지침 작성](gpt-principles-of-prompting-1)
+  + [모델에게 생각할 시간 주기](../gpt-principles-of-prompting-2)
+* [프롬프트 개발하기](../gpt-iterative-prompt-development)
+* GPT 기능 활용
+  + [Summarizing](../gpt-summarize/)
+  + [Inferring](../gpt-inferring/)
+  + [Transfroming](../gpt-transforming/)
+  + [Expanding](../gpt-expanding)
+* [GPT를 활용한 Chatbot 작성](../gpt-building-chatbot)
+
+이번 문서에서는 프롬프트 작성의 1 원칙과 원칙에 따라 작성하기 위한 몇 가지 팁을 소개하도록 하겠습니다.
+
+## 프롬프트 원칙
+- 원칙 1: **명확하고 구체적인 지침을 작성하세요**.
+- 원칙 2: **모델에게 생각할 시간을 주세요**.
+
+### 명확하고 구체적인 지침을 작성하는 요령
+
+#### 1. 구분 기호를 사용하여 입력의 뚜렷한 부분을 명확하게 표시하세요
+
+아래 예시와 같이, 요약이 필요할 때, 요약이 필요한 문장을 `<>`로 묶어서 필요한 부분만 요약할 수 있습니다.
+
+```s
+User
+Summarize the text Parenthetical senteces by <> into a single sentence.
+
+<You should express what you want a model to do by \ 
+providing instructions that are as clear and \ 
+specific as you can possibly make them. \ 
+This will guide the model towards the desired output, \ 
+and reduce the chances of receiving irrelevant \ 
+or incorrect responses. Don't confuse writing a \ 
+clear prompt with writing a short prompt. \ 
+In many cases, longer prompts provide more clarity \ 
+and context for the model, which can lead to \ 
+more detailed and relevant outputs.>
+```  
+
+
+```s
+ChatGPT
+To achieve desired outputs and minimize irrelevant or incorrect responses, you should provide a model with clear and specific instructions, remembering that longer prompts often offer more clarity and context, leading to more detailed and relevant results.
+```
+
+#### 2. 특정한 구조의 출력을 요청하세요
+
+아래의 예시와 같이 JSON, HTML과 같은 유형의 출력을 요청하여 결과를 얻을 수 있습니다.
+
+```s
+User
+Generate a list of three made-up book titles along \ 
+with their authors and genres. 
+Provide them in JSON format with the following keys: 
+book_id, title, author, genre.
+```
+
+```json
+[
+  {
+    "book_id": "1",
+    "title": "Eclipse of Shadows",
+    "author": "Liam S. Hartfield",
+    "genre": "Fantasy"
+  },
+  {
+    "book_id": "2",
+    "title": "Quantum Echoes",
+    "author": "Dr. Eleanor Vasquez",
+    "genre": "Science Fiction"
+  },
+  {
+    "book_id": "3",
+    "title": "Beneath The Silent City",
+    "author": "Martin O'Leary",
+    "genre": "Historical Fiction"
+  }
+]
+```
+
+#### 3. 모델에게 조건이 충족되었는지 확인하도록 요청하세요
+
+아래 예시는 제가 제공한 문단에 대해 모델에게 지시 순서를 요청하는 프롬프트입니다.
+제공한 문단에 지시가 있을 경우와 없을 경우에 대한 프롬프트를 제공하여, 좀 더 명확한 결과를 얻을 수 있습니다.
+
+
+```s
+User
+You will be provided with text wrapped by <>. 
+If it contains a sequence of instructions, \ 
+re-write those instructions in the following format:
+
+Step 1 - ...
+Step 2 - …
+…
+Step N - …
+
+If the text does not contain a sequence of instructions, \ 
+then simply write \"No steps provided.\"
+
+
+<Making a cup of tea is easy! First, you need to get some \ 
+water boiling. While that's happening, \ 
+grab a cup and put a tea bag in it. Once the water is \ 
+hot enough, just pour it over the tea bag. \ 
+Let it sit for a bit so the tea can steep. After a \ 
+few minutes, take out the tea bag. If you \ 
+like, you can add some sugar or milk to taste. \ 
+And that's it! You've got yourself a delicious \ 
+cup of tea to enjoy.>
+```
+
+```s
+ChatGPT
+Step 1 - Get some water boiling.
+Step 2 - Grab a cup and put a tea bag in it.
+Step 3 - Once the water is hot enough, pour it over the tea bag.
+Step 4 - Let the tea steep for a few minutes.
+Step 5 - After steeping, remove the tea bag.
+Step 6 - If desired, add sugar or milk to taste.
+Step 7 - Enjoy your delicious cup of tea.
+```
+
+
+
+```s
+User
+You will be provided with text wrapped by <>. 
+If it contains a sequence of instructions, \ 
+re-write those instructions in the following format:
+
+Step 1 - ...
+Step 2 - …
+…
+Step N - …
+
+If the text does not contain a sequence of instructions, \ 
+then simply write \"No steps provided.\"
+
+<The sun is shining brightly today, and the birds are \
+singing. It's a beautiful day to go for a \ 
+walk in the park. The flowers are blooming, and the \ 
+trees are swaying gently in the breeze. People \ 
+are out and about, enjoying the lovely weather. \ 
+Some are having picnics, while others are playing \ 
+games or simply relaxing on the grass. It's a \ 
+perfect day to spend time outdoors and appreciate the \ 
+beauty of nature.>
+```
+
+```s
+ChatGPT
+No steps provided.
+```
+
+#### 4. 모델에게 Few-shot Learning을 제공하세요
+
+모델에게 내가 원하는 사례를 보여주고, 질문을 하면 원하는 결과를 얻을 수 있습니다.
+
+```s
+User
+Your task is to answer in a consistent style.
+
+<child>: Teach me about patience.
+
+<grandparent>: The river that carves the deepest \ 
+valley flows from a modest spring; the \ 
+grandest symphony originates from a single note; \ 
+the most intricate tapestry begins with a solitary thread.
+
+<child>: Teach me about resilience.
+```
+
+```s
+ChatGPT
+<grandparent>: The mightiest oak in the forest was once a little nut that stood its ground;  
+the highest mountain withstands the harshest weather, yet remains unyielding; 
+the most enduring diamond begins its journey as a humble piece of coal.
+```
