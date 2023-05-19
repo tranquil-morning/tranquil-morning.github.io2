@@ -1,0 +1,174 @@
+---
+title: "Summarise using GPT"
+author: "Jinwook Chang"
+date: "2023-05-20"
+date-modified: "2023-05-20"
+categories: [AI, GPT]
+---
+
+![](../../others/prompt.png)
+
+
+[DeepLearning.AI](https://www.deeplearning.ai/)에서 제공하는 ChatGPT Prompt 강좌를 요약한 글입니다.
+실제 OpenAI 개발자가 진행하는 강좌이기에, 단순히 이용자의 경험과 감으로 제공되는 prompt 보다 나을 것으로 예상하여 정리합니다.
+
+모든 예시는 GPT 4.0 API로 작성되었습니다.
+
+목차 :
+
+* 프롬프팅의 원칙
+  + [명확하고 구체적인 지침 작성](gpt-principles-of-prompting-1)
+  + [모델에게 생각할 시간 주기](../gpt-principles-of-prompting-2)
+* [프롬프트 개발하기](../gpt-iterative-prompt-development)
+* GPT 기능 활용
+  + [Summarizing](../gpt-summarize/)
+  + [Inferring](../gpt-inferring/)
+  + [Transfroming](../gpt-transforming/)
+  + [Expanding](../gpt-expanding)
+* [GPT를 활용한 Chatbot 작성](../gpt-building-chatbot)
+
+이번 문서에서는 GPT를 활용하여 요약을 하는 방법들에 대해 알아보겠습니다.
+
+다음과 같은 제품 리뷰를 요약한다고 생각해봅시다.
+
+```s
+<Got this panda plush toy for my daughter's birthday, \
+who loves it and takes it everywhere. It's soft and \ 
+super cute, and its face has a friendly look. It's \ 
+a bit small for what I paid though. I think there \ 
+might be other options that are bigger for the \ 
+same price. It arrived a day earlier than expected, \ 
+so I got to play with it myself before I gave it \ 
+to her.>
+```
+
+요약될 문장을 특정 문자 수 이내로 제한하거나, 요약할 내용을 어디에 중점을 둘 것인지 정할 수 있습니다.  
+
+
+```s
+User
+
+Your task is to generate a short summary of a product \
+review from an ecommerce site. 
+
+Summarize the review below, wrapped by <> 
+in at most 30 words. 
+
+Review: <~생략~>
+```
+
+```s
+ChatGPT
+
+The reviewer is pleased with the panda plush toy's softness, cuteness, and friendly look. However, they believe it's smaller than its price suggests. It arrived earlier than expected.
+```
+
+리뷰를 30 단어 이내로 잘 요약하였습니다.
+
+```s
+User
+
+Your task is to generate a short summary of a product \
+review from an ecommerce site to give feedback to the \
+pricing deparmtment, responsible for determining the \
+price of the product.  
+
+Summarize the review below, wrapped by <> 
+in at most 30 words, and focusing on any aspects \
+that are relevant to the price and perceived value. 
+
+Review: <~생략~>
+```
+
+```s
+ChatGPT
+
+The panda plush toy is adored, soft, and cute but perceived as slightly small for its price point. Despite early delivery, the customer suggests better value alternatives may exist.
+```
+
+이전과 달리 가격에 중점을 두고 요약을 한 결과입니다.
+
+여러가지 리뷰를 표로 요약해보겠습니다.
+
+```s
+User
+
+Your task is to generate a short summary of a product \
+review from an ecommerce site. 
+
+Summarize the review below, wrapped by """ in at most 30 words. 
+
+Share result as table, including [type of product, summary of review, sentiment of review]
+
+"""
+Needed a nice lamp for my bedroom, and this one \
+had additional storage and not too high of a price \
+point. Got it fast - arrived in 2 days. The string \
+to the lamp broke during the transit and the company \
+happily sent over a new one. Came within a few days \
+as well. It was easy to put together. Then I had a \
+missing part, so I contacted their support and they \
+very quickly got me the missing piece! Seems to me \
+to be a great company that cares about their customers \
+and products. 
+"""
+
+ """
+My dental hygienist recommended an electric toothbrush, \
+which is why I got this. The battery life seems to be \
+pretty impressive so far. After initial charging and \
+leaving the charger plugged in for the first week to \
+condition the battery, I've unplugged the charger and \
+been using it for twice daily brushing for the last \
+3 weeks all on the same charge. But the toothbrush head \
+is too small. I’ve seen baby toothbrushes bigger than \
+this one. I wish the head was bigger with different \
+length bristles to get between teeth better because \
+this one doesn’t.  Overall if you can get this one \
+around the $50 mark, it's a good deal. The manufactuer's \
+replacements heads are pretty expensive, but you can \
+get generic ones that're more reasonably priced. This \
+toothbrush makes me feel like I've been to the dentist \
+every day. My teeth feel sparkly clean! 
+"""
+
+ """
+So, they still had the 17 piece system on seasonal \
+sale for around $49 in the month of November, about \
+half off, but for some reason (call it price gouging) \
+around the second week of December the prices all went \
+up to about anywhere from between $70-$89 for the same \
+system. And the 11 piece system went up around $10 or \
+so in price also from the earlier sale price of $29. \
+So it looks okay, but if you look at the base, the part \
+where the blade locks into place doesn’t look as good \
+as in previous editions from a few years ago, but I \
+plan to be very gentle with it (example, I crush \
+very hard items like beans, ice, rice, etc. in the \ 
+blender first then pulverize them in the serving size \
+I want in the blender then switch to the whipping \
+blade for a finer flour, and use the cross cutting blade \
+first when making smoothies, then use the flat blade \
+if I need them finer/less pulpy). Special tip when making \
+smoothies, finely cut and freeze the fruits and \
+vegetables (if using spinach-lightly stew soften the \ 
+spinach then freeze until ready for use-and if making \
+sorbet, use a small to medium sized food processor) \ 
+that you plan to use that way you can avoid adding so \
+much ice if at all-when making your smoothie. \
+After about a year, the motor was making a funny noise. \
+I called customer service but the warranty expired \
+already, so I had to buy another one. FYI: The overall \
+quality has gone done in these types of products, so \
+they are kind of counting on brand recognition and \
+consumer loyalty to maintain sales. Got it in about \
+two days.
+"""
+```
+
+
+| Type of Product | Summary of Review | Sentiment of Review |
+| --------------- | ----------------- | ------------------- |
+| Bedroom Lamp | The lamp was affordable, arrived promptly, and had additional storage. The customer had issues with a broken string and a missing part, but customer service quickly resolved both issues. | Positive |
+| Electric Toothbrush | The electric toothbrush has a long-lasting battery life and makes teeth feel very clean. However, the head of the toothbrush is too small. The customer finds the manufacturer's replacement heads expensive but suggests cheaper generic ones. | Mixed |
+| Blender System | The blender system was bought at a discount, but its prices later increased significantly. The quality isn't as good as earlier models, and the motor had issues after a year. Customer also shares tips on how to use it. | Mixed |
