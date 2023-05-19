@@ -2,6 +2,7 @@
   {
     "listing": "/index.html",
     "items": [
+      "/posts/gpt-iterative-prompt-development/index.html",
       "/posts/bayesian-network/index.html",
       "/posts/gpt-principles-of-prompting-2/index.html",
       "/posts/gpt-principles-of-prompting-1/index.html",
