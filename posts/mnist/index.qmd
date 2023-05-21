@@ -13,8 +13,8 @@ Lab에 대해서는 [이곳](https://github.com/aamini/introtodeeplearning/)에�
 2. [Lab1-Part2 Music Generation](../music-generation)
 3. [Lab2-Part1 MNIST](../mnist)
 4. [Lab2-Part2 Diagnosing Bias](../bias-diagnose)
-5. [Lab3-Part1 Introduction Caspa]()
-6. [Lab3-Part2 Bias and Uncertainty]()
+5. [Lab3-Part1 Introduction Caspa](../intro-to-caspa)
+6. [Lab3-Part2 Bias and Uncertainty](../bias-and-uncertainty)
 
 
 이번 과제에서는 CNN 모델을 통해 손으로 쓰여진 0 ~ 9 의 글씨를 예측하는 모형을 만듭니다.  

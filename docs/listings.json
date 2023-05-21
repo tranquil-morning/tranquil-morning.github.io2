@@ -2,6 +2,7 @@
   {
     "listing": "/index.html",
     "items": [
+      "/posts/intro-to-caspa/index.html",
       "/posts/gpt-summarize/index.html",
       "/posts/gpt-iterative-prompt-development/index.html",
       "/posts/bayesian-network/index.html",
