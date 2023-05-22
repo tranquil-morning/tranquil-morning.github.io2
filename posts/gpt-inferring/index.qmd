@@ -1,0 +1,163 @@
+---
+title: "Inferring Using GPT"
+author: "Jinwook Chang"
+date: "2023-05-22"
+date-modified: "2023-05-22"
+categories: [AI, GPT]
+---
+
+![](../../others/prompt.png)
+
+
+[DeepLearning.AI](https://www.deeplearning.ai/)에서 제공하는 ChatGPT Prompt 강좌를 요약한 글입니다.
+실제 OpenAI 개발자가 진행하는 강좌이기에, 단순히 이용자의 경험과 감으로 제공되는 prompt 보다 나을 것으로 예상하여 정리합니다.
+
+모든 예시는 GPT 4.0 API로 작성되었습니다.
+
+목차 :
+
+* 프롬프팅의 원칙
+  + [명확하고 구체적인 지침 작성](gpt-principles-of-prompting-1)
+  + [모델에게 생각할 시간 주기](../gpt-principles-of-prompting-2)
+* [프롬프트 개발하기](../gpt-iterative-prompt-development)
+* GPT 기능 활용
+  + [Summarizing](../gpt-summarize/)
+  + [Inferring](../gpt-inferring/)
+  + [Transfroming](../gpt-transforming/)
+  + [Expanding](../gpt-expanding)
+* [GPT를 활용한 Chatbot 작성](../gpt-building-chatbot)
+
+이번 문서에서는 제품 리뷰를 통해 글의 감정/주제를 추출하는 예제를 실행해보겠습니다.  
+이용할 제품 리뷰는 다음과 같습니다:  
+
+```s
+<Needed a nice lamp for my bedroom, and this one had \
+additional storage and not too high of a price point. \
+Got it fast.  The string to our lamp broke during the \
+transit and the company happily sent over a new one. \
+Came within a few days as well. It was easy to put \
+together.  I had a missing part, so I contacted their \
+support and they very quickly got me the missing piece! \
+Lumina seems to me to be a great company that cares \
+about their customers and products!!>
+```
+
+위의 리뷰를 사용하여 텍스트에서 감정을 추출해보겠습니다.
+
+Positve / Negative 예제:  
+
+```s
+User
+What is the sentiment of the following product review, 
+which is wrapped with <>
+
+Give your answer as a single word, either "positive" \
+or "negative".
+
+<~생략~>
+```
+
+```s
+ChatGPT
+
+positive
+```
+
+5개 감정 추출 예제:  
+
+```s
+User
+
+Identify a list of emotions that the writer of the \
+following review is expressing. Include no more than \
+five items in the list. Format your answer as a list of \
+lower-case words.
+
+example : [angry, sad, ...]
+
+<~생략~>
+```
+
+```s
+ChatGPT
+
+[happy, satisfied, impressed, grateful, pleased]
+```
+
+특정 감정 여부 확인 예제:  
+
+```s
+User
+
+Is the writer of the following review expressing anger?\
+The review is wrapped by <> \
+Give your answer as either yes or no.
+
+<~생략~>
+```
+
+```s
+ChatGPT
+
+No
+```
+
+특정 주제 추출 예제:  
+
+```s
+User
+
+Identify the following items from the review text: 
+- Item purchased by reviewer
+- Company that made the item
+
+The review is wrapped by <>. \
+Format your response as a JSON object with \
+"Item" and "Brand" as the keys. 
+If the information isn't present, use "unknown" \
+as the value.
+Make your response as short as possible.
+
+
+
+<~생략~>
+```
+
+```json
+{
+  "Item": "lamp",
+  "Brand": "Lumina"
+}
+```
+
+
+여러 과제 수행 예제:  
+
+```s
+User
+
+Identify the following items from the review text: 
+- Sentiment (positive or negative)
+- Is the reviewer expressing anger? (true or false)
+- Item purchased by reviewer
+- Company that made the item
+
+The review is delimited wrapped by <>. \
+Format your response as a JSON object with \
+"Sentiment", "Anger", "Item" and "Brand" as the keys.
+If the information isn't present, use "unknown" \
+as the value.
+Make your response as short as possible.
+Format the Anger value as a boolean.
+
+<~생략~>
+```
+
+```json
+{
+  "Sentiment": "positive",
+  "Anger": false,
+  "Item": "lamp",
+  "Brand": "Lumina"
+}
+```
