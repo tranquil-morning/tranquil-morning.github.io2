@@ -1,8 +1,8 @@
 ---
-title: "Inferring Using GPT"
+title: "Expanding Using GPT"
 author: "Jinwook Chang"
-date: "2023-05-22"
-date-modified: "2023-05-22"
+date: "2023-05-24"
+date-modified: "2023-05-24"
 categories: [AI, GPT]
 ---
 
@@ -25,139 +25,110 @@ categories: [AI, GPT]
   + [Inferring](../gpt-inferring/)
   + [Transfroming](../gpt-transforming/)
   + [Expanding](../gpt-expanding)
-* [GPT를 활용한 Chatbot 작성](../gpt-building-chatbot)
 
-이번 문서에서는 제품 리뷰를 통해 글의 감정/주제를 추출하는 예제를 실행해보겠습니다.  
-이용할 제품 리뷰는 다음과 같습니다:  
+이번 문서에서는 제품 리뷰에 대한 답변을 작성하고, 제품의 오류에 대한 CS를 답변하는 예제를 알아보겠습니다.
+
+제품 리뷰
 
 ```s
-<Needed a nice lamp for my bedroom, and this one had \
-additional storage and not too high of a price point. \
-Got it fast.  The string to our lamp broke during the \
-transit and the company happily sent over a new one. \
-Came within a few days as well. It was easy to put \
-together.  I had a missing part, so I contacted their \
-support and they very quickly got me the missing piece! \
-Lumina seems to me to be a great company that cares \
-about their customers and products!!>
+<So, they still had the 17 piece system on seasonal \
+sale for around $49 in the month of November, about \
+half off, but for some reason (call it price gouging) \
+around the second week of December the prices all went \
+up to about anywhere from between $70-$89 for the same \
+system. And the 11 piece system went up around $10 or \
+so in price also from the earlier sale price of $29. \
+So it looks okay, but if you look at the base, the part \
+where the blade locks into place doesn’t look as good \
+as in previous editions from a few years ago, but I \
+plan to be very gentle with it (example, I crush \
+very hard items like beans, ice, rice, etc. in the \ 
+blender first then pulverize them in the serving size \
+I want in the blender then switch to the whipping \
+blade for a finer flour, and use the cross cutting blade \
+first when making smoothies, then use the flat blade \
+if I need them finer/less pulpy). Special tip when making \
+smoothies, finely cut and freeze the fruits and \
+vegetables (if using spinach-lightly stew soften the \ 
+spinach then freeze until ready for use-and if making \
+sorbet, use a small to medium sized food processor) \ 
+that you plan to use that way you can avoid adding so \
+much ice if at all-when making your smoothie. \
+After about a year, the motor was making a funny noise. \
+I called customer service but the warranty expired \
+already, so I had to buy another one. FYI: The overall \
+quality has gone done in these types of products, so \
+they are kind of counting on brand recognition and \
+consumer loyalty to maintain sales. Got it in about \
+two days.>
 ```
-
-위의 리뷰를 사용하여 텍스트에서 감정을 추출해보겠습니다.
-
-Positve / Negative 예제:  
 
 ```s
 User
-What is the sentiment of the following product review, 
-which is wrapped with <>
 
-Give your answer as a single word, either "positive" \
-or "negative".
+You are a customer service AI assistant.
+Your task is to send an email reply to a valued customer.
+Given the customer email wrapped by <>, \
+Generate a reply to thank the customer for their review.
+If the sentiment is positive or neutral, thank them for \
+their review.
+If the sentiment is negative, apologize and suggest that \
+they can reach out to customer service. 
+Make sure to use specific details from the review.
+Write in a concise and professional tone.
+Sign the email as `AI customer agent`.
 
-<~생략~>
+Customer review: <So, they still had the 17 piece system on seasonal \
+sale for around $49 in the month of November, about \
+half off, but for some reason (call it price gouging) \
+around the second week of December the prices all went \
+up to about anywhere from between $70-$89 for the same \
+system. And the 11 piece system went up around $10 or \
+so in price also from the earlier sale price of $29. \
+So it looks okay, but if you look at the base, the part \
+where the blade locks into place doesn’t look as good \
+as in previous editions from a few years ago, but I \
+plan to be very gentle with it (example, I crush \
+very hard items like beans, ice, rice, etc. in the \ 
+blender first then pulverize them in the serving size \
+I want in the blender then switch to the whipping \
+blade for a finer flour, and use the cross cutting blade \
+first when making smoothies, then use the flat blade \
+if I need them finer/less pulpy). Special tip when making \
+smoothies, finely cut and freeze the fruits and \
+vegetables (if using spinach-lightly stew soften the \ 
+spinach then freeze until ready for use-and if making \
+sorbet, use a small to medium sized food processor) \ 
+that you plan to use that way you can avoid adding so \
+much ice if at all-when making your smoothie. \
+After about a year, the motor was making a funny noise. \
+I called customer service but the warranty expired \
+already, so I had to buy another one. FYI: The overall \
+quality has gone done in these types of products, so \
+they are kind of counting on brand recognition and \
+consumer loyalty to maintain sales. Got it in about \
+two days.>
 ```
 
 ```s
 ChatGPT
 
-positive
-```
+Dear Valued Customer,
 
-5개 감정 추출 예제:  
+Thank you for taking the time to provide us with a detailed review of your experience with our 17 piece system. Your feedback is essential in our efforts to continuously improve our products and services.
 
-```s
-User
+We understand your concern about the pricing changes in December. We assure you that these fluctuations are generally linked to many factors such as demand, stock availability, and seasonal trends, and not intended to inconvenience our customers. We aim to provide the best value for our customers at all times.
 
-Identify a list of emotions that the writer of the \
-following review is expressing. Include no more than \
-five items in the list. Format your answer as a list of \
-lower-case words.
+Your observation about the base and blade lock design is noted. Our engineering team continuously works on improving the design based on customer feedback like yours, to ensure our products not only meet but exceed customer expectations.
 
-example : [angry, sad, ...]
+We're glad to know that you've developed efficient techniques for using our system to make your smoothies and other foods. Your tips about pre-freezing fruits and vegetables for smoothies is a great one and we appreciate you sharing it.
 
-<~생략~>
-```
+We're sorry to hear about the motor issue you experienced after a year. While it's unfortunate that the issue occurred after the warranty period, our customer service team is always here to provide you with support and guidance. For any future concerns, we encourage you to reach out to us immediately.
 
-```s
-ChatGPT
+The remark about our product quality is taken seriously. Our commitment is to offer products of the highest quality and your feedback will be forwarded to our quality assurance team for further review.
 
-[happy, satisfied, impressed, grateful, pleased]
-```
+Thank you for staying loyal to our brand. We value your trust and we aim to make sure our products meet your needs.
 
-특정 감정 여부 확인 예제:  
-
-```s
-User
-
-Is the writer of the following review expressing anger?\
-The review is wrapped by <> \
-Give your answer as either yes or no.
-
-<~생략~>
-```
-
-```s
-ChatGPT
-
-No
-```
-
-특정 주제 추출 예제:  
-
-```s
-User
-
-Identify the following items from the review text: 
-- Item purchased by reviewer
-- Company that made the item
-
-The review is wrapped by <>. \
-Format your response as a JSON object with \
-"Item" and "Brand" as the keys. 
-If the information isn't present, use "unknown" \
-as the value.
-Make your response as short as possible.
-
-
-
-<~생략~>
-```
-
-```json
-{
-  "Item": "lamp",
-  "Brand": "Lumina"
-}
-```
-
-
-여러 과제 수행 예제:  
-
-```s
-User
-
-Identify the following items from the review text: 
-- Sentiment (positive or negative)
-- Is the reviewer expressing anger? (true or false)
-- Item purchased by reviewer
-- Company that made the item
-
-The review is delimited wrapped by <>. \
-Format your response as a JSON object with \
-"Sentiment", "Anger", "Item" and "Brand" as the keys.
-If the information isn't present, use "unknown" \
-as the value.
-Make your response as short as possible.
-Format the Anger value as a boolean.
-
-<~생략~>
-```
-
-```json
-{
-  "Sentiment": "positive",
-  "Anger": false,
-  "Item": "lamp",
-  "Brand": "Lumina"
-}
+Yours Sincerely,
+AI Customer Agent
 ```

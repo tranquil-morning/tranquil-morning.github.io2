@@ -2,8 +2,9 @@
   {
     "listing": "/index.html",
     "items": [
-      "/posts/gpt-transforming/index.html",
       "/posts/gpt-inferring/index.html",
+      "/posts/gpt-transforming/index.html",
+      "/posts/gpt-expanding/index.html",
       "/posts/intro-to-caspa/index.html",
       "/posts/gpt-summarize/index.html",
       "/posts/gpt-iterative-prompt-development/index.html",

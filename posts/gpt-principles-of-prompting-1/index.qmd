@@ -25,7 +25,6 @@ categories: [AI, GPT]
   + [Inferring](../gpt-inferring/)
   + [Transfroming](../gpt-transforming/)
   + [Expanding](../gpt-expanding)
-* [GPT를 활용한 Chatbot 작성](../gpt-building-chatbot)
 
 이번 문서에서는 프롬프트 작성의 1 원칙과 원칙에 따라 작성하기 위한 몇 가지 팁을 소개하도록 하겠습니다.
 
