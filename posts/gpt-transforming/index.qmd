@@ -141,7 +141,7 @@ table with column headers and title:
 </html>
 ```
 
-!()[restaurant-html.png]
+![](restaurant-html.png)
 
 
 
