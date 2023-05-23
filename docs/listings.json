@@ -2,6 +2,7 @@
   {
     "listing": "/index.html",
     "items": [
+      "/posts/gpt-transforming/index.html",
       "/posts/gpt-inferring/index.html",
       "/posts/intro-to-caspa/index.html",
       "/posts/gpt-summarize/index.html",

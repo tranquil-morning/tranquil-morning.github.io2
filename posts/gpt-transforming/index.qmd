@@ -1,0 +1,179 @@
+---
+title: "Transform using GPT"
+author: "Jinwook Chang"
+date: "2023-05-23"
+date-modified: "2023-05-23"
+categories: [AI, GPT]
+---
+
+![](../../others/prompt.png)
+
+
+[DeepLearning.AI](https://www.deeplearning.ai/)에서 제공하는 ChatGPT Prompt 강좌를 요약한 글입니다.
+실제 OpenAI 개발자가 진행하는 강좌이기에, 단순히 이용자의 경험과 감으로 제공되는 prompt 보다 나을 것으로 예상하여 정리합니다.
+
+모든 예시는 GPT 4.0 API로 작성되었습니다.
+
+목차 :
+
+* 프롬프팅의 원칙
+  + [명확하고 구체적인 지침 작성](gpt-principles-of-prompting-1)
+  + [모델에게 생각할 시간 주기](../gpt-principles-of-prompting-2)
+* [프롬프트 개발하기](../gpt-iterative-prompt-development)
+* GPT 기능 활용
+  + [Summarizing](../gpt-summarize/)
+  + [Inferring](../gpt-inferring/)
+  + [Transfroming](../gpt-transforming/)
+  + [Expanding](../gpt-expanding)
+* [GPT를 활용한 Chatbot 작성](../gpt-building-chatbot)
+
+이번 문서에서는 GPT를 활용하여 변환을 하는 방법들에 대해 알아보겠습니다.
+번역, 톤 바꾸기, 문법체크를 예시로 알아보겠습니다.
+
+#### 번역
+
+단순히 하나의 문장을 다른 언어로 번역하는 것도 물론 가능하나,  
+다국가로 이루어진 문장들을 하나의 언어로 번역하는 것도 가능합니다.
+
+```s
+User
+
+Tell me what the langauge of below sentences and translate them to Korean.
+Share result as table (language, meaning)
+  "La performance du système est plus lente que d'habitude.",     
+  "Mi monitor tiene píxeles que no se iluminan.",            
+  "Il mio mouse non funziona",                              
+  "Mój klawisz Ctrl jest zepsuty",                 
+  "我的屏幕在闪烁"   
+```  
+
+| Language | Original Sentence | Korean Translation |
+| --- | --- | --- |
+| French | La performance du système est plus lente que d'habitude. | 시스템의 성능이 평소보다 느립니다. |
+| Spanish | Mi monitor tiene píxeles que no se iluminan. | 내 모니터에는 불이 들어오지 않는 픽셀이 있습니다. |
+| Italian | Il mio mouse non funziona | 나의 마우스가 작동하지 않습니다. |
+| Polish | Mój klawisz Ctrl jest zepsuty | 나의 Ctrl 키가 고장났습니다. |
+| Chinese | 我的屏幕在闪烁 | 내 화면이 깜빡거립니다. |
+
+#### 톤 변경
+
+```s
+User
+
+Translate the following from slang to a business letter: 
+'Dude, This is Joe, check out this spec on this standing lamp.'
+```
+
+```s
+ChatGPT
+
+Dear Sir/Madam,
+
+My name is Joe. I am writing to bring to your attention the specifications of a particular standing lamp that I believe could be of interest to you. I would highly recommend you take a moment to review the details of this product.
+
+Kind Regards,
+Joe
+```
+
+
+#### 포맷 변경
+
+```s
+User
+
+Translate the following python dictionary from JSON to an HTML \
+table with column headers and title:
+
+{ "resturant employees" :[ 
+    {"name":"Shyam", "email":"shyamjaiswal@gmail.com"},
+    {"name":"Bob", "email":"bob32@gmail.com"},
+    {"name":"Jai", "email":"jai87@gmail.com"}
+]}
+```
+
+```html
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Restaurant Employees</title>
+    <style>
+        table {
+            width: 50%;
+            border-collapse: collapse;
+        }
+
+        th, td {
+            border: 1px solid black;
+            padding: 5px;
+            text-align: left;
+        }
+
+        th {
+            background-color: #f2f2f2;
+        }
+    </style>
+</head>
+<body>
+    <h2>Restaurant Employees</h2>
+    <table>
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>Email</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>Shyam</td>
+                <td>shyamjaiswal@gmail.com</td>
+            </tr>
+            <tr>
+                <td>Bob</td>
+                <td>bob32@gmail.com</td>
+            </tr>
+            <tr>
+                <td>Jai</td>
+                <td>jai87@gmail.com</td>
+            </tr>
+        </tbody>
+    </table>
+</body>
+</html>
+```
+
+!()[restaurant-html.png]
+
+
+
+### 문법 체크
+
+```s
+User
+
+Check Spell and Grammar for below sentences.
+Share result that sentences are correct or not.
+if sentence is not correct, edit the sentence.
+share result as table.
+on the table, please highlight edited words in blue color.
+
+[ 
+  "The girl with the black and white puppies have a ball.", 
+  "Yolanda has her notebook.", 
+  "Its going to be a long day. Does the car need it’s oil changed?",  
+  "Their goes my freedom. There going to bring they’re suitcases.",  
+  "Your going to need you’re notebook.",  
+  "That medicine effects my ability to sleep. Have you heard of the butterfly affect?", 
+  "This phrase is to cherck chatGPT for speling abilitty" 
+]
+
+```
+
+| Original Sentence | Corrected Sentence |
+| --- | --- |
+| The girl with the black and white puppies have a ball. | The girl with the black and white puppies <span style="color:blue">has</span> a ball. |
+| Yolanda has her notebook. | Yolanda has her notebook. |
+| Its going to be a long day. Does the car need it’s oil changed? | <span style="color:blue">It's</span> going to be a long day. Does the car need <span style="color:blue">its</span> oil changed? |
+| Their goes my freedom. There going to bring they’re suitcases. | <span style="color:blue">There</span> goes my freedom. <span style="color:blue">They're</span> going to bring <span style="color:blue">their</span> suitcases. |
+| Your going to need you’re notebook. | <span style="color:blue">You're</span> going to need <span style="color:blue">your</span> notebook. |
+| That medicine effects my ability to sleep. Have you heard of the butterfly affect? | That medicine <span style="color:blue">affects</span> my ability to sleep. Have you heard of the butterfly <span style="color:blue">effect</span>? |
+| This phrase is to cherck chatGPT for speling abilitty | This phrase is to <span style="color:blue">check</span> chatGPT for <span style="color:blue">spelling ability</span>. |
