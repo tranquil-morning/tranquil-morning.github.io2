@@ -3,7 +3,6 @@
     "listing": "/index.html",
     "items": [
       "/posts/gpt-inferring/index.html",
-      "/posts/perlin-noise/index.html",
       "/posts/gpt-transforming/index.html",
       "/posts/gpt-expanding/index.html",
       "/posts/intro-to-caspa/index.html",
