@@ -2,6 +2,7 @@
   {
     "listing": "/index.html",
     "items": [
+      "/posts/convolution-relu-maxpool/index.html",
       "/posts/dc-marvel-heroes/index.html",
       "/posts/football-score-comparison/index.html",
       "/posts/writing-report-tips/index.html",
@@ -28,29 +29,29 @@
       "/posts/knapsack-n-bags/index.html",
       "/posts/knapsack/index.html",
       "/posts/linear-optimization/index.html",
-      "/posts/error-metrics/index.html",
       "/posts/gpt-prompt/index.html",
+      "/posts/error-metrics/index.html",
+      "/posts/word-embedding/index.html",
       "/posts/entropy/index.html",
       "/posts/mutual-information/index.html",
-      "/posts/word-embedding/index.html",
       "/posts/dual-number/index.html",
       "/posts/causal-relationship/index.html",
       "/posts/dbscan/index.html",
       "/posts/gradient-boosting/index.html",
       "/posts/random-forest/index.html",
-      "/posts/ensemble-learning/index.html",
       "/posts/k-means/index.html",
-      "/posts/t-sne/index.html",
       "/posts/umap/index.html",
-      "/posts/clustering/index.html",
-      "/posts/dimension-reduction/index.html",
+      "/posts/ensemble-learning/index.html",
+      "/posts/t-sne/index.html",
       "/posts/dummy-variables/index.html",
-      "/posts/covariance/index.html",
-      "/posts/hierarchical/index.html",
+      "/posts/dimension-reduction/index.html",
+      "/posts/clustering/index.html",
       "/posts/pca/index.html",
-      "/posts/alpha-max-plus-beta-min/index.html",
+      "/posts/hierarchical/index.html",
+      "/posts/covariance/index.html",
       "/posts/benfords-law/index.html",
-      "/posts/zifs-law/index.html"
+      "/posts/zifs-law/index.html",
+      "/posts/alpha-max-plus-beta-min/index.html"
     ]
   }
 ]
