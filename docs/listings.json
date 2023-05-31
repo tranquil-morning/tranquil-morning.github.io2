@@ -2,6 +2,7 @@
   {
     "listing": "/index.html",
     "items": [
+      "/posts/shap-values/index.html",
       "/posts/convolution-relu-maxpool/index.html",
       "/posts/permutation-importance/index.html",
       "/posts/dc-marvel-heroes/index.html",
