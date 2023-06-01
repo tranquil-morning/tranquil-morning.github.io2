@@ -1,5 +1,5 @@
 ---
-title: "Intro to Huggingface Transformers - Sentiment Analysis"
+title: "Intro to Huggingface Transformers 1 - Sentiment Analysis"
 author: "Jinwook Chang"
 date: "2023-06-01"
 date-modified: "2023-06-01"
