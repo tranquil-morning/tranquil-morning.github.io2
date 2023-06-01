@@ -1,0 +1,210 @@
+---
+title: "Intro to Huggingface Transformers - Named Entity Recognition"
+author: "Jinwook Chang"
+date: "2023-06-01"
+date-modified: "2023-06-01"
+categories: [DataScience, Script, NLP]
+---
+
+![](hf-logo.png)
+
+"Transformers"는 Hugging Face에서 개발한 자연어 처리(NLP) 라이브러리입니다. 이 라이브러리는 트랜스포머 기반의 신경망 아키텍처를 이용한 모델들을 손쉽게 사용할 수 있게 합니다. 주로 Python 언어로 작성되었으며, PyTorch와 TensorFlow 등의 딥러닝 프레임워크와 호환됩니다.
+
+Transformers 라이브러리는 다양한 사전 훈련된 모델을 제공하는데, BERT, GPT-2, GPT-3, T5, DistilBert, RoBERTa 등이 포함됩니다. 이 라이브러리를 통해 이들 모델을 쉽게 불러와, 텍스트 분류, 문장 생성, 문서 요약, 기계 번역, 감성 분석 등 다양한 NLP 작업에 활용할 수 있습니다. 또한, 이 라이브러리는 모델 훈련 및 미세조정(fine-tuning)을 지원하여, 특정 작업에 맞게 모델을 사용자 정의할 수 있게 합니다.
+
+이번 자료에서는 간단한 Named entity recognition 예제를 통해 라이브러리 활용법을 알아보겠습니다.
+
+### Install and Load Libraries
+
+```python
+!pip install transformers sentencepiece
+```
+
+```python
+#The main package that contains functions to use Hugging Face
+import transformers
+
+#Set to avoid warning messages.
+transformers.logging.set_verbosity_error()
+```
+
+
+### Pipeline 기본 모델로 NER 예측하기
+
+Named Entity Recognition(줄여서 NER)은 문장에서 특정 정보를 뽑는 것으로 주로 사람, 날짜, 회사명, 제품 코드와 같은 정보들을 추출하는 모델입니다.
+`transformers`에서 제공하는 기본 NER 모델로 문장을 넣어보겠습니다.
+
+
+```python
+from transformers import pipeline
+
+input_text="Sam went to California on the 23rd of August. \
+There, he visited Google headquarters with John Smith and bought a cap for $23"
+
+basic_ner = pipeline("ner")
+
+basic_ner(input_text)
+```
+
+```python
+[{'entity': 'I-PER',
+  'score': 0.99887806,
+  'index': 1,
+  'word': 'Sam',
+  'start': 0,
+  'end': 3},
+ {'entity': 'I-LOC',
+  'score': 0.99972683,
+  'index': 4,
+  'word': 'California',
+  'start': 12,
+  'end': 22},
+ {'entity': 'I-ORG',
+  'score': 0.9960085,
+  'index': 15,
+  'word': 'Google',
+  'start': 64,
+  'end': 70},
+ {'entity': 'I-PER',
+  'score': 0.99891376,
+  'index': 18,
+  'word': 'John',
+  'start': 89,
+  'end': 93},
+ {'entity': 'I-PER',
+  'score': 0.99921584,
+  'index': 19,
+  'word': 'Smith',
+  'start': 94,
+  'end': 99}]
+```
+
+사람, 지역, 조직이 잘 추출되었음을 볼 수 있습니다. \
+하지만 모델이 어떤 정보를 뽑을 수 있을지 어떻게 알 수 있을까요? \
+
+
+```python
+print(basic_ner.model.config)
+```
+
+```python
+BertConfig {
+  "_name_or_path": "dbmdz/bert-large-cased-finetuned-conll03-english",
+  "_num_labels": 9,
+  "architectures": [
+    "BertForTokenClassification"
+  ],
+  "attention_probs_dropout_prob": 0.1,
+  "classifier_dropout": null,
+  "directionality": "bidi",
+  "hidden_act": "gelu",
+  "hidden_dropout_prob": 0.1,
+  "hidden_size": 1024,
+  "id2label": {
+    "0": "O",
+    "1": "B-MISC",
+    "2": "I-MISC",
+    "3": "B-PER",
+    "4": "I-PER",
+    "5": "B-ORG",
+    "6": "I-ORG",
+    "7": "B-LOC",
+    "8": "I-LOC"
+  },
+  "initializer_range": 0.02,
+  "intermediate_size": 4096,
+  "label2id": {
+    "B-LOC": 7,
+    "B-MISC": 1,
+    "B-ORG": 5,
+    "B-PER": 3,
+    "I-LOC": 8,
+    "I-MISC": 2,
+    "I-ORG": 6,
+    "I-PER": 4,
+    "O": 0
+  },
+  "layer_norm_eps": 1e-12,
+  "max_position_embeddings": 512,
+  "model_type": "bert",
+  "num_attention_heads": 16,
+  "num_hidden_layers": 24,
+  "pad_token_id": 0,
+  "pooler_fc_size": 768,
+  "pooler_num_attention_heads": 12,
+  "pooler_num_fc_layers": 3,
+  "pooler_size_per_head": 128,
+  "pooler_type": "first_token_transform",
+  "position_embedding_type": "absolute",
+  "transformers_version": "4.29.2",
+  "type_vocab_size": 2,
+  "use_cache": true,
+  "vocab_size": 28996
+}
+
+```
+
+위와 같이 모델의 config를 조회하여 알 수 있습니다. 위 모델은 `PER, ORG, LOC, MISC`를 예측할 수 있다는 것을 확인할 수 있습니다.
+
+
+### Custom 모델을 활용하여 NER 예측하기
+
+```python
+from transformers import AutoTokenizer, TFAutoModelForTokenClassification
+
+tokenizer = AutoTokenizer.from_pretrained("Jean-Baptiste/camembert-ner-with-dates",
+                                          from_pt=True)
+
+model = TFAutoModelForTokenClassification.from_pretrained("Jean-Baptiste/camembert-ner-with-dates",
+                                                          from_pt=True)
+
+print(model.config.id2label)
+```
+
+```python
+{0: 'O', 1: 'I-LOC', 2: 'I-PER', 3: 'I-MISC', 4: 'I-ORG', 5: 'I-DATE'}
+```
+Custom 모델에서는 추가적으로 `DATE`예측도 가능함을 확인할 수 있습니다.
+
+
+```python
+#Prediction
+enhanced_ner = pipeline('ner', 
+                        model=model, 
+                        tokenizer=tokenizer, 
+                        aggregation_strategy="simple")
+enhanced_ner(input_text)
+```
+
+```python
+[{'entity_group': 'PER',
+  'score': 0.9776213,
+  'word': 'Sam',
+  'start': 0,
+  'end': 3},
+ {'entity_group': 'LOC',
+  'score': 0.9936407,
+  'word': 'California',
+  'start': 11,
+  'end': 22},
+ {'entity_group': 'DATE',
+  'score': 0.92356014,
+  'word': 'August',
+  'start': 37,
+  'end': 44},
+ {'entity_group': 'ORG',
+  'score': 0.5721686,
+  'word': 'Google',
+  'start': 63,
+  'end': 70},
+ {'entity_group': 'PER',
+  'score': 0.9938346,
+  'word': 'John Smith',
+  'start': 88,
+  'end': 99},
+ {'entity_group': 'DATE',
+  'score': 0.6406434,
+  'word': '23',
+  'start': 122,
+  'end': 124}]
+```

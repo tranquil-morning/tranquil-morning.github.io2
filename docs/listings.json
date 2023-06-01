@@ -2,6 +2,8 @@
   {
     "listing": "/index.html",
     "items": [
+      "/posts/intro-to-huggingface-sentiment-analysis/index.html",
+      "/posts/intro-to-huggingface-named-entity-recognition/index.html",
       "/posts/shap-values/index.html",
       "/posts/convolution-relu-maxpool/index.html",
       "/posts/permutation-importance/index.html",
