@@ -2,6 +2,7 @@
   {
     "listing": "/index.html",
     "items": [
+      "/posts/langchain-prompt-template/index.html",
       "/posts/intro-to-huggingface-named-entity-recognition/index.html",
       "/posts/intro-to-huggingface-sentiment-analysis/index.html",
       "/posts/shap-values/index.html",
