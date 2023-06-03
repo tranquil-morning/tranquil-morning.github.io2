@@ -2,6 +2,7 @@
   {
     "listing": "/index.html",
     "items": [
+      "/posts/langchain-memory/index.html",
       "/posts/langchain-output-parser/index.html",
       "/posts/langchain-prompt-template/index.html",
       "/posts/intro-to-huggingface-named-entity-recognition/index.html",
