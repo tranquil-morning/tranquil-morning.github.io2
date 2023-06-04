@@ -1,5 +1,5 @@
 ---
-title: "LangChain Output Parser"
+title: "LangChain Memory"
 author: "Jinwook Chang"
 date: "2023-06-05"
 date-modified: "2023-06-05"
