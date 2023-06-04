@@ -18,6 +18,7 @@ categories: [AI, NLP, LangChain, Script]
 * [Memory](../langchain-memory/)
 * [Chain](../langchain-chains/)
 * [Q&A](../langchain-qna)
+* [Agent](../langchain-agent)
 
 LangChain은 큰 언어 모델(Large Language Models, LLMs)을 사용하여 애플리케이션을 구축하는 개발자들을 돕기 위한 라이브러리입니다. \
 이번 자료에서는 LangChain을 통해 Prompt Template를 작성해보도록 하겠습니다.

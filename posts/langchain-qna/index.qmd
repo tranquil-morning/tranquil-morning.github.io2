@@ -1,0 +1,196 @@
+---
+title: "LangChain Q&A"
+author: "Jinwook Chang"
+date: "2023-06-06"
+date-modified: "2023-06-06"
+categories: [AI, NLP, LangChain, Script]
+---
+
+![](../../others/prompt.png)
+
+
+[DeepLearning.AI](https://www.deeplearning.ai/)에서 제공하는 LangChian for LLM Application Development 강좌를 요약한 글입니다.
+
+목차 :
+
+* [Prompt Template](../langchain-prompt-template/)
+* [Output Parser](../langchain-output-parser/)
+* [Memory](../langchain-memory/)
+* [Chain](../langchain-chains/)
+* [Q&A](../langchain-qna)
+* [Agent](../langchain-agent)
+
+LangChain은 큰 언어 모델(Large Language Models, LLMs)을 사용하여 애플리케이션을 구축하는 개발자들을 돕기 위한 라이브러리입니다. \
+이번 자료에서는 LangChain의 Q&A 기능을 활용해보도록 하겠습니다. \
+Q&A 기능을 통하여 LLM과 데이터 셋 (CSV, PDF 등)을 연동하여 사용할 수 있습니다.
+
+### Install and Load Libraries
+
+```python
+#!pip install python-dotenv
+#!pip install openai
+#!pip install --upgrade langchain
+#!pip install tiktoken
+#pip install docarray
+
+import os
+import openai
+openai.api_key = "YOUR_API_KEY"
+from langchain.chat_models import ChatOpenAI
+from langchain.chains import ConversationChain
+from langchain.memory import ConversationBufferMemory
+from langchain.chains import RetrievalQA
+from langchain.chat_models import ChatOpenAI
+from langchain.document_loaders import CSVLoader
+from langchain.vectorstores import DocArrayInMemorySearch
+from langchain.indexes import VectorstoreIndexCreator
+
+```
+
+### DocArrayInMemorySearch 활용하기
+
+`DocArrayInMemorySearch`는 Q&A를 활용하기 가장 쉬운 방법 중 하나입니다. \
+우선 DocArrayInMemorySearch를 활용해 본 뒤, 실제로 동작이 어떻게 일어나는지 알아보겠습니다.
+
+
+```python
+file = 'OutdoorClothingCatalog_1000.csv'
+loader = CSVLoader(file_path=file)
+```
+
+```python
+index = VectorstoreIndexCreator(
+    vectorstore_cls=DocArrayInMemorySearch
+).from_loaders([loader])
+
+llm = ChatOpenAI(temperature = 0.0)
+qa = RetrievalQA.from_chain_type(
+    llm=llm, 
+    chain_type="stuff", 
+    retriever=index.vectorstore.as_retriever(), 
+    verbose=True,
+)
+
+query ="Please list all your shirts with sun protection \
+in a table in markdown and summarize each one."
+
+response = qa_stuff.run(query)
+```
+
+
+
+
+```python
+display(Markdown(response))
+```
+
+
+| Shirt Number | Name | Description |
+| --- | --- | --- |
+| 618 | Men's Tropical Plaid Short-Sleeve Shirt | This shirt is made of 100% polyester and is wrinkle-resistant. It has front and back cape venting that lets in cool breezes and two front bellows pockets. It is rated UPF 50+ for superior protection from the sun's UV rays. |
+| 374 | Men's Plaid Tropic Shirt, Short-Sleeve | This shirt is made with 52% polyester and 48% nylon. It is machine washable and dryable. It has front and back cape venting, two front bellows pockets, and is rated to UPF 50+. |
+| 535 | Men's TropicVibe Shirt, Short-Sleeve | This shirt is made of 71% Nylon and 29% Polyester. It has front and back cape venting that lets in cool breezes and two front bellows pockets. It is rated UPF 50+ for superior protection from the sun's UV rays. |
+| 255 | Sun Shield Shirt | This shirt is made of 78% nylon and 22% Lycra Xtra Life fiber. It is handwashable and line dry. It is rated UPF 50+ for superior protection from the sun's UV rays. It is abrasion-resistant and wicks moisture for quick-drying comfort. |
+
+All of these shirts provide UPF 50+ sun protection, blocking 98% of the sun's harmful rays. They are all designed to be lightweight and comfortable in hot weather. They all have front and back cape venting that lets in cool breezes and two front bellows pockets. The Men's Tropical Plaid Short-Sleeve Shirt is made of 100% polyester and is wrinkle-resistant. The Men's Plaid Tropic Shirt, Short-Sleeve is made with 52% polyester and 48% nylon. The Men's TropicVibe Shirt, Short-Sleeve is made of 71% Nylon and 29% Polyester. The Sun Shield Shirt is made of 78% nylon and 22% Lycra Xtra Life fiber and is abrasion-resistant and wicks moisture for quick-drying comfort.
+
+위 예시를 살펴보면, 단순히 LLM이 데이터 전체를 파악한 뒤 질문에 답을 하는 것으로 보이나, 실제로는 이보다 좀 더 복잡하게 동작합니다. \
+이제 위의 과정이 어떻게 동작되는지 알아보도록 하겠습니다.
+
+
+### Under the hood in Q&A
+
+```python
+loader = CSVLoader(file_path=file)
+```
+
+
+```python
+docs = loader.load()
+```
+
+`CSVLoader`를 통하여 data를 document로 변환할 때, `docs` list의 한 요소는 데이터에서 하나의 행을 가지게 됩니다. \
+langchain에서는 각 document와 나의 query의 거리를 word embedding을 통해 계산하여, 가장 밀접한 document를 추출하게 됩니다. \
+
+```python
+from langchain.embeddings import OpenAIEmbeddings
+embeddings = OpenAIEmbeddings()
+```
+
+
+```python
+db = DocArrayInMemorySearch.from_documents(
+    docs, 
+    embeddings
+)
+```
+
+
+```python
+query = "Please suggest a shirt with sunblocking"
+```
+
+
+```python
+docs = db.similarity_search(query)
+```
+
+
+```python
+len(docs)
+```
+
+```python
+4
+```
+
+```python
+docs[0]
+```
+
+
+
+
+    Document(page_content=': 255\nname: Sun Shield Shirt by\ndescription: "Block the sun, not the fun – our high-performance sun shirt is guaranteed to protect from harmful UV rays. \n\nSize & Fit: Slightly Fitted: Softly shapes the body. Falls at hip.\n\nFabric & Care: 78% nylon, 22% Lycra Xtra Life fiber. UPF 50+ rated – the highest rated sun protection possible. Handwash, line dry.\n\nAdditional Features: Wicks moisture for quick-drying comfort. Fits comfortably over your favorite swimsuit. Abrasion resistant for season after season of wear. Imported.\n\nSun Protection That Won\'t Wear Off\nOur high-performance fabric provides SPF 50+ sun protection, blocking 98% of the sun\'s harmful rays. This fabric is recommended by The Skin Cancer Foundation as an effective UV protectant.', metadata={'source': 'OutdoorClothingCatalog_1000.csv', 'row': 255})
+
+
+query와 유사한 문서가 4개 있는 것으로 확인하였습니다. \
+이제 LLM을 통해 구체적인 질문을 해보겠습니다.
+
+```python
+retriever = db.as_retriever()
+```
+
+
+```python
+llm = ChatOpenAI(temperature = 0.0)
+
+```
+
+
+```python
+qdocs = "".join([docs[i].page_content for i in range(len(docs))])
+
+```
+
+
+```python
+response = llm.call_as_llm(f"{qdocs} Question: Please list all your \
+shirts with sun protection in a table in markdown and summarize each one.") 
+
+```
+
+
+```python
+display(Markdown(response))
+```
+
+
+| Shirt Number | Name | Description |
+| --- | --- | --- |
+| 618 | Men's Tropical Plaid Short-Sleeve Shirt | This shirt is made of 100% polyester and is wrinkle-resistant. It has front and back cape venting that lets in cool breezes and two front bellows pockets. It is rated UPF 50+ for superior protection from the sun's UV rays. |
+| 374 | Men's Plaid Tropic Shirt, Short-Sleeve | This shirt is made with 52% polyester and 48% nylon. It is machine washable and dryable. It has front and back cape venting, two front bellows pockets, and is rated to UPF 50+. |
+| 535 | Men's TropicVibe Shirt, Short-Sleeve | This shirt is made of 71% Nylon and 29% Polyester. It has front and back cape venting that lets in cool breezes and two front bellows pockets. It is rated UPF 50+ for superior protection from the sun's UV rays. |
+| 255 | Sun Shield Shirt | This shirt is made of 78% nylon and 22% Lycra Xtra Life fiber. It is handwashable and line dry. It is rated UPF 50+ for superior protection from the sun's UV rays. It is abrasion-resistant and wicks moisture for quick-drying comfort. |
+
+All of these shirts provide UPF 50+ sun protection, blocking 98% of the sun's harmful rays. They are all designed to be lightweight and comfortable in hot weather. They all have front and back cape venting that lets in cool breezes and two front bellows pockets. The Men's Tropical Plaid Short-Sleeve Shirt is made of 100% polyester and is wrinkle-resistant. The Men's Plaid Tropic Shirt, Short-Sleeve is made with 52% polyester and 48% nylon. The Men's TropicVibe Shirt, Short-Sleeve is made of 71% Nylon and 29% Polyester. The Sun Shield Shirt is made of 78% nylon and 22% Lycra Xtra Life fiber and is abrasion-resistant and wicks moisture for quick-drying comfort.

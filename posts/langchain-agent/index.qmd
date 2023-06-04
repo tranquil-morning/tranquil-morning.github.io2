@@ -1,0 +1,283 @@
+---
+title: "LangChain Agent"
+author: "Jinwook Chang"
+date: "2023-06-07"
+date-modified: "2023-06-07"
+categories: [AI, NLP, LangChain, Script]
+---
+
+![](../../others/prompt.png)
+
+
+[DeepLearning.AI](https://www.deeplearning.ai/)에서 제공하는 LangChian for LLM Application Development 강좌를 요약한 글입니다.
+
+목차 :
+
+* [Prompt Template](../langchain-prompt-template/)
+* [Output Parser](../langchain-output-parser/)
+* [Memory](../langchain-memory/)
+* [Chain](../langchain-chains/)
+* [Q&A](../langchain-qna)
+* [Agent](../langchain-agent)
+
+LangChain은 큰 언어 모델(Large Language Models, LLMs)을 사용하여 애플리케이션을 구축하는 개발자들을 돕기 위한 라이브러리입니다. \
+이번 자료에서는 LangChain의 Agent 기능을 알아보도록 하겠습니다. \
+Agent 기능은 LLM에 다른 외부 부가기능을 붙여 여러가지 기능을 부가적으로 수행하도록 합니다.
+
+### Install and Load Libraries
+
+```python
+openai.api_key = "YOUR_API_KEY"
+from langchain.agents.agent_toolkits import create_python_agent
+from langchain.agents import load_tools, initialize_agent
+from langchain.agents import AgentType
+from langchain.tools.python.tool import PythonREPLTool
+from langchain.python import PythonREPL
+from langchain.chat_models import ChatOpenAI
+```
+
+
+```python
+llm = ChatOpenAI(temperature=0,openai_api_key = key)
+```
+
+
+```python
+tools = load_tools(["llm-math","wikipedia"], llm=llm)
+```
+
+
+```python
+agent= initialize_agent(
+    tools, 
+    llm, 
+    agent=AgentType.CHAT_ZERO_SHOT_REACT_DESCRIPTION,
+    handle_parsing_errors=True,
+    verbose = True)
+```
+
+### Calculator Agent
+
+```python
+agent("300의 1/4는 몇인가요?")
+```
+
+    
+```python   
+    [1m> Entering new AgentExecutor chain...[0m
+    [32;1m[1;3mQuestion: 300의 1/4는 몇인가요?
+    Thought: I need to use a calculator to perform the arithmetic operation.
+    Action:
+    ```
+    {
+      "action": "Calculator",
+      "action_input": "300 * 1/4"
+    }
+    ```
+    [0m
+    Observation: [36;1m[1;3mAnswer: 75.0[0m
+    Thought:[32;1m[1;3mI have the answer to the question.
+    Final Answer: 300의 1/4는 75입니다.[0m
+    
+    [1m> Finished chain.[0m
+
+
+
+
+
+    {'input': '300의 1/4는 몇인가요?', 'output': '300의 1/4는 75입니다.'}
+
+```
+### Wikipedia Agent
+
+```python
+question = "박지성이 맨유에 뛰었을 때, 맨유의 감독은 누구였나요?"
+result = agent(question) 
+```
+
+박지성의 위키피디아 페이지에 접속하여 맨유의 입단 년도를 알아낸 후, 해당 년도의 맨유의 페이지에서 감독이 누구인가를 알아보는 모습을 알 수 있습니다.
+    
+```python 
+    [1m> Entering new AgentExecutor chain...[0m
+    [32;1m[1;3mThought: I need to search for the year when Park Ji-sung joined Manchester United to find out who the manager was at that time.
+    
+    Action:
+    ```
+    {
+      "action": "Wikipedia",
+      "action_input": "Park Ji-sung Manchester United"
+    }
+    ```
+    
+    [0m
+    Observation: [33;1m[1;3mPage: Park Ji-sung
+    Summary: Park Ji-sung (Korean: 박지성; Hanja: 朴智星; Korean pronunciation: [pak̚.t͈ɕi.sʌŋ]; born 30 March 1981) is a South Korean former professional footballer who played as a midfielder. Born in the South Korean capital Seoul, Park is one of the most successful Asian players in football history, having won 19 trophies in his career. He is the first Asian footballer to have won the UEFA Champions League, to play in a UEFA Champions League final, as well as the first Asian to have won the FIFA Club World Cup. Park was able to play anywhere across the midfield and was noted for his exceptional fitness level, discipline, work ethic and off-the-ball movement. His remarkable endurance levels earned him the nickname "Three-Lung" Park.Park began his football career in his native South Korea and played for the Myongji University team before moving to Japan to play for Kyoto Purple Sanga. After Park's national team manager Guus Hiddink moved back to the Netherlands to manage PSV Eindhoven, Park followed him to the Dutch side a year later. After PSV reached the semi-finals of the 2004–05 UEFA Champions League, Park's talents were recognised by Manchester United manager Sir Alex Ferguson and he signed Park for a fee of around £4 million in July 2005. In his time at United, his honours included four Premier League titles, the 2007–08 UEFA Champions League, and the 2008 FIFA Club World Cup. He moved to Queens Park Rangers in July 2012 after suffering a reduction in his number of appearances for Manchester United the previous season. However, an injury-interrupted season with QPR, combined with the club's relegation, led to Park rejoining PSV on loan for the 2013–14 season.
+    As a member of the South Korea national team, Park won 100 caps and scored 13 goals. He was a member of the team that finished fourth at the 2002 FIFA World Cup, and also represented his nation at the 2006 FIFA World Cup and the 2010 FIFA World Cup. At the World Cup, he was named man of the match four times, the most of any Asian player, and is currently South Korea's joint all-time leading World Cup goalscorer with three goals alongside Ahn Jung-hwan and Son Heung-min, having scored in three consecutive tournaments.
+    
+    Page: 2011 MLS All-Star Game
+    Summary: The 2011 Major League Soccer All-Star Game, held on July 27, 2011, was the 16th annual Major League Soccer All-Star Game, a soccer match involving all-stars from Major League Soccer. The MLS All-Stars faced Manchester United of the English Premier League for the second year running in the eighth MLS All-Star Game to feature international opposition. Manchester United won the game 4–0 with goals from Anderson, Park Ji-Sung, Dimitar Berbatov and Danny Welbeck.
+    The game was played at the Red Bull Arena in Harrison, New Jersey, making it the first MLS All-Star Game to be played in the New York metropolitan area since 1997.
+    
+    Page: 2005–06 Manchester United F.C. season
+    Summary: The 2005–06 season was Manchester United's 14th season in the Premier League, and their 31st consecutive season in the top division of English football.After having finished in third place in both of the previous two seasons, the Red Devils improved slightly to finish the 2005–06 season in second place, despite finishing 8 points off the lead.
+    However, despite the improvement in their league form, United's European form took a massive blow, with the club failing to reach the knockout stage of the UEFA Champions League for the first time since 1994–95. The club fared better in the FA Cup, reaching the Fifth Round, but their real success came in the League Cup, in which they beat Wigan Athletic 4–0 in the final. United became the first club in Premier League history to score 1,000 goals, a milestone reached on 29 October in the 4–1 defeat to Middlesbrough at the Riverside, with Cristiano Ronaldo scoring the goal.The 2005–06 season also saw the departure of club captain Roy Keane, who had been at Old Trafford since 1993. Keane played his la[0m
+    Thought:[32;1m[1;3mAccording to the Wikipedia page, Park Ji-sung joined Manchester United in July 2005 for a fee of around £4 million. Therefore, I need to find out who the manager of Manchester United was in July 2005.
+    
+    Action:
+    ```
+    {
+      "action": "Wikipedia",
+      "action_input": "Manchester United in 2005"
+    }
+    ```
+    
+    [0m
+    Observation: [33;1m[1;3mPage: 2005–06 Manchester United F.C. season
+    Summary: The 2005–06 season was Manchester United's 14th season in the Premier League, and their 31st consecutive season in the top division of English football.After having finished in third place in both of the previous two seasons, the Red Devils improved slightly to finish the 2005–06 season in second place, despite finishing 8 points off the lead.
+    However, despite the improvement in their league form, United's European form took a massive blow, with the club failing to reach the knockout stage of the UEFA Champions League for the first time since 1994–95. The club fared better in the FA Cup, reaching the Fifth Round, but their real success came in the League Cup, in which they beat Wigan Athletic 4–0 in the final. United became the first club in Premier League history to score 1,000 goals, a milestone reached on 29 October in the 4–1 defeat to Middlesbrough at the Riverside, with Cristiano Ronaldo scoring the goal.The 2005–06 season also saw the departure of club captain Roy Keane, who had been at Old Trafford since 1993. Keane played his last game for the club on 18 September 2005 in a goalless draw with Liverpool, but was forced to withdraw from the match only a couple of minutes before full-time. It was later revealed that Keane had picked up a foot injury and he eventually left the club for his boyhood team Celtic on 18 November 2005. Keane was subsequently replaced as captain by his deputy, Gary Neville. On 25 November 2005, just seven days after Keane left the club, United fans were plunged into mourning by the death of legendary former player George Best, who died at age 59.
+    
+    Page: Glazer ownership of Manchester United
+    Summary: Manchester United Football Club is an English football club based in Old Trafford, Greater Manchester. The club was formed as Newton Heath LYR Football Club, the works team of the Lancashire and Yorkshire Railway depot in Newton Heath, in 1878. The club split from the railway company in 1892 and remained under private ownership for almost 100 years, changing its name to Manchester United after being saved from bankruptcy in 1902. The club was the subject of takeover bids from media tycoon Robert Maxwell in 1984 and property trader Michael Knighton in 1989, before going public in 1991; they received another takeover bid from Rupert Murdoch's BSkyB corporation in 1998 before Malcolm Glazer's stake was announced in September 2003.
+    By the end of 2003, Glazer had increased his shareholding from 3.17% to around 15%, which he almost doubled in the year up to October 2004. His acquisition of John Magnier and J. P. McManus's 28.7% stake in May 2005 pushed his own up to around 57%, well over the 30% threshold that would force him to launch a takeover bid. A few days later, he took control of 75% of the club's shares, allowing him to delist the company from the London Stock Exchange, and within a month, the Glazers took 98% ownership of the club via their Red Football parent company, forcing a squeeze-out of the remaining 2%. The final purchase price of the club totalled almost £800 million.
+    Most of the capital used by Glazer to purchase Manchester United came in the form of loans, the majority of which were secured against the club's assets, incurring interest payments of over £60 million per annum. The remainder came in the form of PIK loans (payment in kind loans), which were later sold to hedge funds. Manchester United was not liable for the PIKs, which were held by Red Football Joint Venture and were secured on that company's shares in Red Football (and thus the club). The interest on the PIKs rolled up at 14.25% per annum. Despite this, the Glazers did not pay down any of the PIK loans in the first five years they owned the club. In January 2010, the club carried out a successful £500 million bond issue, and by March 2010, the PIKs stood at around £207 million. The PIKs were eventually paid off in November 2010 by unspecified means. In August 2012, as p[0m
+    Thought:[32;1m[1;3mAccording to the Wikipedia page, Sir Alex Ferguson was the manager of Manchester United in July 2005 when Park Ji-sung joined the team.
+    
+    Final Answer: Sir Alex Ferguson was the manager of Manchester United when Park Ji-sung joined the team in July 2005.[0m
+    
+    [1m> Finished chain.[0m
+```
+
+
+
+### Python REPL Agent
+
+Python REPL 자체를 Agent로 이용할 수 있습니다. \
+아래는 고객 명을 성 / 이름 순으로 나열하는 예제입니다.
+
+
+```python
+agent = create_python_agent(
+    llm,
+    tool=PythonREPLTool(),
+    verbose=True
+)
+```
+
+
+```python
+customer_list = [["Harrison", "Chase"], 
+                 ["Lang", "Chain"],
+                 ["Dolly", "Too"],
+                 ["Elle", "Elem"], 
+                 ["Geoff","Fusion"], 
+                 ["Trance","Former"],
+                 ["Jen","Ayai"]
+                ]
+```
+
+
+```python
+agent.run(f"""Sort these customers by \
+last name and then first name \
+and print the output: {customer_list}""") 
+```
+
+    
+```python    
+    [1m> Entering new AgentExecutor chain...[0m
+    [32;1m[1;3mI can use the sorted() function to sort the list of customers by last name and then first name. I will need to provide a key function to sorted() that returns a tuple of the last name and first name in that order.
+    Action: Python REPL
+    Action Input:
+    ```
+    customers = [['Harrison', 'Chase'], ['Lang', 'Chain'], ['Dolly', 'Too'], ['Elle', 'Elem'], ['Geoff', 'Fusion'], ['Trance', 'Former'], ['Jen', 'Ayai']]
+    sorted_customers = sorted(customers, key=lambda x: (x[1], x[0]))
+    for customer in sorted_customers:
+        print(customer)
+    ```[0m
+    Observation: [36;1m[1;3m['Jen', 'Ayai']
+    ['Lang', 'Chain']
+    ['Harrison', 'Chase']
+    ['Elle', 'Elem']
+    ['Trance', 'Former']
+    ['Geoff', 'Fusion']
+    ['Dolly', 'Too']
+    [0m
+    Thought:[32;1m[1;3mThe customers have been sorted by last name and then first name, and the output has been printed. 
+    Final Answer: [['Jen', 'Ayai'], ['Lang', 'Chain'], ['Harrison', 'Chase'], ['Elle', 'Elem'], ['Trance', 'Former'], ['Geoff', 'Fusion'], ['Dolly', 'Too']][0m
+    
+    [1m> Finished chain.[0m
+
+
+
+
+
+    "[['Jen', 'Ayai'], ['Lang', 'Chain'], ['Harrison', 'Chase'], ['Elle', 'Elem'], ['Trance', 'Former'], ['Geoff', 'Fusion'], ['Dolly', 'Too']]"
+
+```
+
+
+### Tool 만들기
+
+기존에 정의된 Tool 외에 새로운 Tool을 정의하는 것도 가능합니다. \
+다음은 오늘의 날짜를 불러오는 Tool의 예시입니다.
+
+
+```python
+#!pip install DateTime
+```
+
+
+```python
+from langchain.agents import tool
+from datetime import date
+```
+
+
+```python
+@tool
+def time(text: str) -> str:
+    """Returns todays date, use this for any \
+    questions related to knowing todays date. \
+    The input should always be an empty string, \
+    and this function will always return todays \
+    date - any date mathmatics should occur \
+    outside this function."""
+    return str(date.today())
+```
+
+
+```python
+agent= initialize_agent(
+    tools + [time], 
+    llm, 
+    agent=AgentType.CHAT_ZERO_SHOT_REACT_DESCRIPTION,
+    handle_parsing_errors=True,
+    verbose = True)
+```
+
+```python
+try:
+    result = agent("whats the date today?") 
+except: 
+    print("exception on external access")
+```
+
+    
+```python
+    [1m> Entering new AgentExecutor chain...[0m
+    [32;1m[1;3mThought: I need to use the `time` tool to get today's date.
+    Action:
+    ```
+    {
+      "action": "time",
+      "action_input": ""
+    }
+    ```
+    [0m
+    Observation: [38;5;200m[1;3m2023-06-04[0m
+    Thought:[32;1m[1;3mI have successfully retrieved today's date using the `time` tool.
+    Final Answer: Today's date is 2023-06-04.[0m
+    
+    [1m> Finished chain.[0m
+```
+

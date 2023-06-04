@@ -1,0 +1,177 @@
+---
+title: "LangChain Chain"
+author: "Jinwook Chang"
+date: "2023-06-05"
+date-modified: "2023-06-05"
+categories: [AI, NLP, LangChain, Script]
+---
+
+![](../../others/prompt.png)
+
+
+[DeepLearning.AI](https://www.deeplearning.ai/)에서 제공하는 LangChian for LLM Application Development 강좌를 요약한 글입니다.
+
+목차 :
+
+* [Prompt Template](../langchain-prompt-template/)
+* [Output Parser](../langchain-output-parser/)
+* [Memory](../langchain-memory/)
+* [Chain](../langchain-chains/)
+* [Q&A](../langchain-qna)
+* [Agent](../langchain-agent)
+
+LangChain은 큰 언어 모델(Large Language Models, LLMs)을 사용하여 애플리케이션을 구축하는 개발자들을 돕기 위한 라이브러리입니다. \
+이번 자료에서는 LangChain의 Chain 기능을 알아보도록 하겠습니다.
+
+### Install and Load Libraries
+
+```python
+#!pip install python-dotenv
+#!pip install openai
+#!pip install --upgrade langchain
+#!pip install tiktoken
+
+import os
+import openai
+openai.api_key = "YOUR_API_KEY"
+from langchain.chat_models import ChatOpenAI
+from langchain.prompts import ChatPromptTemplate
+
+```
+
+### LLM Chain
+ 
+LLM Chain은 Chain의 연결에 기본이 되는 단일 체인입니다. \
+우선 기본 chain을 만들어보고, 이후에 연결해보도록 하겠습니다.
+
+```python
+from langchain.chains import LLMChain
+
+llm = ChatOpenAI(temperature=0.9)
+
+prompt = ChatPromptTemplate.from_template(
+    "What is the best name to describe \
+    a company that makes {product}?"
+)
+
+chain = LLMChain(llm=llm, prompt=prompt)
+product = "Queen Size Sheet Set"
+chain.run(product)
+```
+
+```python
+'"Royal Bedding Co."'
+```
+
+
+### SequntialChain
+
+SequntialChain은 한 체인의 출력이 다음 체인의 입력이 되는 여러 체인을 결합하는 것입니다.
+순차 체인에는 두 가지 유형이 있습니다:
+
+1. `SimpleSequentialChain` : 단일 출력
+2. `SequentialChain` : 다중 출력
+
+#### SimpleSequentialChain
+
+```python
+from langchain.chains import SimpleSequentialChain
+
+product = "고화질의 대형 TV"
+
+# prompt template 1
+first_prompt = ChatPromptTemplate.from_template(
+    "What is the best name to describe \
+    a company that makes {product}?"
+)
+
+# Chain 1
+chain_one = LLMChain(llm=llm, prompt=first_prompt)
+
+
+# prompt template 2
+second_prompt = ChatPromptTemplate.from_template(
+    "Write a 20 words description for the following \
+    company:{company_name}\
+    Please reply it in Korean Language"
+)
+# chain 2
+chain_two = LLMChain(llm=llm, prompt=second_prompt)
+
+overall_simple_chain = SimpleSequentialChain(chains=[chain_one, chain_two],
+                                             verbose=True
+                                            )
+overall_simple_chain.run(product)
+```
+
+```python
+> Entering new SimpleSequentialChain chain...
+"High-Definition TV Solutions Inc."
+"하이-디피니션 TV 솔루션 주식회사"는 최신 기술을 활용하여 고품질 TV 솔루션을 제공하는 회사입니다.
+
+> Finished chain.
+"하이-디피니션 TV 솔루션 주식회사"는 최신 기술을 활용하여 고품질 TV 솔루션을 제공하는 회사입니다.
+```
+
+기본이 되는 `LLMChain` 2개를 만들고, 이 둘을 `SimpleSequentialChain`으로 엮었습니다. \
+첫번째 체인에서는 `product`를 입력으로 받아 적절한 회사명을 추천해주고 \
+두번째 체인에서는 만들어진 적절한 회사명에 따라 20 단어의 설명을 제공합니다.
+
+#### SequentialChain
+
+이제 다중 출력을 지원하는 `SequentialChain`을 사용해보도록 하겠습니다. \
+아래 예제에서는 4가지 체인을 엮어 3가지 출력을 내보냅니다. \
+체인은 다음과 같은 과정을 거칩니다 : \
+리뷰를 영어로 번역 → 번역본을 요약 → 리뷰의 언어 알아내기 → 리뷰의 언어로 follow-up 메시지 작성
+
+```python
+from langchain.chains import SequentialChain
+
+introduce_my_self = """제 이름은 장진욱입니다. 저는 1993년 10월 22일에 태어났습니다. 저의 고향은 통영이고 그 곳에서 7살까지 살다가 서울로 이사왔습니다."""
+
+first_prompt = ChatPromptTemplate.from_template(
+    """다음은 자기소개하는 문장입니다. 이 문장을 반말로 바꿔주십시오.
+    \n\n{Review}"""
+)
+chain_one = LLMChain(llm=llm, prompt=first_prompt, 
+                     output_key="Rude_Review"
+                    )
+
+second_prompt = ChatPromptTemplate.from_template(
+    "Please translate this sentence to English"
+    "\n\n{Rude_Review}"
+)
+chain_two = LLMChain(llm=llm, prompt=second_prompt, 
+                     output_key="English"
+                    )
+
+thrid_prompt = ChatPromptTemplate.from_template(
+    """Please translate this sentence to Japanese.
+    \n\n{Rude_Review}"""
+)
+chain_three = LLMChain(llm=llm, prompt=thrid_prompt,
+                      output_key="Japanese_Review"
+                     )
+
+overall_chain = SequentialChain(
+    chains=[chain_one, chain_two, chain_three],
+    input_variables=["Review"],
+    output_variables=["Rude_Review", "English","Japanese_Review"],
+    verbose=True
+)
+
+overall_chain(introduce_my_self)
+```
+
+```python
+> Entering new SequentialChain chain...
+
+> Finished chain.
+{'Review': '제 이름은 장진욱입니다. 저는 1993년 10월 22일에 태어났습니다. 저의 고향은 통영이고 그 곳에서 7살까지 살다가 서울로 이사왔습니다.',
+ 'Rude_Review': '내 이름은 장진욱이야. 나는 1993년 10월 22일에 태어났어. 내 고향은 통영이고 거기서 7살까지 살았어. 그러다가 서울로 이사왔지.',
+ 'English': 'My name is Jang Jin-wook. I was born on October 22, 1993. My hometown is Tongyeong, and I lived there until I was seven years old. Then, I moved to Seoul.',
+ 'Japanese_Review': '私の名前はジャン・ジンウックです。私は1993年10月22日に生まれました。私の故郷はトンヨンで、そこで7歳まで育ちました。その後、ソウルに引っ越しました。'}
+ ```
+
+
+
