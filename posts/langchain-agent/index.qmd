@@ -1,8 +1,8 @@
 ---
 title: "LangChain Agent"
 author: "Jinwook Chang"
-date: "2023-06-07"
-date-modified: "2023-06-07"
+date: "2023-06-08"
+date-modified: "2023-06-08"
 categories: [AI, NLP, LangChain, Script]
 ---
 

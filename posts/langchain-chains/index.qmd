@@ -1,8 +1,8 @@
 ---
 title: "LangChain Chain"
 author: "Jinwook Chang"
-date: "2023-06-05"
-date-modified: "2023-06-05"
+date: "2023-06-06"
+date-modified: "2023-06-06"
 categories: [AI, NLP, LangChain, Script]
 ---
 
