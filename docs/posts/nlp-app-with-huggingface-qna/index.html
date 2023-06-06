@@ -7,9 +7,9 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 <meta name="author" content="Jinwook Chang">
-<meta name="dcterms.date" content="2023-06-01">
+<meta name="dcterms.date" content="2023-06-05">
 
-<title>Note of myself - Intro to Huggingface Transformers 1 - Sentiment Analysis</title>
+<title>Note of myself - Intro to Huggingface Transformers 3 - Q&amp;A</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -156,12 +156,12 @@ gtag('config', 'G-D7YERGZ04Y', { 'anonymize_ip': true});
 <header id="title-block-header" class="quarto-title-block default page-columns page-full">
   <div class="quarto-title-banner page-columns page-full">
     <div class="quarto-title column-body">
-      <h1 class="title">Intro to Huggingface Transformers 1 - Sentiment Analysis</h1>
+      <h1 class="title">Intro to Huggingface Transformers 3 - Q&amp;A</h1>
                                 <div class="quarto-categories">
-                <div class="quarto-category">DataScience</div>
-                <div class="quarto-category">Script</div>
+                <div class="quarto-category">AI</div>
                 <div class="quarto-category">NLP</div>
                 <div class="quarto-category">HuggingFace</div>
+                <div class="quarto-category">Script</div>
               </div>
                   </div>
   </div>
@@ -179,14 +179,14 @@ gtag('config', 'G-D7YERGZ04Y', { 'anonymize_ip': true});
       <div>
       <div class="quarto-title-meta-heading">Published</div>
       <div class="quarto-title-meta-contents">
-        <p class="date">June 1, 2023</p>
+        <p class="date">June 5, 2023</p>
       </div>
     </div>
     
       <div>
       <div class="quarto-title-meta-heading">Modified</div>
       <div class="quarto-title-meta-contents">
-        <p class="date-modified">June 1, 2023</p>
+        <p class="date-modified">June 5, 2023</p>
       </div>
     </div>
       
@@ -206,77 +206,43 @@ gtag('config', 'G-D7YERGZ04Y', { 'anonymize_ip': true});
 <p><img src="../../others/hf-logo.png" class="img-fluid"></p>
 <p>“Transformers”는 Hugging Face에서 개발한 자연어 처리(NLP) 라이브러리입니다. 이 라이브러리는 트랜스포머 기반의 신경망 아키텍처를 이용한 모델들을 손쉽게 사용할 수 있게 합니다. 주로 Python 언어로 작성되었으며, PyTorch와 TensorFlow 등의 딥러닝 프레임워크와 호환됩니다.</p>
 <p>Transformers 라이브러리는 다양한 사전 훈련된 모델을 제공하는데, BERT, GPT-2, GPT-3, T5, DistilBert, RoBERTa 등이 포함됩니다. 이 라이브러리를 통해 이들 모델을 쉽게 불러와, 텍스트 분류, 문장 생성, 문서 요약, 기계 번역, 감성 분석 등 다양한 NLP 작업에 활용할 수 있습니다. 또한, 이 라이브러리는 모델 훈련 및 미세조정(fine-tuning)을 지원하여, 특정 작업에 맞게 모델을 사용자 정의할 수 있게 합니다.</p>
-<p>이번 자료에서는 간단한 Sentiment Analysis 예제를 통해 라이브러리 활용법을 알아보겠습니다.</p>
-<section id="install-and-load-libraries" class="level3">
-<h3 class="anchored" data-anchor-id="install-and-load-libraries">Install and Load Libraries</h3>
-<div class="sourceCode" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="op">!</span>pip install transformers sentencepiece</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="sourceCode" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="co">#The main package that contains functions to use Hugging Face</span></span>
-<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> transformers</span>
-<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a><span class="co">#Set to avoid warning messages.</span></span>
-<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>transformers.logging.set_verbosity_error()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>이번 자료에서는 Q&amp;A Pipeline 활용법을 알아보겠습니다.</p>
+<section id="loading-libraries" class="level3">
+<h3 class="anchored" data-anchor-id="loading-libraries">Loading Libraries</h3>
+<div class="sourceCode" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> transformers</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="co">#Set to avoid warning messages.</span></span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>transformers.logging.set_verbosity_error()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </section>
-<section id="pipeline이란" class="level3">
-<h3 class="anchored" data-anchor-id="pipeline이란">Pipeline이란?</h3>
-<p>Huggingface에서는 pipeline을 통해 일반적으로 활용되는 task들에 대한 wrapper를 제공합니다.<br>
-다음은 제공하는 task 목록입니다.</p>
-<div class="sourceCode" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> transformers.pipelines <span class="im">import</span> PIPELINE_REGISTRY</span>
-<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a><span class="co">#Get the list of tasks that are supported by Huggingface pipeline</span></span>
-<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(PIPELINE_REGISTRY.get_supported_tasks())</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="sourceCode" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>[<span class="st">'audio-classification'</span>, <span class="st">'automatic-speech-recognition'</span>, <span class="st">'conversational'</span>, <span class="st">'depth-estimation'</span>, <span class="st">'document-question-answering'</span>, <span class="st">'feature-extraction'</span>, <span class="st">'fill-mask'</span>, <span class="st">'image-classification'</span>, <span class="st">'image-segmentation'</span>, <span class="st">'image-to-text'</span>, <span class="st">'mask-generation'</span>, <span class="st">'ner'</span>, <span class="st">'object-detection'</span>, <span class="st">'question-answering'</span>, <span class="st">'sentiment-analysis'</span>, <span class="st">'summarization'</span>, <span class="st">'table-question-answering'</span>, <span class="st">'text-classification'</span>, <span class="st">'text-generation'</span>, <span class="st">'text2text-generation'</span>, <span class="st">'token-classification'</span>, <span class="st">'translation'</span>, <span class="st">'video-classification'</span>, <span class="st">'visual-question-answering'</span>, <span class="st">'vqa'</span>, <span class="st">'zero-shot-audio-classification'</span>, <span class="st">'zero-shot-classification'</span>, <span class="st">'zero-shot-image-classification'</span>, <span class="st">'zero-shot-object-detection'</span>]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<p>Sentiment Analysis 모델에 대해 알아보겠습니다.</p>
-<div class="sourceCode" id="cb5"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="co">#Get information about a specific task</span></span>
-<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"</span><span class="ch">\n</span><span class="st">Default Model for Sentiment Analysis: "</span>)</span>
-<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(PIPELINE_REGISTRY.check_task(<span class="st">'sentiment-analysis'</span>)[<span class="dv">1</span>].get(<span class="st">'default'</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="sourceCode" id="cb6"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>{<span class="st">'model'</span>: {<span class="st">'pt'</span>: (<span class="st">'distilbert-base-uncased-finetuned-sst-2-english'</span>, <span class="st">'af0f99b'</span>), <span class="st">'tf'</span>: (<span class="st">'distilbert-base-uncased-finetuned-sst-2-english'</span>, <span class="st">'af0f99b'</span>)}}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<p>여기서 pt는 pytorch에서 활용할 수 있는 기본 모델이며, tf은 tensorflow에서 활용할 수 있는 기본 모델입니다.<br>
-이제 pipeline으로 기본 모델을 불러오도록 하겠습니다.</p>
-</section>
-<section id="pipeline-기본-모델로-sentiment-예측하기" class="level3">
-<h3 class="anchored" data-anchor-id="pipeline-기본-모델로-sentiment-예측하기">Pipeline 기본 모델로 Sentiment 예측하기</h3>
-<div class="sourceCode" id="cb7"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> transformers <span class="im">import</span> pipeline</span>
-<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> os</span>
-<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a><span class="co">#Load a pipeline. This will download the model checkpoint from huggingface and cache it </span></span>
-<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a><span class="co">#locally on disk. If model is already available in cache, it will simply use the cached version</span></span>
-<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a><span class="co">#Download will usually take a long time, depending on network bandwidth</span></span>
-<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a>sentiment_classifier <span class="op">=</span> pipeline(<span class="st">"sentiment-analysis"</span>)</span>
-<span id="cb7-9"><a href="#cb7-9" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb7-10"><a href="#cb7-10" aria-hidden="true" tabindex="-1"></a><span class="co">#Cache usually available at : &lt;&lt;user-home&gt;&gt;.cache\huggingface\hub</span></span>
-<span id="cb7-11"><a href="#cb7-11" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb7-12"><a href="#cb7-12" aria-hidden="true" tabindex="-1"></a>cache_dir <span class="op">=</span> os.path.expanduser(<span class="st">'~'</span>) <span class="op">+</span> <span class="st">"/.cache/huggingface/hub"</span></span>
-<span id="cb7-13"><a href="#cb7-13" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"Huggingface Cache directory is : "</span>, cache_dir)</span>
-<span id="cb7-14"><a href="#cb7-14" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb7-15"><a href="#cb7-15" aria-hidden="true" tabindex="-1"></a><span class="co">#Contents of cache directory</span></span>
-<span id="cb7-16"><a href="#cb7-16" aria-hidden="true" tabindex="-1"></a>os.listdir(cache_dir)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="sourceCode" id="cb8"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>Huggingface Cache directory <span class="kw">is</span> :  <span class="op">/</span>root<span class="op">/</span>.cache<span class="op">/</span>huggingface<span class="op">/</span>hub</span>
-<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>[<span class="st">'models--distilbert-base-uncased-finetuned-sst-2-english'</span>, <span class="st">'version.txt'</span>]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="sourceCode" id="cb9"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="co">#Predict sentiment using the pipeline</span></span>
-<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>sentiment_results<span class="op">=</span>sentiment_classifier(<span class="st">"This is a great course"</span>)</span>
-<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(sentiment_results)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="sourceCode" id="cb10"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>[{<span class="st">'label'</span>: <span class="st">'POSITIVE'</span>, <span class="st">'score'</span>: <span class="fl">0.9998713731765747</span>}]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="sourceCode" id="cb11"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="co">#A second example</span></span>
-<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>sentiment_results<span class="op">=</span>sentiment_classifier(<span class="st">"The download speed is really bad"</span>)</span>
-<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(sentiment_results)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="sourceCode" id="cb12"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>[{<span class="st">'label'</span>: <span class="st">'NEGATIVE'</span>, <span class="st">'score'</span>: <span class="fl">0.9998070597648621</span>}]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</section>
-<section id="custom-모델을-활용하여-sentiment-예측하기" class="level3">
-<h3 class="anchored" data-anchor-id="custom-모델을-활용하여-sentiment-예측하기">Custom 모델을 활용하여 sentiment 예측하기</h3>
-<div class="sourceCode" id="cb13"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a>sentiment_classifier <span class="op">=</span> pipeline(task<span class="op">=</span><span class="st">"sentiment-analysis"</span>,</span>
-<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>                                model<span class="op">=</span><span class="st">"finiteautomata/bertweet-base-sentiment-analysis"</span>)</span>
-<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb13-4"><a href="#cb13-4" aria-hidden="true" tabindex="-1"></a>sentiment_result<span class="op">=</span>sentiment_classifier(<span class="st">"This is a great course"</span>)</span>
-<span id="cb13-5"><a href="#cb13-5" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb13-6"><a href="#cb13-6" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(sentiment_result)</span>
-<span id="cb13-7"><a href="#cb13-7" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb13-8"><a href="#cb13-8" aria-hidden="true" tabindex="-1"></a><span class="co">#Contents of cache directory</span></span>
-<span id="cb13-9"><a href="#cb13-9" aria-hidden="true" tabindex="-1"></a>os.listdir(cache_dir)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="sourceCode" id="cb14"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a>[{<span class="st">'label'</span>: <span class="st">'POS'</span>, <span class="st">'score'</span>: <span class="fl">0.9920700192451477</span>}]</span>
-<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a>[<span class="st">'models--distilbert-base-uncased-finetuned-sst-2-english'</span>,</span>
-<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a> <span class="st">'models--finiteautomata--bertweet-base-sentiment-analysis'</span>,</span>
-<span id="cb14-4"><a href="#cb14-4" aria-hidden="true" tabindex="-1"></a> <span class="st">'version.txt'</span>]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<section id="using-qa-pipeline" class="level3">
+<h3 class="anchored" data-anchor-id="using-qa-pipeline">Using Q&amp;A Pipeline</h3>
+<div class="sourceCode" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> transformers <span class="im">import</span> pipeline</span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>context<span class="op">=</span><span class="st">"""</span></span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a><span class="st">Earth is the third planet from the Sun and the only astronomical object </span></span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a><span class="st">known to harbor life. While large volumes of water can be found </span></span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a><span class="st">throughout the Solar System, only Earth sustains liquid surface water. </span></span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a><span class="st">About 71</span><span class="sc">% o</span><span class="st">f Earth's surface is made up of the ocean, dwarfing </span></span>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a><span class="st">Earth's polar ice, lakes, and rivers. The remaining 29</span><span class="sc">% o</span><span class="st">f Earth's </span></span>
+<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a><span class="st">surface is land, consisting of continents and islands. </span></span>
+<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a><span class="st">Earth's surface layer is formed of several slowly moving tectonic plates, </span></span>
+<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a><span class="st">interacting to produce mountain ranges, volcanoes, and earthquakes. </span></span>
+<span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a><span class="st">Earth's liquid outer core generates the magnetic field that shapes Earth's </span></span>
+<span id="cb2-13"><a href="#cb2-13" aria-hidden="true" tabindex="-1"></a><span class="st">magnetosphere, deflecting destructive solar winds.</span></span>
+<span id="cb2-14"><a href="#cb2-14" aria-hidden="true" tabindex="-1"></a><span class="st">"""</span></span>
+<span id="cb2-15"><a href="#cb2-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-16"><a href="#cb2-16" aria-hidden="true" tabindex="-1"></a>quan_pipeline <span class="op">=</span> pipeline(<span class="st">"question-answering"</span>, </span>
+<span id="cb2-17"><a href="#cb2-17" aria-hidden="true" tabindex="-1"></a>                         model<span class="op">=</span><span class="st">"deepset/minilm-uncased-squad2"</span>)</span>
+<span id="cb2-18"><a href="#cb2-18" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-19"><a href="#cb2-19" aria-hidden="true" tabindex="-1"></a>answer<span class="op">=</span>quan_pipeline(question<span class="op">=</span><span class="st">"How much of earth is land?"</span>,</span>
+<span id="cb2-20"><a href="#cb2-20" aria-hidden="true" tabindex="-1"></a>             context<span class="op">=</span>context)</span>
+<span id="cb2-21"><a href="#cb2-21" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(answer)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>{<span class="st">'score'</span>: <span class="fl">0.9553403258323669</span>, <span class="st">'start'</span>: <span class="dv">327</span>, <span class="st">'end'</span>: <span class="dv">330</span>, <span class="st">'answer'</span>: <span class="st">'29%'</span>}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"</span><span class="ch">\n</span><span class="st">Another question :"</span>)</span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(quan_pipeline( question<span class="op">=</span><span class="st">"How are mountain ranges created?"</span>,</span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>             context<span class="op">=</span>context))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode" id="cb5"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>Another question :</span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>{<span class="st">'score'</span>: <span class="fl">0.2615407407283783</span>, <span class="st">'start'</span>: <span class="dv">399</span>, <span class="st">'end'</span>: <span class="dv">471</span>, <span class="st">'answer'</span>: <span class="st">"Earth's surface layer is formed of several slowly moving tectonic plates"</span>}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 
 
 </section>

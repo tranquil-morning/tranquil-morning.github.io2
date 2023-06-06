@@ -4,8 +4,10 @@
     "items": [
       "/posts/langchain-agent/index.html",
       "/posts/langchain-qna/index.html",
+      "/posts/nlp-app-with-huggingface-text-summarization/index.html",
       "/posts/langchain-chains/index.html",
       "/posts/langchain-memory/index.html",
+      "/posts/nlp-app-with-huggingface-qna/index.html",
       "/posts/langchain-output-parser/index.html",
       "/posts/langchain-prompt-template/index.html",
       "/posts/intro-to-huggingface-named-entity-recognition/index.html",

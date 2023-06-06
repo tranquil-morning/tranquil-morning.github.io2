@@ -1,0 +1,67 @@
+---
+title: "Intro to Huggingface Transformers 3 - Q&A"
+author: "Jinwook Chang"
+date: "2023-06-05"
+date-modified: "2023-06-05"
+categories: [AI, NLP, HuggingFace, Script]
+---
+
+![](../../others/hf-logo.png)
+
+“Transformers”는 Hugging Face에서 개발한 자연어 처리(NLP) 라이브러리입니다. 이 라이브러리는 트랜스포머 기반의 신경망 아키텍처를 이용한 모델들을 손쉽게 사용할 수 있게 합니다. 주로 Python 언어로 작성되었으며, PyTorch와 TensorFlow 등의 딥러닝 프레임워크와 호환됩니다.
+
+Transformers 라이브러리는 다양한 사전 훈련된 모델을 제공하는데, BERT, GPT-2, GPT-3, T5, DistilBert, RoBERTa 등이 포함됩니다. 이 라이브러리를 통해 이들 모델을 쉽게 불러와, 텍스트 분류, 문장 생성, 문서 요약, 기계 번역, 감성 분석 등 다양한 NLP 작업에 활용할 수 있습니다. 또한, 이 라이브러리는 모델 훈련 및 미세조정(fine-tuning)을 지원하여, 특정 작업에 맞게 모델을 사용자 정의할 수 있게 합니다.
+
+이번 자료에서는 Q&A Pipeline 활용법을 알아보겠습니다.
+
+
+### Loading Libraries
+
+```python
+import transformers
+
+#Set to avoid warning messages.
+transformers.logging.set_verbosity_error()
+```
+
+### Using Q&A Pipeline
+
+```python
+from transformers import pipeline
+
+context="""
+Earth is the third planet from the Sun and the only astronomical object 
+known to harbor life. While large volumes of water can be found 
+throughout the Solar System, only Earth sustains liquid surface water. 
+About 71% of Earth's surface is made up of the ocean, dwarfing 
+Earth's polar ice, lakes, and rivers. The remaining 29% of Earth's 
+surface is land, consisting of continents and islands. 
+Earth's surface layer is formed of several slowly moving tectonic plates, 
+interacting to produce mountain ranges, volcanoes, and earthquakes. 
+Earth's liquid outer core generates the magnetic field that shapes Earth's 
+magnetosphere, deflecting destructive solar winds.
+"""
+
+quan_pipeline = pipeline("question-answering", 
+                         model="deepset/minilm-uncased-squad2")
+
+answer=quan_pipeline(question="How much of earth is land?",
+             context=context)
+print(answer)
+```
+
+```python
+{'score': 0.9553403258323669, 'start': 327, 'end': 330, 'answer': '29%'}
+```
+
+
+```python
+print("\nAnother question :")
+print(quan_pipeline( question="How are mountain ranges created?",
+             context=context))
+```
+
+```python
+Another question :
+{'score': 0.2615407407283783, 'start': 399, 'end': 471, 'answer': "Earth's surface layer is formed of several slowly moving tectonic plates"}
+```
