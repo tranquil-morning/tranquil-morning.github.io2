@@ -217,7 +217,7 @@ model.evaluate(X_test,Y_test)
 
 
     
-![png](code_05_XX_Spam_Classification_Example_files/code_05_XX_Spam_Classification_Example_7_1.png)
+![](code_05_XX_Spam_Classification_Example_7_1.png)
     
 
 
