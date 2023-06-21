@@ -45,7 +45,7 @@ for image_file in image_files:
 
 
     
-![jpeg](output_3_1.jpg)
+![](output_3_1.jpg)
     
 
 
@@ -55,7 +55,7 @@ for image_file in image_files:
 
 
     
-![jpeg](output_3_3.jpg)
+![](output_3_3.jpg)
     
 
 
@@ -65,7 +65,7 @@ for image_file in image_files:
 
 
     
-![jpeg](output_3_5.jpg)
+![](output_3_5.jpg)
     
 
 
@@ -75,19 +75,19 @@ for image_file in image_files:
 
 
     
-![jpeg](output_3_7.jpg)
+![](output_3_7.jpg)
     
 
 
-### Overview of the model
+### 모델 개요
 
-Now that you have a sense of the image data and the objects present, let's try and see if the model is able to detect and classify them correctly.
+이제 이미지 데이터와 존재하는 객체에 대해 이해했으므로 모델이 객체를 올바르게 감지하고 분류할 수 있는지 확인해 보겠습니다.
 
-For this you will be using [`cvlib`](https://www.cvlib.net/), which is a very simple but powerful library for object detection that is fueled by [`OpenCV`](https://docs.opencv.org/4.5.1/) and [`Tensorflow`](https://www.tensorflow.org/).
+이를 위해 [`CVLIB`](https://www.cvlib.net/)를 사용할 텐데, 이는 매우 간단하지만 강력한 객체 감지 라이브러리로, [`OpenCV`](https://docs.opencv.org/4.5.1/)와 [`Tensorflow`](https://www.tensorflow.org/)에 의해 구동됩니다.
 
-More concretely, you will use the [`detect_common_objects`](https://docs.cvlib.net/object_detection/) function, which takes an image formatted as a [`numpy array`](https://numpy.org/doc/stable/reference/generated/numpy.array.html) and returns:
+좀 더 구체적으로, [`numpy 배열`(https://numpy.org/doc/stable/reference/generated/numpy.array.html)로 형식이 지정된 이미지를 받아 반환하는 [`detect_common_objects`](https://docs.cvlib.net/object_detection/) 함수를 사용할 것입니다:
 
-- `bbox`: list of list containing bounding box coordinates for detected objects. 
+- `bbox`: 감지된 객체의 경계 상자 좌표가 포함된 목록 목록입니다.
 
         Example:
     
@@ -96,7 +96,7 @@ More concretely, you will use the [`detect_common_objects`](https://docs.cvlib.n
     ```
     
 
-- `label`: list of labels for detected objects.
+- `label`: 감지된 개체에 대한 레이블 목록입니다.
     
         Example:
     ```python
@@ -104,16 +104,15 @@ More concretely, you will use the [`detect_common_objects`](https://docs.cvlib.n
     ```
 
 
-- `conf`: list of confidence scores for detected objects.
+- `conf`: 감지된 객체에 대한 확률 점수입니다.
         Example:
         
     ```python
         [0.6187325716018677, 0.42835739254951477]
     ```
     
-In the next section you will visually see these elements in action.
 
-### Creating the detect_and_draw_box function
+### detect_and_draw_box 함수 정의
 
 입력 인자로 받는 `detect_and_draw_box` 함수를 정의해 보겠습니다: 
 
@@ -171,7 +170,7 @@ def detect_and_draw_box(filename, model="yolov3-tiny", confidence=0.5):
     display(Image(f'images_with_boxes/{filename}'))
 ```
 
-Let's try it out for the example images.
+예제 이미지로 위 함수를 시험해봅시다.
 
 
 ```python
@@ -188,7 +187,7 @@ for image_file in image_files:
 
 
     
-![jpeg](output_9_1.jpg)
+![](output_9_1.jpg)
     
 
 
@@ -201,7 +200,7 @@ for image_file in image_files:
 
 
     
-![jpeg](output_9_3.jpg)
+![](output_9_3.jpg)
     
 
 
@@ -216,7 +215,7 @@ for image_file in image_files:
 
 
     
-![jpeg](output_9_5.jpg)
+![](output_9_5.jpg)
     
 
 
@@ -229,7 +228,7 @@ for image_file in image_files:
 
 
     
-![jpeg](output_9_7.jpg)
+![](output_9_7.jpg)
     
 
 
@@ -255,7 +254,7 @@ detect_and_draw_box("fruits.jpg")
 
 
     
-![jpeg](output_11_1.jpg)
+![](output_11_1.jpg)
     
 
 
@@ -295,7 +294,7 @@ detect_and_draw_box("fruits.jpg", confidence=0.2)
 
 
     
-![jpeg](output_13_1.jpg)
+![](output_13_1.jpg)
     
 
 
@@ -410,16 +409,16 @@ uvicorn.run(app, host=host, port=8000, root_path="/serve")
 
 `http://127.0.0.1:8000/`에 접속하여 서비스를 이용해봅시다.
 
-![image.png](fastapi-1.png)
+![](fastapi-1.png)
 
 
 
 **Try it out** 버튼을 클릭해봅시다.
 
-![image.png](fastapi-2.png)
+![](fastapi-2.png)
 
 **모델** 필드에서 모델을 선택하고 **파일**은 서버가 객체를 감지할 이미지여야 합니다.
 
 **파일 선택** 버튼을 클릭하여 로컬 파일 시스템에서 이미지를 **제출**한 다음 파란색 **실행** 버튼을 클릭하여 서버에 HTTP 요청을 전송합니다. 그런 다음 아래로 스크롤하면 **응답을 확인할 수 있습니다**.
 
-![image.png](fastapi-3.png)
+![](fastapi-3.png)

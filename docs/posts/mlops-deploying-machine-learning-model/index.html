@@ -223,53 +223,32 @@ gtag('config', 'G-D7YERGZ04Y', { 'anonymize_ip': true});
 <span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(<span class="ss">f"</span><span class="ch">\n</span><span class="ss">Displaying image: </span><span class="sc">{</span>image_file<span class="sc">}</span><span class="ss">"</span>)</span>
 <span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a>    display(Image(filename<span class="op">=</span><span class="ss">f"images/</span><span class="sc">{</span>image_file<span class="sc">}</span><span class="ss">"</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <pre><code>Displaying image: apple.jpg</code></pre>
-<div class="quarto-figure quarto-figure-center">
-<figure class="figure">
-<p><img src="output_3_1.jpg" class="img-fluid figure-img"></p>
-<figcaption class="figure-caption">jpeg</figcaption>
-</figure>
-</div>
+<p><img src="output_3_1.jpg" class="img-fluid"></p>
 <pre><code>Displaying image: clock.jpg</code></pre>
-<div class="quarto-figure quarto-figure-center">
-<figure class="figure">
-<p><img src="output_3_3.jpg" class="img-fluid figure-img"></p>
-<figcaption class="figure-caption">jpeg</figcaption>
-</figure>
-</div>
+<p><img src="output_3_3.jpg" class="img-fluid"></p>
 <pre><code>Displaying image: oranges.jpg</code></pre>
-<div class="quarto-figure quarto-figure-center">
-<figure class="figure">
-<p><img src="output_3_5.jpg" class="img-fluid figure-img"></p>
-<figcaption class="figure-caption">jpeg</figcaption>
-</figure>
-</div>
+<p><img src="output_3_5.jpg" class="img-fluid"></p>
 <pre><code>Displaying image: car.jpg</code></pre>
-<div class="quarto-figure quarto-figure-center">
-<figure class="figure">
-<p><img src="output_3_7.jpg" class="img-fluid figure-img"></p>
-<figcaption class="figure-caption">jpeg</figcaption>
-</figure>
-</div>
+<p><img src="output_3_7.jpg" class="img-fluid"></p>
 </section>
-<section id="overview-of-the-model" class="level3">
-<h3 class="anchored" data-anchor-id="overview-of-the-model">Overview of the model</h3>
-<p>Now that you have a sense of the image data and the objects present, let’s try and see if the model is able to detect and classify them correctly.</p>
-<p>For this you will be using <a href="https://www.cvlib.net/"><code>cvlib</code></a>, which is a very simple but powerful library for object detection that is fueled by <a href="https://docs.opencv.org/4.5.1/"><code>OpenCV</code></a> and <a href="https://www.tensorflow.org/"><code>Tensorflow</code></a>.</p>
-<p>More concretely, you will use the <a href="https://docs.cvlib.net/object_detection/"><code>detect_common_objects</code></a> function, which takes an image formatted as a <a href="https://numpy.org/doc/stable/reference/generated/numpy.array.html"><code>numpy array</code></a> and returns:</p>
+<section id="모델-개요" class="level3">
+<h3 class="anchored" data-anchor-id="모델-개요">모델 개요</h3>
+<p>이제 이미지 데이터와 존재하는 객체에 대해 이해했으므로 모델이 객체를 올바르게 감지하고 분류할 수 있는지 확인해 보겠습니다.</p>
+<p>이를 위해 <a href="https://www.cvlib.net/"><code>CVLIB</code></a>를 사용할 텐데, 이는 매우 간단하지만 강력한 객체 감지 라이브러리로, <a href="https://docs.opencv.org/4.5.1/"><code>OpenCV</code></a>와 <a href="https://www.tensorflow.org/"><code>Tensorflow</code></a>에 의해 구동됩니다.</p>
+<p>좀 더 구체적으로, [<code>numpy 배열</code>(https://numpy.org/doc/stable/reference/generated/numpy.array.html)로 형식이 지정된 이미지를 받아 반환하는 <a href="https://docs.cvlib.net/object_detection/"><code>detect_common_objects</code></a> 함수를 사용할 것입니다:</p>
 <ul>
-<li><p><code>bbox</code>: list of list containing bounding box coordinates for detected objects.</p>
+<li><p><code>bbox</code>: 감지된 객체의 경계 상자 좌표가 포함된 목록 목록입니다.</p>
 <pre><code>  Example:</code></pre>
 <div class="sourceCode" id="cb8"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>    [[<span class="dv">32</span>, <span class="dv">76</span>, <span class="dv">128</span>, <span class="dv">192</span>], [<span class="dv">130</span>, <span class="dv">83</span>, <span class="dv">220</span>, <span class="dv">185</span>]]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div></li>
-<li><p><code>label</code>: list of labels for detected objects.</p>
+<li><p><code>label</code>: 감지된 개체에 대한 레이블 목록입니다.</p>
 <pre><code>  Example:</code></pre>
 <div class="sourceCode" id="cb10"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>    [<span class="st">'apple'</span>, <span class="st">'apple'</span>]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div></li>
-<li><p><code>conf</code>: list of confidence scores for detected objects. Example:</p>
+<li><p><code>conf</code>: 감지된 객체에 대한 확률 점수입니다. Example:</p>
 <div class="sourceCode" id="cb11"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>    [<span class="fl">0.6187325716018677</span>, <span class="fl">0.42835739254951477</span>]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div></li>
 </ul>
-<p>In the next section you will visually see these elements in action.</p>
 </section>
-<section id="creating-the-detect_and_draw_box-function" class="level3">
-<h3 class="anchored" data-anchor-id="creating-the-detect_and_draw_box-function">Creating the detect_and_draw_box function</h3>
+<section id="detect_and_draw_box-함수-정의" class="level3">
+<h3 class="anchored" data-anchor-id="detect_and_draw_box-함수-정의">detect_and_draw_box 함수 정의</h3>
 <p>입력 인자로 받는 <code>detect_and_draw_box</code> 함수를 정의해 보겠습니다:</p>
 <ul>
 <li>시스템 내 파일의 <strong>파일명</strong>.</li>
@@ -318,51 +297,31 @@ gtag('config', 'G-D7YERGZ04Y', { 'anonymize_ip': true});
 <span id="cb12-36"><a href="#cb12-36" aria-hidden="true" tabindex="-1"></a>    </span>
 <span id="cb12-37"><a href="#cb12-37" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Display the image with bounding boxes</span></span>
 <span id="cb12-38"><a href="#cb12-38" aria-hidden="true" tabindex="-1"></a>    display(Image(<span class="ss">f'images_with_boxes/</span><span class="sc">{</span>filename<span class="sc">}</span><span class="ss">'</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<p>Let’s try it out for the example images.</p>
+<p>예제 이미지로 위 함수를 시험해봅시다.</p>
 <div class="sourceCode" id="cb13"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> image_file <span class="kw">in</span> image_files:</span>
 <span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>    detect_and_draw_box(image_file)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <pre><code>========================
 Image processed: apple.jpg
 
 Detected object: apple with confidence level of 0.5717206597328186</code></pre>
-<div class="quarto-figure quarto-figure-center">
-<figure class="figure">
-<p><img src="output_9_1.jpg" class="img-fluid figure-img"></p>
-<figcaption class="figure-caption">jpeg</figcaption>
-</figure>
-</div>
+<p><img src="output_9_1.jpg" class="img-fluid"></p>
 <pre><code>========================
 Image processed: clock.jpg
 
 Detected object: clock with confidence level of 0.9683185815811157</code></pre>
-<div class="quarto-figure quarto-figure-center">
-<figure class="figure">
-<p><img src="output_9_3.jpg" class="img-fluid figure-img"></p>
-<figcaption class="figure-caption">jpeg</figcaption>
-</figure>
-</div>
+<p><img src="output_9_3.jpg" class="img-fluid"></p>
 <pre><code>========================
 Image processed: oranges.jpg
 
 Detected object: orange with confidence level of 0.6185590028762817
 
 Detected object: orange with confidence level of 0.5561688542366028</code></pre>
-<div class="quarto-figure quarto-figure-center">
-<figure class="figure">
-<p><img src="output_9_5.jpg" class="img-fluid figure-img"></p>
-<figcaption class="figure-caption">jpeg</figcaption>
-</figure>
-</div>
+<p><img src="output_9_5.jpg" class="img-fluid"></p>
 <pre><code>========================
 Image processed: car.jpg
 
 Detected object: car with confidence level of 0.6325407028198242</code></pre>
-<div class="quarto-figure quarto-figure-center">
-<figure class="figure">
-<p><img src="output_9_7.jpg" class="img-fluid figure-img"></p>
-<figcaption class="figure-caption">jpeg</figcaption>
-</figure>
-</div>
+<p><img src="output_9_7.jpg" class="img-fluid"></p>
 </section>
 </section>
 <section id="신뢰-수준-변경해보기" class="level2">
@@ -377,12 +336,7 @@ Detected object: apple with confidence level of 0.5818483829498291
 Detected object: orange with confidence level of 0.5346481204032898
 
 Detected object: orange with confidence level of 0.515099287033081</code></pre>
-<div class="quarto-figure quarto-figure-center">
-<figure class="figure">
-<p><img src="output_11_1.jpg" class="img-fluid figure-img"></p>
-<figcaption class="figure-caption">jpeg</figcaption>
-</figure>
-</div>
+<p><img src="output_11_1.jpg" class="img-fluid"></p>
 <p>모델이 여러 과일을 감지하지 못하고 오렌지를 사과로 ’잘못 분류’했습니다. 이전에는 사과 하나를 감지할 수 있었기 때문에 모델이 사과의 모양을 공정하게 표현한다고 생각할 수 있습니다.</p>
 <p>한 가지 가능성은 모델이 다른 과일을 감지했지만 신뢰 수준이 0.5보다 낮을 수 있다는 것입니다. 이것이 유효한 가설인지 테스트해 봅시다:</p>
 <div class="sourceCode" id="cb20"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a>detect_and_draw_box(<span class="st">"fruits.jpg"</span>, confidence<span class="op">=</span><span class="fl">0.2</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
@@ -408,12 +362,7 @@ Detected object: orange with confidence level of 0.2749975323677063
 Detected object: apple with confidence level of 0.2744506299495697
 
 Detected object: orange with confidence level of 0.2141905575990677</code></pre>
-<div class="quarto-figure quarto-figure-center">
-<figure class="figure">
-<p><img src="output_13_1.jpg" class="img-fluid figure-img"></p>
-<figcaption class="figure-caption">jpeg</figcaption>
-</figure>
-</div>
+<p><img src="output_13_1.jpg" class="img-fluid"></p>
 <p>신뢰 수준을 낮추면 모델은 대부분의 과일을 성공적으로 감지합니다. 그러나 존재하는 물체를 정확하게 감지하기 위해서는 신뢰 수준을 매우 낮게 설정해야 했습니다. 일반적으로 이러한 종류의 매개 변수를 변경하면 원하지 않는 결과가 나올 수 있으므로 이러한 종류의 매개 변수를 줄이거나 늘릴 때 주의해야 합니다.</p>
 <p>오렌지를 사과로 잘못 분류한 이 구체적인 예는 <strong>이 모델이 완벽하지 않다는 것을 상기시켜 주며, 실제 업무에 사용할 때 이 점을 고려해야 합니다</strong>.</p>
 </section>
@@ -507,27 +456,12 @@ Detected object: orange with confidence level of 0.2141905575990677</code></pre>
 <section id="서비스-이용하기" class="level2">
 <h2 class="anchored" data-anchor-id="서비스-이용하기">서비스 이용하기</h2>
 <p><code>http://127.0.0.1:8000/</code>에 접속하여 서비스를 이용해봅시다.</p>
-<div class="quarto-figure quarto-figure-center">
-<figure class="figure">
-<p><img src="fastapi-1.png" class="img-fluid figure-img"></p>
-<figcaption class="figure-caption">image.png</figcaption>
-</figure>
-</div>
+<p><img src="fastapi-1.png" class="img-fluid"></p>
 <p><strong>Try it out</strong> 버튼을 클릭해봅시다.</p>
-<div class="quarto-figure quarto-figure-center">
-<figure class="figure">
-<p><img src="fastapi-2.png" class="img-fluid figure-img"></p>
-<figcaption class="figure-caption">image.png</figcaption>
-</figure>
-</div>
+<p><img src="fastapi-2.png" class="img-fluid"></p>
 <p><strong>모델</strong> 필드에서 모델을 선택하고 <strong>파일</strong>은 서버가 객체를 감지할 이미지여야 합니다.</p>
 <p><strong>파일 선택</strong> 버튼을 클릭하여 로컬 파일 시스템에서 이미지를 <strong>제출</strong>한 다음 파란색 <strong>실행</strong> 버튼을 클릭하여 서버에 HTTP 요청을 전송합니다. 그런 다음 아래로 스크롤하면 <strong>응답을 확인할 수 있습니다</strong>.</p>
-<div class="quarto-figure quarto-figure-center">
-<figure class="figure">
-<p><img src="fastapi-3.png" class="img-fluid figure-img"></p>
-<figcaption class="figure-caption">image.png</figcaption>
-</figure>
-</div>
+<p><img src="fastapi-3.png" class="img-fluid"></p>
 
 
 </section>
