@@ -1,0 +1,773 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.3.361">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+<meta name="author" content="Jinwook Chang">
+<meta name="dcterms.date" content="2023-06-21">
+
+<title>Note of myself - MLOps - Deploying a Machine Learning Model</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+</style>
+
+
+<script src="../../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../../site_libs/quarto-nav/headroom.min.js"></script>
+<script src="../../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../../">
+<script src="../../site_libs/quarto-html/quarto.js"></script>
+<script src="../../site_libs/quarto-html/popper.min.js"></script>
+<script src="../../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../../site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../../site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "navbar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "end",
+  "type": "overlay",
+  "limit": 20,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+<script async="" src="https://www.googletagmanager.com/gtag/js?id=G-D7YERGZ04Y"></script>
+
+<script type="text/javascript">
+
+window.dataLayer = window.dataLayer || [];
+function gtag(){dataLayer.push(arguments);}
+gtag('js', new Date());
+gtag('config', 'G-D7YERGZ04Y', { 'anonymize_ip': true});
+</script>
+
+
+<link rel="stylesheet" href="../../styles.css">
+</head>
+
+<body class="nav-fixed fullcontent">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+    <nav class="navbar navbar-expand-lg navbar-dark ">
+      <div class="navbar-container container-fluid">
+      <div class="navbar-brand-container">
+    <a class="navbar-brand" href="../../index.html">
+    <span class="navbar-title">Note of myself</span>
+    </a>
+  </div>
+            <div id="quarto-search" class="" title="Search"></div>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+  <span class="navbar-toggler-icon"></span>
+</button>
+          <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav navbar-nav-scroll ms-auto">
+  <li class="nav-item">
+    <a class="nav-link" href="../../about.html" rel="" target="">
+ <span class="menu-text">About</span></a>
+  </li>  
+  <li class="nav-item compact">
+    <a class="nav-link" href="https://github.com/tranquil-morning" rel="" target=""><i class="bi bi-github" role="img">
+</i> 
+ <span class="menu-text"></span></a>
+  </li>  
+  <li class="nav-item compact">
+    <a class="nav-link" href="https://www.linkedin.com/in/tranquil-morning/" rel="" target=""><i class="bi bi-linkedin" role="img">
+</i> 
+ <span class="menu-text"></span></a>
+  </li>  
+  <li class="nav-item compact">
+    <a class="nav-link" href="https://www.instagram.com/zzang_jinuk/" rel="" target=""><i class="bi bi-instagram" role="img">
+</i> 
+ <span class="menu-text"></span></a>
+  </li>  
+</ul>
+            <div class="quarto-navbar-tools">
+</div>
+          </div> <!-- /navcollapse -->
+      </div> <!-- /container-fluid -->
+    </nav>
+</header>
+<!-- content -->
+<header id="title-block-header" class="quarto-title-block default page-columns page-full">
+  <div class="quarto-title-banner page-columns page-full">
+    <div class="quarto-title column-body">
+      <h1 class="title">MLOps - Deploying a Machine Learning Model</h1>
+                                <div class="quarto-categories">
+                <div class="quarto-category">MachineLearning</div>
+                <div class="quarto-category">DataScience</div>
+                <div class="quarto-category">MLOps</div>
+                <div class="quarto-category">Script</div>
+              </div>
+                  </div>
+  </div>
+    
+  
+  <div class="quarto-title-meta">
+
+      <div>
+      <div class="quarto-title-meta-heading">Author</div>
+      <div class="quarto-title-meta-contents">
+               <p>Jinwook Chang </p>
+            </div>
+    </div>
+      
+      <div>
+      <div class="quarto-title-meta-heading">Published</div>
+      <div class="quarto-title-meta-contents">
+        <p class="date">June 21, 2023</p>
+      </div>
+    </div>
+    
+      <div>
+      <div class="quarto-title-meta-heading">Modified</div>
+      <div class="quarto-title-meta-contents">
+        <p class="date-modified">June 21, 2023</p>
+      </div>
+    </div>
+      
+    </div>
+    
+  
+  </header><div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<!-- sidebar -->
+<!-- margin-sidebar -->
+    
+<!-- main -->
+<main class="content quarto-banner-title-block" id="quarto-document-content">
+
+
+
+
+<p>이 실습은 실제 머신 러닝 모델을 배포하고 그 결과를 확인하는 데 중점을 둡니다. 보다 구체적으로, 사진에서 일반적인 물체를 감지하도록 훈련된 컴퓨터 비전 모델을 배포합니다. 모델 배포는 일반적인 머신 러닝 라이프사이클의 마지막 단계 중 하나입니다. 이 실습에서는 사전 학습된 모델인 <a href="https://pjreddie.com/darknet/yolo/"><code>YOLOV3</code></a>를 사용합니다.</p>
+<p>이 실습에서 완료해야 할 단계/작업 순서는 다음과 같습니다: 1. 물체 감지에 사용되는 이미지 데이터 세트를 검사합니다. 2. 모델 자체를 살펴봅니다. 3. fastAPI를 사용하여 모델을 배포합니다. 해당 웹사이트 <a href="https://fastapi.tiangolo.com/">여기</a>에서 확인할 수 있습니다.</p>
+<section id="yolov3를-활용한-객체-감지" class="level2">
+<h2 class="anchored" data-anchor-id="yolov3를-활용한-객체-감지">YOLOV3를 활용한 객체 감지</h2>
+<section id="이미지-확인하기" class="level3">
+<h3 class="anchored" data-anchor-id="이미지-확인하기">이미지 확인하기</h3>
+<p>YOLOV3 모델에 전달될 이미지를 살펴봅시다. 이를 이미지에 대한 인사이트를 얻을 수 있습니다. 이 이미지들은 <a href="http://www.image-net.org/index"><code>ImageNet</code></a> 데이터 세트의 일부입니다.</p>
+<div class="sourceCode" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> IPython.display <span class="im">import</span> Image, display</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Some example images</span></span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>image_files <span class="op">=</span> [</span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>    <span class="st">'apple.jpg'</span>,</span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>    <span class="st">'clock.jpg'</span>,</span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>    <span class="st">'oranges.jpg'</span>,</span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>    <span class="st">'car.jpg'</span></span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a>]</span>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> image_file <span class="kw">in</span> image_files:</span>
+<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(<span class="ss">f"</span><span class="ch">\n</span><span class="ss">Displaying image: </span><span class="sc">{</span>image_file<span class="sc">}</span><span class="ss">"</span>)</span>
+<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a>    display(Image(filename<span class="op">=</span><span class="ss">f"images/</span><span class="sc">{</span>image_file<span class="sc">}</span><span class="ss">"</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<pre><code>Displaying image: apple.jpg</code></pre>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="output_3_1.jpg" class="img-fluid figure-img"></p>
+<figcaption class="figure-caption">jpeg</figcaption>
+</figure>
+</div>
+<pre><code>Displaying image: clock.jpg</code></pre>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="output_3_3.jpg" class="img-fluid figure-img"></p>
+<figcaption class="figure-caption">jpeg</figcaption>
+</figure>
+</div>
+<pre><code>Displaying image: oranges.jpg</code></pre>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="output_3_5.jpg" class="img-fluid figure-img"></p>
+<figcaption class="figure-caption">jpeg</figcaption>
+</figure>
+</div>
+<pre><code>Displaying image: car.jpg</code></pre>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="output_3_7.jpg" class="img-fluid figure-img"></p>
+<figcaption class="figure-caption">jpeg</figcaption>
+</figure>
+</div>
+</section>
+<section id="overview-of-the-model" class="level3">
+<h3 class="anchored" data-anchor-id="overview-of-the-model">Overview of the model</h3>
+<p>Now that you have a sense of the image data and the objects present, let’s try and see if the model is able to detect and classify them correctly.</p>
+<p>For this you will be using <a href="https://www.cvlib.net/"><code>cvlib</code></a>, which is a very simple but powerful library for object detection that is fueled by <a href="https://docs.opencv.org/4.5.1/"><code>OpenCV</code></a> and <a href="https://www.tensorflow.org/"><code>Tensorflow</code></a>.</p>
+<p>More concretely, you will use the <a href="https://docs.cvlib.net/object_detection/"><code>detect_common_objects</code></a> function, which takes an image formatted as a <a href="https://numpy.org/doc/stable/reference/generated/numpy.array.html"><code>numpy array</code></a> and returns:</p>
+<ul>
+<li><p><code>bbox</code>: list of list containing bounding box coordinates for detected objects.</p>
+<pre><code>  Example:</code></pre>
+<div class="sourceCode" id="cb8"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>    [[<span class="dv">32</span>, <span class="dv">76</span>, <span class="dv">128</span>, <span class="dv">192</span>], [<span class="dv">130</span>, <span class="dv">83</span>, <span class="dv">220</span>, <span class="dv">185</span>]]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div></li>
+<li><p><code>label</code>: list of labels for detected objects.</p>
+<pre><code>  Example:</code></pre>
+<div class="sourceCode" id="cb10"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>    [<span class="st">'apple'</span>, <span class="st">'apple'</span>]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div></li>
+<li><p><code>conf</code>: list of confidence scores for detected objects. Example:</p>
+<div class="sourceCode" id="cb11"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>    [<span class="fl">0.6187325716018677</span>, <span class="fl">0.42835739254951477</span>]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div></li>
+</ul>
+<p>In the next section you will visually see these elements in action.</p>
+</section>
+<section id="creating-the-detect_and_draw_box-function" class="level3">
+<h3 class="anchored" data-anchor-id="creating-the-detect_and_draw_box-function">Creating the detect_and_draw_box function</h3>
+<p>입력 인자로 받는 <code>detect_and_draw_box</code> 함수를 정의해 보겠습니다:</p>
+<ul>
+<li>시스템 내 파일의 <strong>파일명</strong>.</li>
+<li><strong>모델</strong></li>
+<li><strong>신뢰 수준</strong>.</li>
+</ul>
+<p>이러한 입력을 통해 이미지에서 일반적인 객체를 감지하고 감지된 객체와 함께 경계 상자를 표시하는 새 이미지를 저장합니다. 이 새 이미지는 <code>images_with_boxes</code> 디렉토리에 저장됩니다.</p>
+<p>이 함수가 왜 모델을 입력 인수로 받는지 궁금할 수 있습니다. 어떤 모델을 선택할 수 있을까요? 정답은 <code>detect_common_objects</code>가 기본적으로 <code>yolov3</code> 모델을 사용한다는 것입니다. 그러나 훨씬 더 작고 계산 능력이 덜 필요한 다른 옵션이 있습니다.</p>
+<p>바로 <code>yolov3-tiny</code> 버전입니다. 모델 이름에서 알 수 있듯이 이 모델은 큰 모델을 저장할 수 없는 제약된 환경을 위해 설계되었습니다. 따라서 전체 모델보다 결과가 덜 정확하다는 자연스러운 단점이 있습니다. 하지만 여전히 꽤 잘 작동합니다. 앞으로는 원하는 것을 사용할 수 있지만 기본적으로 <code>yolov3-tiny</code>가 사용됩니다.</p>
+<p>모델 출력은 이미지에 다른 물체가 있는지 여부에 대한 확률 벡터입니다. 마지막 입력 인수인 신뢰 수준은 제공된 이미지에서 특정 물체가 감지되었다고 보고하기 위해 확률이 초과해야 하는 임계값을 결정합니다. 기본적으로 <code>detect_common_objects</code>는 이 값으로 0.5를 사용합니다.</p>
+<div class="sourceCode" id="cb12"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> cv2</span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> cvlib <span class="im">as</span> cv</span>
+<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> cvlib.object_detection <span class="im">import</span> draw_bbox</span>
+<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-5"><a href="#cb12-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-6"><a href="#cb12-6" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> detect_and_draw_box(filename, model<span class="op">=</span><span class="st">"yolov3-tiny"</span>, confidence<span class="op">=</span><span class="fl">0.5</span>):</span>
+<span id="cb12-7"><a href="#cb12-7" aria-hidden="true" tabindex="-1"></a>    <span class="co">"""Detects common objects on an image and creates a new image with bounding boxes.</span></span>
+<span id="cb12-8"><a href="#cb12-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-9"><a href="#cb12-9" aria-hidden="true" tabindex="-1"></a><span class="co">    Args:</span></span>
+<span id="cb12-10"><a href="#cb12-10" aria-hidden="true" tabindex="-1"></a><span class="co">        filename (str): Filename of the image.</span></span>
+<span id="cb12-11"><a href="#cb12-11" aria-hidden="true" tabindex="-1"></a><span class="co">        model (str): Either "yolov3" or "yolov3-tiny". Defaults to "yolov3-tiny".</span></span>
+<span id="cb12-12"><a href="#cb12-12" aria-hidden="true" tabindex="-1"></a><span class="co">        confidence (float, optional): Desired confidence level. Defaults to 0.5.</span></span>
+<span id="cb12-13"><a href="#cb12-13" aria-hidden="true" tabindex="-1"></a><span class="co">    """</span></span>
+<span id="cb12-14"><a href="#cb12-14" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb12-15"><a href="#cb12-15" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Images are stored under the images/ directory</span></span>
+<span id="cb12-16"><a href="#cb12-16" aria-hidden="true" tabindex="-1"></a>    img_filepath <span class="op">=</span> <span class="ss">f'images/</span><span class="sc">{</span>filename<span class="sc">}</span><span class="ss">'</span></span>
+<span id="cb12-17"><a href="#cb12-17" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb12-18"><a href="#cb12-18" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Read the image into a numpy array</span></span>
+<span id="cb12-19"><a href="#cb12-19" aria-hidden="true" tabindex="-1"></a>    img <span class="op">=</span> cv2.imread(img_filepath)</span>
+<span id="cb12-20"><a href="#cb12-20" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb12-21"><a href="#cb12-21" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Perform the object detection</span></span>
+<span id="cb12-22"><a href="#cb12-22" aria-hidden="true" tabindex="-1"></a>    bbox, label, conf <span class="op">=</span> cv.detect_common_objects(img, confidence<span class="op">=</span>confidence, model<span class="op">=</span>model)</span>
+<span id="cb12-23"><a href="#cb12-23" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb12-24"><a href="#cb12-24" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Print current image's filename</span></span>
+<span id="cb12-25"><a href="#cb12-25" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(<span class="ss">f"========================</span><span class="ch">\n</span><span class="ss">Image processed: </span><span class="sc">{</span>filename<span class="sc">}</span><span class="ch">\n</span><span class="ss">"</span>)</span>
+<span id="cb12-26"><a href="#cb12-26" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb12-27"><a href="#cb12-27" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Print detected objects with confidence level</span></span>
+<span id="cb12-28"><a href="#cb12-28" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> l, c <span class="kw">in</span> <span class="bu">zip</span>(label, conf):</span>
+<span id="cb12-29"><a href="#cb12-29" aria-hidden="true" tabindex="-1"></a>        <span class="bu">print</span>(<span class="ss">f"Detected object: </span><span class="sc">{</span>l<span class="sc">}</span><span class="ss"> with confidence level of </span><span class="sc">{</span>c<span class="sc">}</span><span class="ch">\n</span><span class="ss">"</span>)</span>
+<span id="cb12-30"><a href="#cb12-30" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb12-31"><a href="#cb12-31" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Create a new image that includes the bounding boxes</span></span>
+<span id="cb12-32"><a href="#cb12-32" aria-hidden="true" tabindex="-1"></a>    output_image <span class="op">=</span> draw_bbox(img, bbox, label, conf)</span>
+<span id="cb12-33"><a href="#cb12-33" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb12-34"><a href="#cb12-34" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Save the image in the directory images_with_boxes</span></span>
+<span id="cb12-35"><a href="#cb12-35" aria-hidden="true" tabindex="-1"></a>    cv2.imwrite(<span class="ss">f'images_with_boxes/</span><span class="sc">{</span>filename<span class="sc">}</span><span class="ss">'</span>, output_image)</span>
+<span id="cb12-36"><a href="#cb12-36" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb12-37"><a href="#cb12-37" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Display the image with bounding boxes</span></span>
+<span id="cb12-38"><a href="#cb12-38" aria-hidden="true" tabindex="-1"></a>    display(Image(<span class="ss">f'images_with_boxes/</span><span class="sc">{</span>filename<span class="sc">}</span><span class="ss">'</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>Let’s try it out for the example images.</p>
+<div class="sourceCode" id="cb13"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> image_file <span class="kw">in</span> image_files:</span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>    detect_and_draw_box(image_file)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<pre><code>========================
+Image processed: apple.jpg
+
+Detected object: apple with confidence level of 0.5717206597328186</code></pre>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="output_9_1.jpg" class="img-fluid figure-img"></p>
+<figcaption class="figure-caption">jpeg</figcaption>
+</figure>
+</div>
+<pre><code>========================
+Image processed: clock.jpg
+
+Detected object: clock with confidence level of 0.9683185815811157</code></pre>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="output_9_3.jpg" class="img-fluid figure-img"></p>
+<figcaption class="figure-caption">jpeg</figcaption>
+</figure>
+</div>
+<pre><code>========================
+Image processed: oranges.jpg
+
+Detected object: orange with confidence level of 0.6185590028762817
+
+Detected object: orange with confidence level of 0.5561688542366028</code></pre>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="output_9_5.jpg" class="img-fluid figure-img"></p>
+<figcaption class="figure-caption">jpeg</figcaption>
+</figure>
+</div>
+<pre><code>========================
+Image processed: car.jpg
+
+Detected object: car with confidence level of 0.6325407028198242</code></pre>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="output_9_7.jpg" class="img-fluid figure-img"></p>
+<figcaption class="figure-caption">jpeg</figcaption>
+</figure>
+</div>
+</section>
+</section>
+<section id="신뢰-수준-변경해보기" class="level2">
+<h2 class="anchored" data-anchor-id="신뢰-수준-변경해보기">신뢰 수준 변경해보기</h2>
+<p>물체 감지가 꽤 잘 된 것 같습니다. 여러 개의 물체가 포함된 좀 더 어려운 이미지에서 시도해 보겠습니다:</p>
+<div class="sourceCode" id="cb18"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a>detect_and_draw_box(<span class="st">"fruits.jpg"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<pre><code>========================
+Image processed: fruits.jpg
+
+Detected object: apple with confidence level of 0.5818483829498291
+
+Detected object: orange with confidence level of 0.5346481204032898
+
+Detected object: orange with confidence level of 0.515099287033081</code></pre>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="output_11_1.jpg" class="img-fluid figure-img"></p>
+<figcaption class="figure-caption">jpeg</figcaption>
+</figure>
+</div>
+<p>모델이 여러 과일을 감지하지 못하고 오렌지를 사과로 ’잘못 분류’했습니다. 이전에는 사과 하나를 감지할 수 있었기 때문에 모델이 사과의 모양을 공정하게 표현한다고 생각할 수 있습니다.</p>
+<p>한 가지 가능성은 모델이 다른 과일을 감지했지만 신뢰 수준이 0.5보다 낮을 수 있다는 것입니다. 이것이 유효한 가설인지 테스트해 봅시다:</p>
+<div class="sourceCode" id="cb20"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a>detect_and_draw_box(<span class="st">"fruits.jpg"</span>, confidence<span class="op">=</span><span class="fl">0.2</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<pre><code>========================
+Image processed: fruits.jpg
+
+Detected object: apple with confidence level of 0.5818483829498291
+
+Detected object: orange with confidence level of 0.5346481204032898
+
+Detected object: orange with confidence level of 0.515099287033081
+
+Detected object: apple with confidence level of 0.3475988507270813
+
+Detected object: orange with confidence level of 0.3287608325481415
+
+Detected object: apple with confidence level of 0.31244662404060364
+
+Detected object: orange with confidence level of 0.2798607349395752
+
+Detected object: orange with confidence level of 0.2749975323677063
+
+Detected object: apple with confidence level of 0.2744506299495697
+
+Detected object: orange with confidence level of 0.2141905575990677</code></pre>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="output_13_1.jpg" class="img-fluid figure-img"></p>
+<figcaption class="figure-caption">jpeg</figcaption>
+</figure>
+</div>
+<p>신뢰 수준을 낮추면 모델은 대부분의 과일을 성공적으로 감지합니다. 그러나 존재하는 물체를 정확하게 감지하기 위해서는 신뢰 수준을 매우 낮게 설정해야 했습니다. 일반적으로 이러한 종류의 매개 변수를 변경하면 원하지 않는 결과가 나올 수 있으므로 이러한 종류의 매개 변수를 줄이거나 늘릴 때 주의해야 합니다.</p>
+<p>오렌지를 사과로 잘못 분류한 이 구체적인 예는 <strong>이 모델이 완벽하지 않다는 것을 상기시켜 주며, 실제 업무에 사용할 때 이 점을 고려해야 합니다</strong>.</p>
+</section>
+<section id="fastapi를-사용하여-모델-배포하기" class="level2">
+<h2 class="anchored" data-anchor-id="fastapi를-사용하여-모델-배포하기">fastAPI를 사용하여 모델 배포하기</h2>
+<section id="서버에-객체-감지-모델-배치하기" class="level3">
+<h3 class="anchored" data-anchor-id="서버에-객체-감지-모델-배치하기">서버에 객체 감지 모델 배치하기</h3>
+<p>이제 모델이 어떻게 작동하는지 알았으니 이제 배포할 차례입니다!</p>
+<p>배포에 들어가기 전에 몇 가지 중요한 개념과 이것이 어떻게 ’fastAPI’로 변환되는지 간단히 요약해 보겠습니다. 서버에 업로드된 이미지는 <code>images_uploaded</code> 디렉토리 내에서 사용됩니다.</p>
+<div class="sourceCode" id="cb22"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> io</span>
+<span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> uvicorn</span>
+<span id="cb22-3"><a href="#cb22-3" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
+<span id="cb22-4"><a href="#cb22-4" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> nest_asyncio</span>
+<span id="cb22-5"><a href="#cb22-5" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> enum <span class="im">import</span> Enum</span>
+<span id="cb22-6"><a href="#cb22-6" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> fastapi <span class="im">import</span> FastAPI, UploadFile, File, HTTPException</span>
+<span id="cb22-7"><a href="#cb22-7" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> fastapi.responses <span class="im">import</span> StreamingResponse</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode" id="cb23"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Assign an instance of the FastAPI class to the variable "app".</span></span>
+<span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a><span class="co"># You will interact with your api using this instance.</span></span>
+<span id="cb23-3"><a href="#cb23-3" aria-hidden="true" tabindex="-1"></a>app <span class="op">=</span> FastAPI(title<span class="op">=</span><span class="st">'Deploying a ML Model with FastAPI'</span>)</span>
+<span id="cb23-4"><a href="#cb23-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb23-5"><a href="#cb23-5" aria-hidden="true" tabindex="-1"></a><span class="co"># List available models using Enum for convenience. This is useful when the options are pre-defined.</span></span>
+<span id="cb23-6"><a href="#cb23-6" aria-hidden="true" tabindex="-1"></a><span class="kw">class</span> Model(<span class="bu">str</span>, Enum):</span>
+<span id="cb23-7"><a href="#cb23-7" aria-hidden="true" tabindex="-1"></a>    yolov3tiny <span class="op">=</span> <span class="st">"yolov3-tiny"</span></span>
+<span id="cb23-8"><a href="#cb23-8" aria-hidden="true" tabindex="-1"></a>    yolov3 <span class="op">=</span> <span class="st">"yolov3"</span></span>
+<span id="cb23-9"><a href="#cb23-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb23-10"><a href="#cb23-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb23-11"><a href="#cb23-11" aria-hidden="true" tabindex="-1"></a><span class="co"># By using @app.get("/") you are allowing the GET method to work for the / endpoint.</span></span>
+<span id="cb23-12"><a href="#cb23-12" aria-hidden="true" tabindex="-1"></a><span class="at">@app.get</span>(<span class="st">"/"</span>)</span>
+<span id="cb23-13"><a href="#cb23-13" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> home():</span>
+<span id="cb23-14"><a href="#cb23-14" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> <span class="st">"Congratulations! Your API is working as expected."</span></span>
+<span id="cb23-15"><a href="#cb23-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb23-16"><a href="#cb23-16" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb23-17"><a href="#cb23-17" aria-hidden="true" tabindex="-1"></a><span class="co"># This endpoint handles all the logic necessary for the object detection to work.</span></span>
+<span id="cb23-18"><a href="#cb23-18" aria-hidden="true" tabindex="-1"></a><span class="co"># It requires the desired model and the image in which to perform object detection.</span></span>
+<span id="cb23-19"><a href="#cb23-19" aria-hidden="true" tabindex="-1"></a><span class="at">@app.post</span>(<span class="st">"/predict"</span>) </span>
+<span id="cb23-20"><a href="#cb23-20" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> prediction(model: Model, <span class="bu">file</span>: UploadFile <span class="op">=</span> File(...)):</span>
+<span id="cb23-21"><a href="#cb23-21" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb23-22"><a href="#cb23-22" aria-hidden="true" tabindex="-1"></a>    <span class="co"># 1. VALIDATE INPUT FILE</span></span>
+<span id="cb23-23"><a href="#cb23-23" aria-hidden="true" tabindex="-1"></a>    filename <span class="op">=</span> <span class="bu">file</span>.filename</span>
+<span id="cb23-24"><a href="#cb23-24" aria-hidden="true" tabindex="-1"></a>    fileExtension <span class="op">=</span> filename.split(<span class="st">"."</span>)[<span class="op">-</span><span class="dv">1</span>] <span class="kw">in</span> (<span class="st">"jpg"</span>, <span class="st">"jpeg"</span>, <span class="st">"png"</span>)</span>
+<span id="cb23-25"><a href="#cb23-25" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> <span class="kw">not</span> fileExtension:</span>
+<span id="cb23-26"><a href="#cb23-26" aria-hidden="true" tabindex="-1"></a>        <span class="cf">raise</span> HTTPException(status_code<span class="op">=</span><span class="dv">415</span>, detail<span class="op">=</span><span class="st">"Unsupported file provided."</span>)</span>
+<span id="cb23-27"><a href="#cb23-27" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb23-28"><a href="#cb23-28" aria-hidden="true" tabindex="-1"></a>    <span class="co"># 2. TRANSFORM RAW IMAGE INTO CV2 image</span></span>
+<span id="cb23-29"><a href="#cb23-29" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb23-30"><a href="#cb23-30" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Read image as a stream of bytes</span></span>
+<span id="cb23-31"><a href="#cb23-31" aria-hidden="true" tabindex="-1"></a>    image_stream <span class="op">=</span> io.BytesIO(<span class="bu">file</span>.<span class="bu">file</span>.read())</span>
+<span id="cb23-32"><a href="#cb23-32" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb23-33"><a href="#cb23-33" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Start the stream from the beginning (position zero)</span></span>
+<span id="cb23-34"><a href="#cb23-34" aria-hidden="true" tabindex="-1"></a>    image_stream.seek(<span class="dv">0</span>)</span>
+<span id="cb23-35"><a href="#cb23-35" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb23-36"><a href="#cb23-36" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Write the stream of bytes into a numpy array</span></span>
+<span id="cb23-37"><a href="#cb23-37" aria-hidden="true" tabindex="-1"></a>    file_bytes <span class="op">=</span> np.asarray(<span class="bu">bytearray</span>(image_stream.read()), dtype<span class="op">=</span>np.uint8)</span>
+<span id="cb23-38"><a href="#cb23-38" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb23-39"><a href="#cb23-39" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Decode the numpy array as an image</span></span>
+<span id="cb23-40"><a href="#cb23-40" aria-hidden="true" tabindex="-1"></a>    image <span class="op">=</span> cv2.imdecode(file_bytes, cv2.IMREAD_COLOR)</span>
+<span id="cb23-41"><a href="#cb23-41" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb23-42"><a href="#cb23-42" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb23-43"><a href="#cb23-43" aria-hidden="true" tabindex="-1"></a>    <span class="co"># 3. RUN OBJECT DETECTION MODEL</span></span>
+<span id="cb23-44"><a href="#cb23-44" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb23-45"><a href="#cb23-45" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Run object detection</span></span>
+<span id="cb23-46"><a href="#cb23-46" aria-hidden="true" tabindex="-1"></a>    bbox, label, conf <span class="op">=</span> cv.detect_common_objects(image, model<span class="op">=</span>model)</span>
+<span id="cb23-47"><a href="#cb23-47" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb23-48"><a href="#cb23-48" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Create image that includes bounding boxes and labels</span></span>
+<span id="cb23-49"><a href="#cb23-49" aria-hidden="true" tabindex="-1"></a>    output_image <span class="op">=</span> draw_bbox(image, bbox, label, conf)</span>
+<span id="cb23-50"><a href="#cb23-50" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb23-51"><a href="#cb23-51" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Save it in a folder within the server</span></span>
+<span id="cb23-52"><a href="#cb23-52" aria-hidden="true" tabindex="-1"></a>    cv2.imwrite(<span class="ss">f'images_uploaded/</span><span class="sc">{</span>filename<span class="sc">}</span><span class="ss">'</span>, output_image)</span>
+<span id="cb23-53"><a href="#cb23-53" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb23-54"><a href="#cb23-54" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb23-55"><a href="#cb23-55" aria-hidden="true" tabindex="-1"></a>    <span class="co"># 4. STREAM THE RESPONSE BACK TO THE CLIENT</span></span>
+<span id="cb23-56"><a href="#cb23-56" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb23-57"><a href="#cb23-57" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Open the saved image for reading in binary mode</span></span>
+<span id="cb23-58"><a href="#cb23-58" aria-hidden="true" tabindex="-1"></a>    file_image <span class="op">=</span> <span class="bu">open</span>(<span class="ss">f'images_uploaded/</span><span class="sc">{</span>filename<span class="sc">}</span><span class="ss">'</span>, mode<span class="op">=</span><span class="st">"rb"</span>)</span>
+<span id="cb23-59"><a href="#cb23-59" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb23-60"><a href="#cb23-60" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Return the image as a stream specifying media type</span></span>
+<span id="cb23-61"><a href="#cb23-61" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> StreamingResponse(file_image, media_type<span class="op">=</span><span class="st">"image/jpeg"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>다음 셀을 실행하면 서버가 스핀업됩니다!</p>
+<p>그러면 커널을 수동으로 중단할 때까지 노트북이 차단됩니다(셀/코드를 실행할 수 없음). <code>Kernel</code> 탭을 클릭한 다음 <code>Interrupt</code>를 클릭하면 이 작업을 수행할 수 있습니다. <code>ESC</code> 키를 누르고 <code>I</code> 키를 두 번 눌러 Jupyter의 명령 모드로 들어갈 수도 있습니다.</p>
+<div class="sourceCode" id="cb24"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Allows the server to be run in this interactive environment</span></span>
+<span id="cb24-2"><a href="#cb24-2" aria-hidden="true" tabindex="-1"></a>nest_asyncio.<span class="bu">apply</span>()</span>
+<span id="cb24-3"><a href="#cb24-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb24-4"><a href="#cb24-4" aria-hidden="true" tabindex="-1"></a><span class="co"># This is an alias for localhost which means this particular machine</span></span>
+<span id="cb24-5"><a href="#cb24-5" aria-hidden="true" tabindex="-1"></a>host <span class="op">=</span> <span class="st">"127.0.0.1"</span></span>
+<span id="cb24-6"><a href="#cb24-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb24-7"><a href="#cb24-7" aria-hidden="true" tabindex="-1"></a><span class="co"># Spin up the server!    </span></span>
+<span id="cb24-8"><a href="#cb24-8" aria-hidden="true" tabindex="-1"></a>uvicorn.run(app, host<span class="op">=</span>host, port<span class="op">=</span><span class="dv">8000</span>, root_path<span class="op">=</span><span class="st">"/serve"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>이제 서버가 실행되었습니다!</p>
+</section>
+</section>
+<section id="서비스-이용하기" class="level2">
+<h2 class="anchored" data-anchor-id="서비스-이용하기">서비스 이용하기</h2>
+<p><code>http://127.0.0.1:8000/</code>에 접속하여 서비스를 이용해봅시다.</p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="fastapi-1.png" class="img-fluid figure-img"></p>
+<figcaption class="figure-caption">image.png</figcaption>
+</figure>
+</div>
+<p><strong>Try it out</strong> 버튼을 클릭해봅시다.</p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="fastapi-2.png" class="img-fluid figure-img"></p>
+<figcaption class="figure-caption">image.png</figcaption>
+</figure>
+</div>
+<p><strong>모델</strong> 필드에서 모델을 선택하고 <strong>파일</strong>은 서버가 객체를 감지할 이미지여야 합니다.</p>
+<p><strong>파일 선택</strong> 버튼을 클릭하여 로컬 파일 시스템에서 이미지를 <strong>제출</strong>한 다음 파란색 <strong>실행</strong> 버튼을 클릭하여 서버에 HTTP 요청을 전송합니다. 그런 다음 아래로 스크롤하면 <strong>응답을 확인할 수 있습니다</strong>.</p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="fastapi-3.png" class="img-fluid figure-img"></p>
+<figcaption class="figure-caption">image.png</figcaption>
+</figure>
+</div>
+
+
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const isCodeAnnotation = (el) => {
+    for (const clz of el.classList) {
+      if (clz.startsWith('code-annotation-')) {                     
+        return true;
+      }
+    }
+    return false;
+  }
+  const clipboard = new window.ClipboardJS('.code-copy-button', {
+    text: function(trigger) {
+      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+  });
+  clipboard.on('success', function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Copied!");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  });
+  function tippyHover(el, contentFn) {
+    const config = {
+      allowHTML: true,
+      content: contentFn,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start'
+    };
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      return note.innerHTML;
+    });
+  }
+      let selectedAnnoteEl;
+      const selectorForAnnotation = ( cell, annotation) => {
+        let cellAttr = 'data-code-cell="' + cell + '"';
+        let lineAttr = 'data-code-annotation="' +  annotation + '"';
+        const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+        return selector;
+      }
+      const selectCodeLines = (annoteEl) => {
+        const doc = window.document;
+        const targetCell = annoteEl.getAttribute("data-target-cell");
+        const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+        const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+        const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+        const lineIds = lines.map((line) => {
+          return targetCell + "-" + line;
+        })
+        let top = null;
+        let height = null;
+        let parent = null;
+        if (lineIds.length > 0) {
+            //compute the position of the single el (top and bottom and make a div)
+            const el = window.document.getElementById(lineIds[0]);
+            top = el.offsetTop;
+            height = el.offsetHeight;
+            parent = el.parentElement.parentElement;
+          if (lineIds.length > 1) {
+            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+            const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+            height = bottom - top;
+          }
+          if (top !== null && height !== null && parent !== null) {
+            // cook up a div (if necessary) and position it 
+            let div = window.document.getElementById("code-annotation-line-highlight");
+            if (div === null) {
+              div = window.document.createElement("div");
+              div.setAttribute("id", "code-annotation-line-highlight");
+              div.style.position = 'absolute';
+              parent.appendChild(div);
+            }
+            div.style.top = top - 2 + "px";
+            div.style.height = height + 4 + "px";
+            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+            if (gutterDiv === null) {
+              gutterDiv = window.document.createElement("div");
+              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+              gutterDiv.style.position = 'absolute';
+              const codeCell = window.document.getElementById(targetCell);
+              const gutter = codeCell.querySelector('.code-annotation-gutter');
+              gutter.appendChild(gutterDiv);
+            }
+            gutterDiv.style.top = top - 2 + "px";
+            gutterDiv.style.height = height + 4 + "px";
+          }
+          selectedAnnoteEl = annoteEl;
+        }
+      };
+      const unselectCodeLines = () => {
+        const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+        elementsIds.forEach((elId) => {
+          const div = window.document.getElementById(elId);
+          if (div) {
+            div.remove();
+          }
+        });
+        selectedAnnoteEl = undefined;
+      };
+      // Attach click handler to the DT
+      const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+      for (const annoteDlNode of annoteDls) {
+        annoteDlNode.addEventListener('click', (event) => {
+          const clickedEl = event.target;
+          if (clickedEl !== selectedAnnoteEl) {
+            unselectCodeLines();
+            const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+            if (activeEl) {
+              activeEl.classList.remove('code-annotation-active');
+            }
+            selectCodeLines(clickedEl);
+            clickedEl.classList.add('code-annotation-active');
+          } else {
+            // Unselect the line
+            unselectCodeLines();
+            clickedEl.classList.remove('code-annotation-active');
+          }
+        });
+      }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
+      });
+    }
+  }
+});
+</script>
+</div> <!-- /content -->
+
+
+
+</body></html>

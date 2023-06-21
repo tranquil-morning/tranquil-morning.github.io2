@@ -2,6 +2,7 @@
   {
     "listing": "/index.html",
     "items": [
+      "/posts/mlops-deploying-machine-learning-model/index.html",
       "/posts/dl-spam-example/index.html",
       "/posts/dl-demand-forecast-example/index.html",
       "/posts/langchain-agent/index.html",
