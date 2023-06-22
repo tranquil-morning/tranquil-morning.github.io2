@@ -1,0 +1,1174 @@
+---
+title: "MLOps TFX Data Validation"
+author: "Jinwook Chang"
+date: "2023-06-22"
+date-modified: "2023-06-22"
+categories: [MLOps,MachineLearning,TFX, Script]
+---
+
+
+
+이번 자료에서는 [TensorFlow Data Validation (TFDV)](https://cloud.google.com/solutions/machine-learning/analyzing-and-validating-data-at-scale-for-ml-using-tfx)의 사용법에 대해 알아볼 예정입니다. 이는 [TensorFlow Extended (TFX)](https://www.tensorflow.org/tfx)라이브러리의 일부입니다.
+
+TFDV는 대용량 ML 데이터를 이해하고 검증하고 모니터링하는 데에 사용됩니다. 이는 다음과 같은 정보를 제공해줄 수 있습니다.
+
+* 데이터의 통계량
+
+* Train 데이터의 요약
+
+* Train 데이터와 Test/Validation 데이터의 차이
+
+* 비정상 데이터 검측 및 수정
+
+다음은 일반적인 TFDV의 워크플로우입니다.
+
+![picture of workflow](tfdv.png)
+
+위에서 볼 수 있듯이 TFDV는 train 데이터의 통계량을 계산할 수 있고, 스키마를 만들 수 있습니다.    
+이를 통해 새로운 데이터 셋이 스키마에 맞는지, 통계량이 어느정도 차이가 나는지 검증할 수 있습니다.  
+
+이 두가지를 TFDV를 통해 시현해보도록 하겠습니다.
+
+## Package Installation and Imports
+
+
+```python
+import tensorflow as tf
+import tensorflow_data_validation as tfdv
+import pandas as pd
+
+from sklearn.model_selection import train_test_split
+from util import add_extra_rows
+
+from tensorflow_metadata.proto.v0 import schema_pb2
+
+print('TFDV Version: {}'.format(tfdv.__version__))
+print('Tensorflow Version: {}'.format(tf.__version__))
+```
+
+    TFDV Version: 1.3.0
+    Tensorflow Version: 2.6.0
+
+
+## Download the dataset
+
+
+[Census Income Dataset](http://archive.ics.uci.edu/ml/datasets/Census+Income)을 통하여, 한 개인이 연간 50,000 불 이상의 소득을 올리는지 아닌지에 대한 예측 모델을 만들어 보겠습니다. 데이터의 attribute는 다음과 같습니다.
+
+* **age**: continuous.
+* **workclass**: Private, Self-emp-not-inc, Self-emp-inc, Federal-gov, Local-gov, State-gov, Without-pay, Never-worked.
+* **fnlwgt**: continuous.
+* **education**: Bachelors, Some-college, 11th, HS-grad, Prof-school, Assoc-acdm, Assoc-voc, 9th, 7th-8th, 12th, Masters, 1st-4th, 10th, Doctorate, 5th-6th, Preschool.
+* **education-num**: continuous.
+* **marital-status**: Married-civ-spouse, Divorced, Never-married, Separated, Widowed, Married-spouse-absent, Married-AF-spouse.
+* **occupation**: Tech-support, Craft-repair, Other-service, Sales, Exec-managerial, Prof-specialty, Handlers-cleaners, Machine-op-inspct, Adm-clerical, Farming-fishing, Transport-moving, Priv-house-serv, Protective-serv, Armed-Forces.
+* **relationship**: Wife, Own-child, Husband, Not-in-family, Other-relative, Unmarried.
+* **race**: White, Asian-Pac-Islander, Amer-Indian-Eskimo, Other, Black.
+* **sex**: Female, Male.
+* **capital-gain**: continuous.
+* **capital-loss**: continuous.
+* **hours-per-week**: continuous.
+* **native-country**: United-States, Cambodia, England, Puerto-Rico, Canada, Germany, Outlying-US(Guam-USVI-etc), India, Japan, Greece, South, China, Cuba, Iran, Honduras, Philippines, Italy, Poland, Jamaica, Vietnam, Mexico, Portugal, Ireland, France, Dominican-Republic, Laos, Ecuador, Taiwan, Haiti, Columbia, Hungary, Guatemala, Nicaragua, Scotland, Thailand, Yugoslavia, El-Salvador, Trinadad&Tobago, Peru, Hong, Holand-Netherlands.
+
+데이터를 읽고 train/test로 나누어 보겠습니다.
+
+
+```python
+# Read in the training and evaluation datasets
+df = pd.read_csv('data/adult.data', skipinitialspace=True)
+
+# Split the dataset. Do not shuffle for this demo notebook.
+train_df, eval_df = train_test_split(df, test_size=0.2, shuffle=False)
+```
+
+Let's see the first few columns of the train and eval sets.
+
+
+```python
+# Preview the train set
+train_df.head()
+```
+
+
+
+
+<div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>age</th>
+      <th>workclass</th>
+      <th>fnlwgt</th>
+      <th>education</th>
+      <th>education-num</th>
+      <th>marital-status</th>
+      <th>occupation</th>
+      <th>relationship</th>
+      <th>race</th>
+      <th>sex</th>
+      <th>capital-gain</th>
+      <th>capital-loss</th>
+      <th>hours-per-week</th>
+      <th>native-country</th>
+      <th>label</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>39</td>
+      <td>State-gov</td>
+      <td>77516</td>
+      <td>Bachelors</td>
+      <td>13</td>
+      <td>Never-married</td>
+      <td>Adm-clerical</td>
+      <td>Not-in-family</td>
+      <td>White</td>
+      <td>Male</td>
+      <td>2174</td>
+      <td>0</td>
+      <td>40</td>
+      <td>United-States</td>
+      <td>&lt;=50K</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>50</td>
+      <td>Self-emp-not-inc</td>
+      <td>83311</td>
+      <td>Bachelors</td>
+      <td>13</td>
+      <td>Married-civ-spouse</td>
+      <td>Exec-managerial</td>
+      <td>Husband</td>
+      <td>White</td>
+      <td>Male</td>
+      <td>0</td>
+      <td>0</td>
+      <td>13</td>
+      <td>United-States</td>
+      <td>&lt;=50K</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>38</td>
+      <td>Private</td>
+      <td>215646</td>
+      <td>HS-grad</td>
+      <td>9</td>
+      <td>Divorced</td>
+      <td>Handlers-cleaners</td>
+      <td>Not-in-family</td>
+      <td>White</td>
+      <td>Male</td>
+      <td>0</td>
+      <td>0</td>
+      <td>40</td>
+      <td>United-States</td>
+      <td>&lt;=50K</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>53</td>
+      <td>Private</td>
+      <td>234721</td>
+      <td>11th</td>
+      <td>7</td>
+      <td>Married-civ-spouse</td>
+      <td>Handlers-cleaners</td>
+      <td>Husband</td>
+      <td>Black</td>
+      <td>Male</td>
+      <td>0</td>
+      <td>0</td>
+      <td>40</td>
+      <td>United-States</td>
+      <td>&lt;=50K</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>28</td>
+      <td>Private</td>
+      <td>338409</td>
+      <td>Bachelors</td>
+      <td>13</td>
+      <td>Married-civ-spouse</td>
+      <td>Prof-specialty</td>
+      <td>Wife</td>
+      <td>Black</td>
+      <td>Female</td>
+      <td>0</td>
+      <td>0</td>
+      <td>40</td>
+      <td>Cuba</td>
+      <td>&lt;=50K</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+
+
+
+
+```python
+# Preview the eval set
+eval_df.head()
+```
+
+
+
+
+<div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>age</th>
+      <th>workclass</th>
+      <th>fnlwgt</th>
+      <th>education</th>
+      <th>education-num</th>
+      <th>marital-status</th>
+      <th>occupation</th>
+      <th>relationship</th>
+      <th>race</th>
+      <th>sex</th>
+      <th>capital-gain</th>
+      <th>capital-loss</th>
+      <th>hours-per-week</th>
+      <th>native-country</th>
+      <th>label</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>26048</th>
+      <td>30</td>
+      <td>Private</td>
+      <td>270886</td>
+      <td>Some-college</td>
+      <td>10</td>
+      <td>Never-married</td>
+      <td>Other-service</td>
+      <td>Own-child</td>
+      <td>White</td>
+      <td>Female</td>
+      <td>0</td>
+      <td>0</td>
+      <td>40</td>
+      <td>United-States</td>
+      <td>&lt;=50K</td>
+    </tr>
+    <tr>
+      <th>26049</th>
+      <td>21</td>
+      <td>Private</td>
+      <td>216129</td>
+      <td>HS-grad</td>
+      <td>9</td>
+      <td>Never-married</td>
+      <td>Other-service</td>
+      <td>Own-child</td>
+      <td>White</td>
+      <td>Male</td>
+      <td>0</td>
+      <td>0</td>
+      <td>35</td>
+      <td>United-States</td>
+      <td>&lt;=50K</td>
+    </tr>
+    <tr>
+      <th>26050</th>
+      <td>33</td>
+      <td>Private</td>
+      <td>189368</td>
+      <td>Some-college</td>
+      <td>10</td>
+      <td>Married-civ-spouse</td>
+      <td>Transport-moving</td>
+      <td>Husband</td>
+      <td>Black</td>
+      <td>Male</td>
+      <td>0</td>
+      <td>0</td>
+      <td>40</td>
+      <td>United-States</td>
+      <td>&gt;50K</td>
+    </tr>
+    <tr>
+      <th>26051</th>
+      <td>19</td>
+      <td>?</td>
+      <td>141418</td>
+      <td>Some-college</td>
+      <td>10</td>
+      <td>Never-married</td>
+      <td>?</td>
+      <td>Own-child</td>
+      <td>White</td>
+      <td>Male</td>
+      <td>0</td>
+      <td>0</td>
+      <td>15</td>
+      <td>United-States</td>
+      <td>&lt;=50K</td>
+    </tr>
+    <tr>
+      <th>26052</th>
+      <td>19</td>
+      <td>Private</td>
+      <td>306225</td>
+      <td>HS-grad</td>
+      <td>9</td>
+      <td>Never-married</td>
+      <td>Handlers-cleaners</td>
+      <td>Own-child</td>
+      <td>White</td>
+      <td>Male</td>
+      <td>0</td>
+      <td>0</td>
+      <td>25</td>
+      <td>United-States</td>
+      <td>&lt;=50K</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+
+
+
+몇 개의 데이터로 데이터의 첫인상을 파악할 수 있습니다. 대부분 문자열과 정수인 것을 알 수 있습니다. 대부분 0인 열도 있습니다. 다음 섹션에서는 이 정보를 더 쉽게 검사할 수 있도록 TFDV를 사용하여 이 정보를 집계하고 처리하는 방법을 살펴보겠습니다.
+
+### Adding extra rows with Anomalies
+
+나중에 TFDV가 어떻게 이상 값를 감지하는지 보여드리기 위해, 평가 데이터 세트에 몇 개의 행을 추가하겠습니다. 이 행들은 비정상적인 값으로 나중에 특정 알람을 트리거할 값을 가지고 있습니다. 이러한 행을 추가하는 코드는 `util.py`의 `add_extra_rows()` 함수에서 볼 수 있습니다.
+
+
+```python
+# add extra rows
+eval_df = add_extra_rows(eval_df)
+
+# preview the added rows
+eval_df.tail(4)
+```
+
+
+
+
+<div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>age</th>
+      <th>workclass</th>
+      <th>fnlwgt</th>
+      <th>education</th>
+      <th>education-num</th>
+      <th>marital-status</th>
+      <th>occupation</th>
+      <th>relationship</th>
+      <th>race</th>
+      <th>sex</th>
+      <th>capital-gain</th>
+      <th>capital-loss</th>
+      <th>hours-per-week</th>
+      <th>native-country</th>
+      <th>label</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>6513</th>
+      <td>46</td>
+      <td>NaN</td>
+      <td>257473</td>
+      <td>Bachelors</td>
+      <td>8</td>
+      <td>Married-civ-spouse</td>
+      <td>Plumber</td>
+      <td>Husband</td>
+      <td>Other</td>
+      <td>Male</td>
+      <td>1000</td>
+      <td>0</td>
+      <td>41</td>
+      <td>Australia</td>
+      <td>&gt;50K</td>
+    </tr>
+    <tr>
+      <th>6514</th>
+      <td>0</td>
+      <td>Private</td>
+      <td>257473</td>
+      <td>Masters</td>
+      <td>8</td>
+      <td>Married-civ-spouse</td>
+      <td>Adm-clerical</td>
+      <td>Wife</td>
+      <td>Asian</td>
+      <td>Female</td>
+      <td>0</td>
+      <td>0</td>
+      <td>40</td>
+      <td>Pakistan</td>
+      <td>&gt;50K</td>
+    </tr>
+    <tr>
+      <th>6515</th>
+      <td>1000</td>
+      <td>Private</td>
+      <td>257473</td>
+      <td>Masters</td>
+      <td>8</td>
+      <td>Married-civ-spouse</td>
+      <td>Prof-specialty</td>
+      <td>Husband</td>
+      <td>Black</td>
+      <td>Male</td>
+      <td>0</td>
+      <td>0</td>
+      <td>20</td>
+      <td>Cameroon</td>
+      <td>&lt;=50K</td>
+    </tr>
+    <tr>
+      <th>6516</th>
+      <td>25</td>
+      <td>?</td>
+      <td>257473</td>
+      <td>Masters</td>
+      <td>8</td>
+      <td>Married-civ-spouse</td>
+      <td>gamer</td>
+      <td>Husband</td>
+      <td>Asian</td>
+      <td>Female</td>
+      <td>0</td>
+      <td>0</td>
+      <td>50</td>
+      <td>Mongolia</td>
+      <td>&lt;=50K</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+
+
+
+## Generate and visualize training dataset statistics
+
+이제 train 데이터의 통계량을 계산하고, 데이터를 시각화해봅시다. TFDV는 tensorflow의 TFRecord, pandas의 Dataframe, 그리고 csv 파일을 수용할 수 있습니다. 이번 자료에서는 pandas를 이용할 것입니다.
+
+데이터의 통계량은 [`generate_statistics_from_dataframe()`](https://www.tensorflow.org/tfx/data_validation/api_docs/python/tfdv/generate_statistics_from_dataframe)를 사용하여 구할 수 있습니다. 이는 [Apache Beam](https://beam.apache.org/)을 사용하여 대용량 데이터에서도 통계량을 구할 수 있도록 합니다.
+
+
+Numeric Data와 Category Data는 하기와 같이 정리됩니다 : 
+
+| Numerical Data | Categorical Data   |
+|:-:|:-:|
+|Count of data records|Count of data records
+|% of missing data records|% of missing data records|
+|Mean, std, min, max|unique records|
+|% of zero values|Avg string length|
+
+
+
+```python
+# Generate training dataset statistics
+train_stats = tfdv.generate_statistics_from_dataframe(train_df)
+```
+
+통계량이 계산된 이후, [`visualize_statistics()`](https://www.tensorflow.org/tfx/data_validation/api_docs/python/tfdv/visualize_statistics)을 사용하여 이를 시각화 할 수 있습니다. 이것은 [Facets interface](https://pair-code.github.io/facets/)를 보여주며, 누락된 데이터가 많거나 표준편차가 높은 경우 이를 파악하는 데 매우 유용합니다. 아래 셀을 실행하고 출력 인터페이스에서 다양한 설정(예: 정렬 기준, 역순, 특징 검색)을 탐색해 보세요.
+
+
+```python
+# Visualize training dataset statistics
+tfdv.visualize_statistics(train_stats)
+```
+
+![](visualize-1.png)
+
+## Infer data schema
+
+Next step is to create a data schema to describe your train set. Simply put, a schema describes standard characteristics of your data such as column data types and expected data value range. The schema is created on a dataset that you consider as reference, and can be reused to validate other incoming datasets.
+
+다음 단계는 train 데이터를 설명하는 데이터 스키마를 만드는 것입니다. 스키마는 열 데이터 유형 및 데이터 값 범위와 같은 데이터의 표준 특성을 뜻합니다.
+통계량이 계산과 같이, TFDV는 [`infer_schema()`](https://www.tensorflow.org/tfx/data_validation/api_docs/python/tfdv/infer_schema)를 통해 자동으로 스키마를 만들 수 있습니다. 이 메서드는 [protocol buffer](https://developers.google.com/protocol-buffers)라는 스키마를 리턴합니다.  
+이 스키마는 다음을 포함합니다: 
+
+
+```python
+# Infer schema from the computed statistics.
+schema = tfdv.infer_schema(statistics=train_stats)
+
+# Display the inferred schema
+tfdv.display_schema(schema)
+```
+
+
+<div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>Type</th>
+      <th>Presence</th>
+      <th>Valency</th>
+      <th>Domain</th>
+    </tr>
+    <tr>
+      <th>Feature name</th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>'age'</th>
+      <td>INT</td>
+      <td>required</td>
+      <td></td>
+      <td>-</td>
+    </tr>
+    <tr>
+      <th>'workclass'</th>
+      <td>STRING</td>
+      <td>required</td>
+      <td></td>
+      <td>'workclass'</td>
+    </tr>
+    <tr>
+      <th>'fnlwgt'</th>
+      <td>INT</td>
+      <td>required</td>
+      <td></td>
+      <td>-</td>
+    </tr>
+    <tr>
+      <th>'education'</th>
+      <td>STRING</td>
+      <td>required</td>
+      <td></td>
+      <td>'education'</td>
+    </tr>
+    <tr>
+      <th>'education-num'</th>
+      <td>INT</td>
+      <td>required</td>
+      <td></td>
+      <td>-</td>
+    </tr>
+    <tr>
+      <th>'marital-status'</th>
+      <td>STRING</td>
+      <td>required</td>
+      <td></td>
+      <td>'marital-status'</td>
+    </tr>
+    <tr>
+      <th>'occupation'</th>
+      <td>STRING</td>
+      <td>required</td>
+      <td></td>
+      <td>'occupation'</td>
+    </tr>
+    <tr>
+      <th>'relationship'</th>
+      <td>STRING</td>
+      <td>required</td>
+      <td></td>
+      <td>'relationship'</td>
+    </tr>
+    <tr>
+      <th>'race'</th>
+      <td>STRING</td>
+      <td>required</td>
+      <td></td>
+      <td>'race'</td>
+    </tr>
+    <tr>
+      <th>'sex'</th>
+      <td>STRING</td>
+      <td>required</td>
+      <td></td>
+      <td>'sex'</td>
+    </tr>
+    <tr>
+      <th>'capital-gain'</th>
+      <td>INT</td>
+      <td>required</td>
+      <td></td>
+      <td>-</td>
+    </tr>
+    <tr>
+      <th>'capital-loss'</th>
+      <td>INT</td>
+      <td>required</td>
+      <td></td>
+      <td>-</td>
+    </tr>
+    <tr>
+      <th>'hours-per-week'</th>
+      <td>INT</td>
+      <td>required</td>
+      <td></td>
+      <td>-</td>
+    </tr>
+    <tr>
+      <th>'native-country'</th>
+      <td>STRING</td>
+      <td>required</td>
+      <td></td>
+      <td>'native-country'</td>
+    </tr>
+    <tr>
+      <th>'label'</th>
+      <td>STRING</td>
+      <td>required</td>
+      <td></td>
+      <td>'label'</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+
+
+
+<div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>Values</th>
+    </tr>
+    <tr>
+      <th>Domain</th>
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>'workclass'</th>
+      <td>'?', 'Federal-gov', 'Local-gov', 'Never-worked', 'Private', 'Self-emp-inc', 'Self-emp-not-inc', 'State-gov', 'Without-pay'</td>
+    </tr>
+    <tr>
+      <th>'education'</th>
+      <td>'10th', '11th', '12th', '1st-4th', '5th-6th', '7th-8th', '9th', 'Assoc-acdm', 'Assoc-voc', 'Bachelors', 'Doctorate', 'HS-grad', 'Masters', 'Preschool', 'Prof-school', 'Some-college'</td>
+    </tr>
+    <tr>
+      <th>'marital-status'</th>
+      <td>'Divorced', 'Married-AF-spouse', 'Married-civ-spouse', 'Married-spouse-absent', 'Never-married', 'Separated', 'Widowed'</td>
+    </tr>
+    <tr>
+      <th>'occupation'</th>
+      <td>'?', 'Adm-clerical', 'Armed-Forces', 'Craft-repair', 'Exec-managerial', 'Farming-fishing', 'Handlers-cleaners', 'Machine-op-inspct', 'Other-service', 'Priv-house-serv', 'Prof-specialty', 'Protective-serv', 'Sales', 'Tech-support', 'Transport-moving'</td>
+    </tr>
+    <tr>
+      <th>'relationship'</th>
+      <td>'Husband', 'Not-in-family', 'Other-relative', 'Own-child', 'Unmarried', 'Wife'</td>
+    </tr>
+    <tr>
+      <th>'race'</th>
+      <td>'Amer-Indian-Eskimo', 'Asian-Pac-Islander', 'Black', 'Other', 'White'</td>
+    </tr>
+    <tr>
+      <th>'sex'</th>
+      <td>'Female', 'Male'</td>
+    </tr>
+    <tr>
+      <th>'native-country'</th>
+      <td>'?', 'Cambodia', 'Canada', 'China', 'Columbia', 'Cuba', 'Dominican-Republic', 'Ecuador', 'El-Salvador', 'England', 'France', 'Germany', 'Greece', 'Guatemala', 'Haiti', 'Holand-Netherlands', 'Honduras', 'Hong', 'Hungary', 'India', 'Iran', 'Ireland', 'Italy', 'Jamaica', 'Japan', 'Laos', 'Mexico', 'Nicaragua', 'Outlying-US(Guam-USVI-etc)', 'Peru', 'Philippines', 'Poland', 'Portugal', 'Puerto-Rico', 'Scotland', 'South', 'Taiwan', 'Thailand', 'Trinadad&amp;Tobago', 'United-States', 'Vietnam', 'Yugoslavia'</td>
+    </tr>
+    <tr>
+      <th>'label'</th>
+      <td>'&lt;=50K', '&gt;50K'</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+
+
+## Generate and visualize evaluation dataset statistics
+
+스키마를 생성한 다음 단계는 이제 validation 데이터 세트를 살펴보는 것입니다. 먼저 통계량를 계산한 다음 train 데이터의 통계량과 비교합니다. validation 데이터의 numeric 및 category 데이터의 특징이 train 데이터와 거의 일치하는 것이 중요합니다. 그렇지 않으면 분포 왜곡이 발생하여 모델의 정확도에 부정적인 영향을 미칠 수 있습니다.
+
+TFDV는 [`visualize_statistics()`](https://www.tensorflow.org/tfx/data_validation/api_docs/python/tfdv/visualize_statistics)를 사용하여 train 데이터와 validation 데이터의 통계량을 각각 구할 수 있도록 합니다. `lhs`와 `rhs` 파라미터가 이를 가능케 합니다.
+
+- `lhs_statistics`: Required parameter. Expects an instance of `DatasetFeatureStatisticsList `.
+
+
+- `rhs_statistics`: Expects an instance of `DatasetFeatureStatisticsList ` to compare with `lhs_statistics`.
+
+
+- `lhs_name`: Name of the `lhs_statistics` dataset.
+
+
+- `rhs_name`: Name of the `rhs_statistics` dataset.
+
+
+```python
+# Generate evaluation dataset statistics
+eval_stats = tfdv.generate_statistics_from_dataframe(eval_df)
+
+# Compare training with evaluation
+tfdv.visualize_statistics(
+    lhs_statistics=eval_stats, 
+    rhs_statistics=train_stats, 
+    lhs_name='EVAL_DATASET', 
+    rhs_name='TRAIN_DATASET'
+)
+```
+
+![](visualize-2.png)
+
+생성된 결과를 관찰하고 메뉴를 전환하여 비주얼리제이션을 조작하는 연습(예: 누락/0을 기준으로 정렬)을 해 보시기 바랍니다. 앞서 소개한 잘못된 행을 TFDV가 감지하는 것을 알 수 있습니다. 먼저, `age` 의 `min` 및 `max` 값은 각각 `0` 및 `1000`으로 표시됩니다. 이 값은 일하는 성인에 대해 이야기하는 경우 의미가 없다는 것을 알고 있습니다. 둘째, 범주형 특징의 `workclass`는 데이터의 `0.02%`가 누락되어 있다고 말합니다. 이 행을 삭제하여 데이터를 더 깔끔하게 만들겠습니다.
+
+
+```python
+# filter the age range
+eval_df = eval_df[eval_df['age'] > 16]
+eval_df = eval_df[eval_df['age'] < 91]
+
+# drop missing values
+eval_df.dropna(inplace=True)
+```
+
+You can then compute the statistics again and see the difference in the results.
+
+
+```python
+# Generate evaluation dataset statistics
+eval_stats = tfdv.generate_statistics_from_dataframe(eval_df)
+
+# Compare training with evaluation
+tfdv.visualize_statistics(
+    lhs_statistics=eval_stats, 
+    rhs_statistics=train_stats, 
+    lhs_name='EVAL_DATASET', 
+    rhs_name='TRAIN_DATASET'
+)
+```
+
+![](visualize-3.png)
+
+## Calculate and display evaluation anomalies
+
+스키마를 사용하여 validation 데이터에서 이상 징후를 확인할 수 있습니다. 감지된 이상값은 정리해야 하는 실제 오류로 간주될 수도 있고, 도메인 지식과 특정 사례에 따라 허용될 수도 있습니다. 
+
+이상 징후를 감지하여 표시하고 해결해야 할 문제가 있는지 확인해 보겠습니다.
+
+
+```python
+# Check evaluation data for errors by validating the evaluation dataset statistics using the reference schema
+anomalies =  tfdv.validate_statistics(statistics=eval_stats, schema=schema)
+
+# Visualize anomalies
+tfdv.display_anomalies(anomalies)
+```
+
+
+<div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>Anomaly short description</th>
+      <th>Anomaly long description</th>
+    </tr>
+    <tr>
+      <th>Feature name</th>
+      <th></th>
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>'race'</th>
+      <td>Unexpected string values</td>
+      <td>Examples contain values missing from the schema: Asian (&lt;1%).</td>
+    </tr>
+    <tr>
+      <th>'occupation'</th>
+      <td>Unexpected string values</td>
+      <td>Examples contain values missing from the schema: gamer (&lt;1%).</td>
+    </tr>
+    <tr>
+      <th>'native-country'</th>
+      <td>Unexpected string values</td>
+      <td>Examples contain values missing from the schema: Mongolia (&lt;1%).</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+
+
+## Revising the Schema
+
+위의 결과에서 볼 수 있듯이 TFDV는 앞서 소개한 나머지 불규칙성을 탐지할 수 있습니다. 짧고 긴 설명을 통해 무엇이 탐지되었는지 알 수 있습니다. 예상대로, 훈련 세트 스키마의 도메인에서 찾을 수 없는 `race`, `native-country`, `occupation`에 대한 문자열 값이 있습니다. 이상값에 대해 어떻게 처리할지는 데이터에 대한 도메인 지식에 따라 달라집니다. 이상 현상이 데이터 오류를 나타내는 경우 기초 데이터를 수정해야 합니다. 그렇지 않으면 평가 데이터 집합에 값을 포함하도록 스키마를 업데이트할 수 있습니다.
+
+TFDV는 스키마를 수정하기 위한 메서드 역시 제공합니다. 이 [레퍼런스](https://www.tensorflow.org/tfx/data_validation/anomalies) 는 이상치의 종류와 이를 수정하기 위한 문서입니다. 이 자료에서는 주요한 몇가지에 대해서만 시연해보겠습니다. 
+
+특정 열에서 특정 값이 만족해야하는 비율을 조정할 수 있습니다. 
+
+```python
+tfdv.get_feature(schema, 'feature_column_name').distribution_constraints.min_domain_mass = <float: 0.0 to 1.0>
+```
+
+특정 열에 새로운 특정 값을 추가할 수 있습니다.
+
+
+```python
+tfdv.get_domain(schema, 'feature_column_name').value.append('string')
+```
+
+## Fix anomalies in the schema
+
+보고된 문자열 이상값을 유효한 것으로 받아들이고 싶다고 가정해 보겠습니다. 평가 데이터 세트에서 일부 누락된 값을 허용하려면 다음과 같이 하면 됩니다:
+
+
+```python
+# Relax the minimum fraction of values that must come from the domain for the feature `native-country`
+country_feature = tfdv.get_feature(schema, 'native-country')
+country_feature.distribution_constraints.min_domain_mass = 0.9
+
+# Relax the minimum fraction of values that must come from the domain for the feature `occupation`
+occupation_feature = tfdv.get_feature(schema, 'occupation')
+occupation_feature.distribution_constraints.min_domain_mass = 0.9
+```
+
+도메인에 유효한 값만 추가하는 대신 엄격하게 하려면 다음과 같이 하면 됩니다:
+
+
+```python
+# Add new value to the domain of the feature `race`
+race_domain = tfdv.get_domain(schema, 'race')
+race_domain.value.append('Asian')
+```
+
+또한 숫자 기능의 범위를 제한할 수도 있습니다. 이렇게 하면 육안으로 검사하지 않고도 유효하지 않은 값을 알 수 있습니다(예: 앞서 유효하지 않은 `age` 값).
+
+
+```python
+# Restrict the range of the `age` feature
+tfdv.set_domain(schema, 'age', schema_pb2.IntDomain(name='age', min=17, max=90))
+
+# Display the modified schema. Notice the `Domain` column of `age`.
+tfdv.display_schema(schema)
+```
+
+
+<div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>Type</th>
+      <th>Presence</th>
+      <th>Valency</th>
+      <th>Domain</th>
+    </tr>
+    <tr>
+      <th>Feature name</th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>'age'</th>
+      <td>INT</td>
+      <td>required</td>
+      <td></td>
+      <td>min: 17; max: 90</td>
+    </tr>
+    <tr>
+      <th>'workclass'</th>
+      <td>STRING</td>
+      <td>required</td>
+      <td></td>
+      <td>'workclass'</td>
+    </tr>
+    <tr>
+      <th>'fnlwgt'</th>
+      <td>INT</td>
+      <td>required</td>
+      <td></td>
+      <td>-</td>
+    </tr>
+    <tr>
+      <th>'education'</th>
+      <td>STRING</td>
+      <td>required</td>
+      <td></td>
+      <td>'education'</td>
+    </tr>
+    <tr>
+      <th>'education-num'</th>
+      <td>INT</td>
+      <td>required</td>
+      <td></td>
+      <td>-</td>
+    </tr>
+    <tr>
+      <th>'marital-status'</th>
+      <td>STRING</td>
+      <td>required</td>
+      <td></td>
+      <td>'marital-status'</td>
+    </tr>
+    <tr>
+      <th>'occupation'</th>
+      <td>STRING</td>
+      <td>required</td>
+      <td></td>
+      <td>'occupation'</td>
+    </tr>
+    <tr>
+      <th>'relationship'</th>
+      <td>STRING</td>
+      <td>required</td>
+      <td></td>
+      <td>'relationship'</td>
+    </tr>
+    <tr>
+      <th>'race'</th>
+      <td>STRING</td>
+      <td>required</td>
+      <td></td>
+      <td>'race'</td>
+    </tr>
+    <tr>
+      <th>'sex'</th>
+      <td>STRING</td>
+      <td>required</td>
+      <td></td>
+      <td>'sex'</td>
+    </tr>
+    <tr>
+      <th>'capital-gain'</th>
+      <td>INT</td>
+      <td>required</td>
+      <td></td>
+      <td>-</td>
+    </tr>
+    <tr>
+      <th>'capital-loss'</th>
+      <td>INT</td>
+      <td>required</td>
+      <td></td>
+      <td>-</td>
+    </tr>
+    <tr>
+      <th>'hours-per-week'</th>
+      <td>INT</td>
+      <td>required</td>
+      <td></td>
+      <td>-</td>
+    </tr>
+    <tr>
+      <th>'native-country'</th>
+      <td>STRING</td>
+      <td>required</td>
+      <td></td>
+      <td>'native-country'</td>
+    </tr>
+    <tr>
+      <th>'label'</th>
+      <td>STRING</td>
+      <td>required</td>
+      <td></td>
+      <td>'label'</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+
+
+
+<div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>Values</th>
+    </tr>
+    <tr>
+      <th>Domain</th>
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>'workclass'</th>
+      <td>'?', 'Federal-gov', 'Local-gov', 'Never-worked', 'Private', 'Self-emp-inc', 'Self-emp-not-inc', 'State-gov', 'Without-pay'</td>
+    </tr>
+    <tr>
+      <th>'education'</th>
+      <td>'10th', '11th', '12th', '1st-4th', '5th-6th', '7th-8th', '9th', 'Assoc-acdm', 'Assoc-voc', 'Bachelors', 'Doctorate', 'HS-grad', 'Masters', 'Preschool', 'Prof-school', 'Some-college'</td>
+    </tr>
+    <tr>
+      <th>'marital-status'</th>
+      <td>'Divorced', 'Married-AF-spouse', 'Married-civ-spouse', 'Married-spouse-absent', 'Never-married', 'Separated', 'Widowed'</td>
+    </tr>
+    <tr>
+      <th>'occupation'</th>
+      <td>'?', 'Adm-clerical', 'Armed-Forces', 'Craft-repair', 'Exec-managerial', 'Farming-fishing', 'Handlers-cleaners', 'Machine-op-inspct', 'Other-service', 'Priv-house-serv', 'Prof-specialty', 'Protective-serv', 'Sales', 'Tech-support', 'Transport-moving'</td>
+    </tr>
+    <tr>
+      <th>'relationship'</th>
+      <td>'Husband', 'Not-in-family', 'Other-relative', 'Own-child', 'Unmarried', 'Wife'</td>
+    </tr>
+    <tr>
+      <th>'race'</th>
+      <td>'Amer-Indian-Eskimo', 'Asian-Pac-Islander', 'Black', 'Other', 'White', 'Asian'</td>
+    </tr>
+    <tr>
+      <th>'sex'</th>
+      <td>'Female', 'Male'</td>
+    </tr>
+    <tr>
+      <th>'native-country'</th>
+      <td>'?', 'Cambodia', 'Canada', 'China', 'Columbia', 'Cuba', 'Dominican-Republic', 'Ecuador', 'El-Salvador', 'England', 'France', 'Germany', 'Greece', 'Guatemala', 'Haiti', 'Holand-Netherlands', 'Honduras', 'Hong', 'Hungary', 'India', 'Iran', 'Ireland', 'Italy', 'Jamaica', 'Japan', 'Laos', 'Mexico', 'Nicaragua', 'Outlying-US(Guam-USVI-etc)', 'Peru', 'Philippines', 'Poland', 'Portugal', 'Puerto-Rico', 'Scotland', 'South', 'Taiwan', 'Thailand', 'Trinadad&amp;Tobago', 'United-States', 'Vietnam', 'Yugoslavia'</td>
+    </tr>
+    <tr>
+      <th>'label'</th>
+      <td>'&lt;=50K', '&gt;50K'</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+
+
+이러한 수정 사항을 적용하면 이제 유효성 검사를 실행해도 이상 징후가 나타나지 않아야 합니다.
+
+
+```python
+# Validate eval stats after updating the schema 
+updated_anomalies = tfdv.validate_statistics(eval_stats, schema)
+tfdv.display_anomalies(updated_anomalies)
+```
+
+
+<h4 style="color:green;">No anomalies found.</h4>
+
+
+## Wrap up
+
+이 자료에서 머신 러닝 프로젝트에서 데이터 유효성 검사를 사용하는 방법을 보여드렸습니다.
+
+* 대용량 데이터 세트에 대한 통계 계산을 할 수 있습니다.
+
+* 주어진 데이터 세트의 스키마를 추론하고 도메인 지식을 기반으로 수정할 수 있습니다. 
+
+* 통계를 시각화하고 이상 징후를 감지하여 학습 데이터 세트와 평가 데이터 세트 간의 불일치를 검사할 수 있습니다.
