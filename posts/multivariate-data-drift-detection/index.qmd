@@ -1,0 +1,94 @@
+---
+title: "Multivariate Drift Detection with NannyML"
+author: "Jinwook Chang"
+date: "2023-07-01"
+date-modified: "2023-07-01"
+categories: [DataScience, DataDrift, Script, MLOps]
+---
+
+
+
+Multivariate Data Drift Detection은 하나의 변수만을 고려하는 데이터 감지 방법의 단점을 해결합니다. 하나의 정보를 제공하여 잘못된 경보의 위험을 줄이고, Univariate 접근 방식으로는 감지할 수 없는 데이터 구조의 미묘한 변화를 감지합니다.
+
+NannyML에서는 PCA를 활용하여 다변수 데이터 드리프트를 감지합니다. 이 메서드는 PCA에서의 재구성 오류를 측정합니다. 이 값의 변화는 모델 입력 구조의 변화를 반영합니다.
+
+NannyML은 모니터링되는 모델에 대해 시간에 따른 재구성 오류를 계산하고, 값이 기준 데이터 기간의 분산으로 정의된 범위를 벗어나는 경우 경고를 발생시킵니다.
+
+모델을 모니터링하기 위해 NannyML은 참조 데이터에서의 PCA를 구성하고 실제 분석 대상 데이터의 재구성 오류를 측정합니다.
+
+## Setting up
+
+
+
+```python
+import nannyml as nml
+reference, analysis, _ = nml.load_synthetic_car_loan_dataset()
+```
+
+
+```python
+reference.head()
+```
+
+![](data_sample.png)
+
+
+
+
+`DataReconstructionDriftCaculator` 모듈이 바로 data drift를 감지할 모듈 역할을 합니다. 이 모듈은 data drift를 감지할 변수의 이름과 TimeStamp를 필요로 합니다.
+
+
+```python
+non_feature_columns = ['timestamp', 'y_pred_proba', 'y_pred', 'repaid']
+
+# Define feature columns
+feature_columns = []
+for c in reference.columns.tolist():
+  if c not in non_feature_columns:
+    feature_columns.append(c)
+
+feature_columns
+```
+
+
+
+
+    ['car_value',
+     'salary_range',
+     'debt_to_income_ratio',
+     'loan_length',
+     'repaid_loan_on_prev_car',
+     'size_of_downpayment',
+     'driver_tenure']
+
+
+
+
+```python
+calc = nml.DataReconstructionDriftCalculator(
+    column_names = feature_columns,
+    timestamp_column_name='timestamp',
+    chunk_size = 5000
+)
+
+calc.fit(reference)
+results = calc.calculate(analysis)
+```
+
+평가가 될 대상인 `analysis` 데이터에 대한 결과는 아래와 같습니다.
+
+
+```python
+results.filter(period='analysis').to_df().tail(10)
+```
+
+![](analysis_result.png)
+
+NannyML에서는 data drift를 검측하기 위한 다양한 plot 역시 제공합니다.
+
+```python
+figure = results.plot()
+figure.show()
+```
+
+![](plot.png)
