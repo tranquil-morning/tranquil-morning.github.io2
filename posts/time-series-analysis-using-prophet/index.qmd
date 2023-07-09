@@ -1,0 +1,332 @@
+---
+title: "Time Series Analysis Using Prophet"
+author: "Jinwook Chang"
+date: "2023-07-09"
+date-modified: "2023-07-09"
+categories: [DataScience, TimeSeries, Script]
+---
+
+
+실전에서 시계열 데이터를 사용하기 가장 어려운 점 중 하나는 도메인 지식을 알고 있는 사람과 시계열에 대해 이해하고 있는 사람이 분리되어 있다는 점일 것입니다.  
+`prophet`은 도메인 지식만을 가진 사람들도 좀 더 쉽게 시계열 데이터를 분석할 수 있도록 만들어진 라이브러리입니다.  
+이번 자료에서는 이 라이브러리의 활용법에 대해 알아보겠습니다.
+
+## Setting up
+
+
+```python
+from prophet import Prophet
+import pandas as pd
+
+url = 'https://raw.githubusercontent.com/facebook/prophet/main/examples/example_wp_log_peyton_manning.csv'
+
+df = pd.read_csv(url)
+```
+
+
+```python
+df.tail()
+```
+
+
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>ds</th>
+      <th>y</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>2900</th>
+      <td>2016-01-16</td>
+      <td>7.817223</td>
+    </tr>
+    <tr>
+      <th>2901</th>
+      <td>2016-01-17</td>
+      <td>9.273878</td>
+    </tr>
+    <tr>
+      <th>2902</th>
+      <td>2016-01-18</td>
+      <td>10.333775</td>
+    </tr>
+    <tr>
+      <th>2903</th>
+      <td>2016-01-19</td>
+      <td>9.125871</td>
+    </tr>
+    <tr>
+      <th>2904</th>
+      <td>2016-01-20</td>
+      <td>8.891374</td>
+    </tr>
+  </tbody>
+</table>
+
+## 기초 사용법
+
+
+```python
+m = Prophet() # default growth = 'linear'
+m.fit(df)
+```
+
+```python
+future = m.make_future_dataframe(periods=365)
+```
+
+```python
+forecast = m.predict(future)
+forecast.tail()
+```
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>ds</th>
+      <th>trend</th>
+      <th>yhat_lower</th>
+      <th>yhat_upper</th>
+      <th>trend_lower</th>
+      <th>trend_upper</th>
+      <th>additive_terms</th>
+      <th>additive_terms_lower</th>
+      <th>additive_terms_upper</th>
+      <th>weekly</th>
+      <th>weekly_lower</th>
+      <th>weekly_upper</th>
+      <th>yearly</th>
+      <th>yearly_lower</th>
+      <th>yearly_upper</th>
+      <th>multiplicative_terms</th>
+      <th>multiplicative_terms_lower</th>
+      <th>multiplicative_terms_upper</th>
+      <th>yhat</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>3265</th>
+      <td>2017-01-15</td>
+      <td>7.190267</td>
+      <td>7.460885</td>
+      <td>8.969197</td>
+      <td>6.829090</td>
+      <td>7.548918</td>
+      <td>1.018038</td>
+      <td>1.018038</td>
+      <td>1.018038</td>
+      <td>0.048296</td>
+      <td>0.048296</td>
+      <td>0.048296</td>
+      <td>0.969742</td>
+      <td>0.969742</td>
+      <td>0.969742</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>8.208305</td>
+    </tr>
+    <tr>
+      <th>3266</th>
+      <td>2017-01-16</td>
+      <td>7.189242</td>
+      <td>7.749525</td>
+      <td>9.292008</td>
+      <td>6.827079</td>
+      <td>7.549269</td>
+      <td>1.344067</td>
+      <td>1.344067</td>
+      <td>1.344067</td>
+      <td>0.352288</td>
+      <td>0.352288</td>
+      <td>0.352288</td>
+      <td>0.991779</td>
+      <td>0.991779</td>
+      <td>0.991779</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>8.533309</td>
+    </tr>
+    <tr>
+      <th>3267</th>
+      <td>2017-01-17</td>
+      <td>7.188218</td>
+      <td>7.628419</td>
+      <td>9.068884</td>
+      <td>6.825068</td>
+      <td>7.550103</td>
+      <td>1.132496</td>
+      <td>1.132496</td>
+      <td>1.132496</td>
+      <td>0.119622</td>
+      <td>0.119622</td>
+      <td>0.119622</td>
+      <td>1.012874</td>
+      <td>1.012874</td>
+      <td>1.012874</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>8.320714</td>
+    </tr>
+    <tr>
+      <th>3268</th>
+      <td>2017-01-18</td>
+      <td>7.187193</td>
+      <td>7.440055</td>
+      <td>8.854468</td>
+      <td>6.823057</td>
+      <td>7.551268</td>
+      <td>0.966163</td>
+      <td>0.966163</td>
+      <td>0.966163</td>
+      <td>-0.066659</td>
+      <td>-0.066659</td>
+      <td>-0.066659</td>
+      <td>1.032822</td>
+      <td>1.032822</td>
+      <td>1.032822</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>8.153356</td>
+    </tr>
+    <tr>
+      <th>3269</th>
+      <td>2017-01-19</td>
+      <td>7.186168</td>
+      <td>7.386423</td>
+      <td>8.878864</td>
+      <td>6.821045</td>
+      <td>7.550986</td>
+      <td>0.979110</td>
+      <td>0.979110</td>
+      <td>0.979110</td>
+      <td>-0.072268</td>
+      <td>-0.072268</td>
+      <td>-0.072268</td>
+      <td>1.051379</td>
+      <td>1.051379</td>
+      <td>1.051379</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>8.165279</td>
+    </tr>
+  </tbody>
+</table>
+
+
+```python
+fig1 = m.plot(forecast)
+```
+
+![](plot/plot_1.png)
+    
+
+```python
+fig2 = m.plot_components(forecast)
+```
+
+
+    
+![](plot/plot_2.png)
+    
+
+## 상한/하한 지정 법
+
+만약 forecasting에 상한/하한이 있을 경우 `cap`/`floor`를 지정할 수 있다.
+
+
+```python
+df['cap'] = 6
+df['floor'] = 1.5
+m = Prophet(growth = 'logistic') # if there are upper/lower limits
+m.fit(df)
+
+future = m.make_future_dataframe(periods=365)
+future['cap'] = 6
+future['floor'] = 1.5
+```
+
+## Trend 변경
+
+Prophet에서는 트렌드의 변경 지점을 `changepoint`라는 이름으로 자동으로 감지합니다.  
+사용자가 이 `changepoint`를 변경하거나 시각화하는 것 역시 가능한데, 이에 대해 알아봅시다.  
+`chagepoint`는 다음 3개의 parameter로 조절할 수 있습니다 :  
+* `changepoint_range`
+  + prophet에서는 시계열 데이터의 80%로 잠재적인 `changepoint`를 형성하는데 이 크기를 바꿀 수 있습니다.
+  + `m = Prophet(changepoint_range = 0.9`
+* `changepoint_prior_scale`
+  + `changepoint`의 유연성을 조절 하는 패러미터로 값이 클수록 variance가 높아집니다.
+  + `m = Prophet(change_point_range = 0.1)`
+* `changepoints`
+  + `changepoint`가 될 수 있는 날짜를 명시적으로 선택할 수 있습니다. (예 : 코로나 발생)
+  + `m = Prophet(changepoints = ['2020-02-05'])`
+
+
+`changepoint`의 시각화는 아래와 같이 `add_changepoints_to_plot`를 통해 할 수 있습니다.
+
+
+```python
+from prophet.plot import add_changepoints_to_plot
+
+fig = m.plot(forecast)
+a = add_changepoints_to_plot(fig.gca(), m, forecast)
+```
+
+
+    
+![](plot/plot_3.png)
+    
+
+
+휴일을 명시적으로 지정하여 Seasonality를 조정할 수 있습니다.  
+하기 코드와 같이 휴일의 과거 / 미래 데이터 모두를 포함시켜 `DataFrame`을 생성하여 이용가능합니다.
+
+
+```python
+playoffs = pd.DataFrame({
+'holiday': 'playoff',
+'ds': pd.to_datetime(['2008-01-13', '2009-01-03', '2010-01-16',
+                      '2010-01-24', '2010-02-07', '2011-01-08',
+                      '2013-01-12', '2014-01-12', '2014-01-19',
+                      '2014-02-02', '2015-01-11', '2016-01-17',
+                      '2016-01-24', '2016-02-07']),
+'lower_window': 0,
+'upper_window': 1,
+})
+superbowls = pd.DataFrame({
+    'holiday': 'superbowl',
+    'ds': pd.to_datetime(['2010-02-07', '2014-02-02', '2016-02-07']),
+    'lower_window': 0,
+    'upper_window': 1,
+  })
+holidays = pd.concat((playoffs, superbowls))
+```
+
+
+```python
+m = Prophet(holidays=holidays)
+forecast = m.fit(df).predict(future)
+```
+
+이전과 달리 holidays effect가 추가된 것을 확인할 수 있습니다.
+
+
+```python
+fig = m.plot_components(forecast)
+```
+    
+![](plot/plot_4.png)
+    
+
+holidays에 overfitting된 것 같으면 `holidays_prior_scale`를 통해 조정할 수 있습니다:  
+
+`m = Prophet(holidays=holidays, holidays_prior_scale=0.05)`
+
