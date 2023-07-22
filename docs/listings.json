@@ -2,6 +2,7 @@
   {
     "listing": "/index.html",
     "items": [
+      "/posts/csvkit/csvkit.html",
       "/posts/time-series-analysis-using-prophet/index.html",
       "/posts/multivariate-data-drift-detection/index.html",
       "/posts/mlops-tfx-feature-engineering/index.html",

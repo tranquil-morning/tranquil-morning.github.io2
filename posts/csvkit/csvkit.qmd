@@ -1,0 +1,407 @@
+---
+title: "Data Science in CMD - csvkit"
+author: "Jinwook Chang"
+date: "2023-07-22"
+date-modified: "2023-07-22"
+categories: [DataScience, Script]
+---
+
+`csvkit`은 command-line에서 csv 확장자를 다루기 위한 툴입니다.  
+아래의 튜토리얼을 통해 csvkit을 활용하는 방법에 대해 알아보겠습니다.
+
+## csvkit 설치하기
+
+
+```python
+! sudo pip install csvkit
+```
+
+## 데이터 가져오기
+
+
+```python
+! mkdir csvkit_tutorial
+! cd csvkit_tutorial
+```
+
+
+```python
+! curl -L -O https://raw.githubusercontent.com/wireservice/csvkit/master/examples/realdata/ne_1033_data.xlsx
+```
+
+      % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
+                                     Dload  Upload   Total   Spent    Left  Speed
+    100 65331  100 65331    0     0   262k      0 --:--:-- --:--:-- --:--:--  263k
+
+
+## in2csv : 엑셀 파일 변환하기
+
+
+```python
+! in2csv ne_1033_data.xlsx > data.csv
+```
+
+
+```python
+! cat data.csv | head
+```
+
+    state,county,fips,nsn,item_name,quantity,ui,acquisition_cost,total_cost,ship_date,federal_supply_category,federal_supply_category_name,federal_supply_class,federal_supply_class_name
+    NE,ADAMS,31001.0,1005-00-589-1271,"RIFLE,7.62 MILLIMETER",1.0,Each,138.0,138.0,2008-07-11,10.0,WEAPONS,1005.0,"Guns, through 30 mm"
+    NE,ADAMS,31001.0,1005-00-589-1271,"RIFLE,7.62 MILLIMETER",1.0,Each,138.0,138.0,2008-07-11,10.0,WEAPONS,1005.0,"Guns, through 30 mm"
+    NE,ADAMS,31001.0,1005-00-589-1271,"RIFLE,7.62 MILLIMETER",1.0,Each,138.0,138.0,2008-07-11,10.0,WEAPONS,1005.0,"Guns, through 30 mm"
+    NE,ADAMS,31001.0,1005-00-589-1271,"RIFLE,7.62 MILLIMETER",1.0,Each,138.0,138.0,2008-07-11,10.0,WEAPONS,1005.0,"Guns, through 30 mm"
+    NE,ADAMS,31001.0,1005-00-589-1271,"RIFLE,7.62 MILLIMETER",1.0,Each,138.0,138.0,2008-07-11,10.0,WEAPONS,1005.0,"Guns, through 30 mm"
+    NE,ADAMS,31001.0,1005-00-589-1271,"RIFLE,7.62 MILLIMETER",1.0,Each,138.0,138.0,2008-07-11,10.0,WEAPONS,1005.0,"Guns, through 30 mm"
+    NE,BUFFALO,31019.0,1005-00-073-9421,"RIFLE,5.56 MILLIMETER",1.0,Each,499.0,499.0,2008-09-24,10.0,WEAPONS,1005.0,"Guns, through 30 mm"
+    NE,BUFFALO,31019.0,1005-00-073-9421,"RIFLE,5.56 MILLIMETER",1.0,Each,499.0,499.0,2008-09-24,10.0,WEAPONS,1005.0,"Guns, through 30 mm"
+    NE,BUFFALO,31019.0,1005-00-073-9421,"RIFLE,5.56 MILLIMETER",1.0,Each,499.0,499.0,2008-09-24,10.0,WEAPONS,1005.0,"Guns, through 30 mm"
+
+
+## csvlook : 데이터 previewer
+
+
+```python
+! csvlook data.csv | head
+```
+
+    | state | county     |   fips | nsn              | item_name                                                      | quantity | ui      | acquisition_cost | total_cost |  ship_date | federal_supply_category | federal_supply_category_name        | federal_supply_class | federal_supply_class_name                                       |
+    | ----- | ---------- | ------ | ---------------- | -------------------------------------------------------------- | -------- | ------- | ---------------- | ---------- | ---------- | ----------------------- | ----------------------------------- | -------------------- | --------------------------------------------------------------- |
+    | NE    | ADAMS      | 31,001 | 1005-00-589-1271 | RIFLE,7.62 MILLIMETER                                          |        1 | Each    |           138.00 |     138.00 | 2008-07-11 |                      10 | WEAPONS                             |                1,005 | Guns, through 30 mm                                             |
+    | NE    | ADAMS      | 31,001 | 1005-00-589-1271 | RIFLE,7.62 MILLIMETER                                          |        1 | Each    |           138.00 |     138.00 | 2008-07-11 |                      10 | WEAPONS                             |                1,005 | Guns, through 30 mm                                             |
+    | NE    | ADAMS      | 31,001 | 1005-00-589-1271 | RIFLE,7.62 MILLIMETER                                          |        1 | Each    |           138.00 |     138.00 | 2008-07-11 |                      10 | WEAPONS                             |                1,005 | Guns, through 30 mm                                             |
+    | NE    | ADAMS      | 31,001 | 1005-00-589-1271 | RIFLE,7.62 MILLIMETER                                          |        1 | Each    |           138.00 |     138.00 | 2008-07-11 |                      10 | WEAPONS                             |                1,005 | Guns, through 30 mm                                             |
+    | NE    | ADAMS      | 31,001 | 1005-00-589-1271 | RIFLE,7.62 MILLIMETER                                          |        1 | Each    |           138.00 |     138.00 | 2008-07-11 |                      10 | WEAPONS                             |                1,005 | Guns, through 30 mm                                             |
+    | NE    | ADAMS      | 31,001 | 1005-00-589-1271 | RIFLE,7.62 MILLIMETER                                          |        1 | Each    |           138.00 |     138.00 | 2008-07-11 |                      10 | WEAPONS                             |                1,005 | Guns, through 30 mm                                             |
+    | NE    | BUFFALO    | 31,019 | 1005-00-073-9421 | RIFLE,5.56 MILLIMETER                                          |        1 | Each    |           499.00 |     499.00 | 2008-09-24 |                      10 | WEAPONS                             |                1,005 | Guns, through 30 mm                                             |
+    | NE    | BUFFALO    | 31,019 | 1005-00-073-9421 | RIFLE,5.56 MILLIMETER                                          |        1 | Each    |           499.00 |     499.00 | 2008-09-24 |                      10 | WEAPONS                             |                1,005 | Guns, through 30 mm                                             |
+
+
+## csvcut : 열 선택하기
+
+csvcut을 통해 데이터가 어떠한 attribute를 가지고 있는지 확인하고, 특정 attribute만 선택하는 것이 가능합니다.  
+`R`의 `dplyr`에 익숙하다면 `select`와 비슷한 역할을 수행합니다.
+
+
+```python
+! csvcut -n data.csv
+```
+
+      1: state
+      2: county
+      3: fips
+      4: nsn
+      5: item_name
+      6: quantity
+      7: ui
+      8: acquisition_cost
+      9: total_cost
+     10: ship_date
+     11: federal_supply_category
+     12: federal_supply_category_name
+     13: federal_supply_class
+     14: federal_supply_class_name
+
+
+
+```python
+! csvcut -c 2,5,6 data.csv | head
+```
+
+    county,item_name,quantity
+    ADAMS,"RIFLE,7.62 MILLIMETER",1.0
+    ADAMS,"RIFLE,7.62 MILLIMETER",1.0
+    ADAMS,"RIFLE,7.62 MILLIMETER",1.0
+    ADAMS,"RIFLE,7.62 MILLIMETER",1.0
+    ADAMS,"RIFLE,7.62 MILLIMETER",1.0
+    ADAMS,"RIFLE,7.62 MILLIMETER",1.0
+    BUFFALO,"RIFLE,5.56 MILLIMETER",1.0
+    BUFFALO,"RIFLE,5.56 MILLIMETER",1.0
+    BUFFALO,"RIFLE,5.56 MILLIMETER",1.0
+
+
+
+```python
+! csvcut -c county,item_name,quantity data.csv | head
+```
+
+    county,item_name,quantity
+    ADAMS,"RIFLE,7.62 MILLIMETER",1.0
+    ADAMS,"RIFLE,7.62 MILLIMETER",1.0
+    ADAMS,"RIFLE,7.62 MILLIMETER",1.0
+    ADAMS,"RIFLE,7.62 MILLIMETER",1.0
+    ADAMS,"RIFLE,7.62 MILLIMETER",1.0
+    ADAMS,"RIFLE,7.62 MILLIMETER",1.0
+    BUFFALO,"RIFLE,5.56 MILLIMETER",1.0
+    BUFFALO,"RIFLE,5.56 MILLIMETER",1.0
+    BUFFALO,"RIFLE,5.56 MILLIMETER",1.0
+
+
+파이프 라인을 통하여 위의 모든 코드를 통합한다면 아래와 같습니다.
+
+
+```python
+! in2csv ne_1033_data.xlsx | csvcut -c county,item_name,quantity | csvlook | head
+```
+
+    | county     | item_name                                                      | quantity |
+    | ---------- | -------------------------------------------------------------- | -------- |
+    | ADAMS      | RIFLE,7.62 MILLIMETER                                          |        1 |
+    | ADAMS      | RIFLE,7.62 MILLIMETER                                          |        1 |
+    | ADAMS      | RIFLE,7.62 MILLIMETER                                          |        1 |
+    | ADAMS      | RIFLE,7.62 MILLIMETER                                          |        1 |
+    | ADAMS      | RIFLE,7.62 MILLIMETER                                          |        1 |
+    | ADAMS      | RIFLE,7.62 MILLIMETER                                          |        1 |
+    | BUFFALO    | RIFLE,5.56 MILLIMETER                                          |        1 |
+    | BUFFALO    | RIFLE,5.56 MILLIMETER                                          |        1 |
+
+
+## csvstat : 코드 없는 통계값
+
+`csvstat`은 `R`의 `summary()` 함수에 영감을 받은 툴입니다.  
+이 툴을 통하여 데이터의 전반적인 통계값에 대한 요약을 볼 수 있습니다.
+
+
+```python
+! csvcut -c county,acquisition_cost,ship_date data.csv | csvstat
+```
+
+      1. "county"
+    
+    	Type of data:          Text
+    	Contains null values:  False
+    	Unique values:         35
+    	Longest value:         10 characters
+    	Most common values:    DOUGLAS (760x)
+    	                       DAKOTA (42x)
+    	                       CASS (37x)
+    	                       HALL (23x)
+    	                       LANCASTER (18x)
+    
+      2. "acquisition_cost"
+    
+    	Type of data:          Number
+    	Contains null values:  False
+    	Unique values:         75
+    	Smallest value:        0
+    	Largest value:         412,000
+    	Sum:                   5,430,787.55
+    	Mean:                  5,242.073
+    	Median:                6,000
+    	StDev:                 13,368.078
+    	Most common values:    6,800 (304x)
+    	                       10,747 (195x)
+    	                       6,000 (105x)
+    	                       499 (98x)
+    	                       0 (81x)
+    
+      3. "ship_date"
+    
+    	Type of data:          Date
+    	Contains null values:  False
+    	Unique values:         84
+    	Smallest value:        2006-03-07
+    	Largest value:         2014-01-30
+    	Most common values:    2013-04-25 (495x)
+    	                       2013-04-26 (160x)
+    	                       2008-05-20 (28x)
+    	                       2012-04-16 (26x)
+    	                       2006-11-17 (20x)
+    
+    Row count: 1036
+
+
+csvstat은 데이터의 각 열이 어떤 type일지 추측한 후 그에 알맞은 통계값을 제공합니다.
+
+예를 들어 `county`는 `Text`로, `acquisitoin_cost`는 `Number`로, `ship_date`는 `Date`로 확인되어 그에 알맞은 통계 값을 보여주고 있습니다.
+
+## csvgrep : 데이터에서 특정 값 찾기
+
+`R`의 `dplyr`에 익숙하다면 `filter`와 비슷한 역할을 수행합니다.
+
+
+```python
+! csvcut -c county,item_name,total_cost data.csv | csvgrep -c county -m LANCASTER | csvlook
+```
+
+    | county    | item_name                      | total_cost |
+    | --------- | ------------------------------ | ---------- |
+    | LANCASTER | RIFLE,5.56 MILLIMETER          |        120 |
+    | LANCASTER | RIFLE,5.56 MILLIMETER          |        120 |
+    | LANCASTER | RIFLE,5.56 MILLIMETER          |        120 |
+    | LANCASTER | RIFLE,5.56 MILLIMETER          |        120 |
+    | LANCASTER | RIFLE,5.56 MILLIMETER          |        120 |
+    | LANCASTER | RIFLE,5.56 MILLIMETER          |        120 |
+    | LANCASTER | RIFLE,5.56 MILLIMETER          |        120 |
+    | LANCASTER | RIFLE,5.56 MILLIMETER          |        120 |
+    | LANCASTER | RIFLE,5.56 MILLIMETER          |        120 |
+    | LANCASTER | RIFLE,5.56 MILLIMETER          |        120 |
+    | LANCASTER | LIGHT ARMORED VEHICLE          |          0 |
+    | LANCASTER | LIGHT ARMORED VEHICLE          |          0 |
+    | LANCASTER | LIGHT ARMORED VEHICLE          |          0 |
+    | LANCASTER | MINE RESISTANT VEHICLE         |    412,000 |
+    | LANCASTER | IMAGE INTENSIFIER,NIGHT VISION |      6,800 |
+    | LANCASTER | IMAGE INTENSIFIER,NIGHT VISION |      6,800 |
+    | LANCASTER | IMAGE INTENSIFIER,NIGHT VISION |      6,800 |
+    | LANCASTER | IMAGE INTENSIFIER,NIGHT VISION |      6,800 |
+
+
+## csvsort: 데이터 나열하기
+
+`R`의 `dplyr`에 익숙하다면 `arrange`와 비슷한 역할을 수행합니다.
+
+
+```python
+! csvcut -c county,item_name,total_cost data.csv | csvgrep -c county -m LANCASTER | csvsort -c total_cost -r | csvlook
+```
+
+    | county    | item_name                      | total_cost |
+    | --------- | ------------------------------ | ---------- |
+    | LANCASTER | MINE RESISTANT VEHICLE         |    412,000 |
+    | LANCASTER | IMAGE INTENSIFIER,NIGHT VISION |      6,800 |
+    | LANCASTER | IMAGE INTENSIFIER,NIGHT VISION |      6,800 |
+    | LANCASTER | IMAGE INTENSIFIER,NIGHT VISION |      6,800 |
+    | LANCASTER | IMAGE INTENSIFIER,NIGHT VISION |      6,800 |
+    | LANCASTER | RIFLE,5.56 MILLIMETER          |        120 |
+    | LANCASTER | RIFLE,5.56 MILLIMETER          |        120 |
+    | LANCASTER | RIFLE,5.56 MILLIMETER          |        120 |
+    | LANCASTER | RIFLE,5.56 MILLIMETER          |        120 |
+    | LANCASTER | RIFLE,5.56 MILLIMETER          |        120 |
+    | LANCASTER | RIFLE,5.56 MILLIMETER          |        120 |
+    | LANCASTER | RIFLE,5.56 MILLIMETER          |        120 |
+    | LANCASTER | RIFLE,5.56 MILLIMETER          |        120 |
+    | LANCASTER | RIFLE,5.56 MILLIMETER          |        120 |
+    | LANCASTER | RIFLE,5.56 MILLIMETER          |        120 |
+    | LANCASTER | LIGHT ARMORED VEHICLE          |          0 |
+    | LANCASTER | LIGHT ARMORED VEHICLE          |          0 |
+    | LANCASTER | LIGHT ARMORED VEHICLE          |          0 |
+
+
+## csvjoin: vlookup in csv
+
+`R`의 `dplyr`에 익숙하다면 `left_join`과 비슷한 역할을 수행합니다.
+
+
+```python
+! curl -L -O https://raw.githubusercontent.com/wireservice/csvkit/master/examples/realdata/acs2012_5yr_population.csv
+```
+
+      % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
+                                     Dload  Upload   Total   Spent    Left  Speed
+    100  3184  100  3184    0     0  11060      0 --:--:-- --:--:-- --:--:-- 11094
+
+
+
+```python
+! csvcut -n acs2012_5yr_population.csv
+```
+
+      1: fips
+      2: name
+      3: total_population
+      4: margin_of_error
+
+
+
+```python
+! csvcut -n data.csv
+```
+
+      1: state
+      2: county
+      3: fips
+      4: nsn
+      5: item_name
+      6: quantity
+      7: ui
+      8: acquisition_cost
+      9: total_cost
+     10: ship_date
+     11: federal_supply_category
+     12: federal_supply_category_name
+     13: federal_supply_class
+     14: federal_supply_class_name
+
+
+`fips` 항목이 두 데이터에서 공통 항목인 것을 알 수 있습니다. 해당 열을 join 해 보도록 하겠습니다.
+
+
+```python
+! csvjoin -c fips data.csv acs2012_5yr_population.csv > joined.csv
+```
+
+
+```python
+! csvlook joined.csv | head
+```
+
+    | state | county     |   fips | nsn              | item_name                                                      | quantity | ui      | acquisition_cost | total_cost |  ship_date | federal_supply_category | federal_supply_category_name        | federal_supply_class | federal_supply_class_name                                       | name                  | total_population | margin_of_error |
+    | ----- | ---------- | ------ | ---------------- | -------------------------------------------------------------- | -------- | ------- | ---------------- | ---------- | ---------- | ----------------------- | ----------------------------------- | -------------------- | --------------------------------------------------------------- | --------------------- | ---------------- | --------------- |
+    | NE    | ADAMS      | 31,001 | 1005-00-589-1271 | RIFLE,7.62 MILLIMETER                                          |        1 | Each    |           138.00 |     138.00 | 2008-07-11 |                      10 | WEAPONS                             |                1,005 | Guns, through 30 mm                                             | Adams County, NE      |           31,299 |               0 |
+    | NE    | ADAMS      | 31,001 | 1005-00-589-1271 | RIFLE,7.62 MILLIMETER                                          |        1 | Each    |           138.00 |     138.00 | 2008-07-11 |                      10 | WEAPONS                             |                1,005 | Guns, through 30 mm                                             | Adams County, NE      |           31,299 |               0 |
+    | NE    | ADAMS      | 31,001 | 1005-00-589-1271 | RIFLE,7.62 MILLIMETER                                          |        1 | Each    |           138.00 |     138.00 | 2008-07-11 |                      10 | WEAPONS                             |                1,005 | Guns, through 30 mm                                             | Adams County, NE      |           31,299 |               0 |
+    | NE    | ADAMS      | 31,001 | 1005-00-589-1271 | RIFLE,7.62 MILLIMETER                                          |        1 | Each    |           138.00 |     138.00 | 2008-07-11 |                      10 | WEAPONS                             |                1,005 | Guns, through 30 mm                                             | Adams County, NE      |           31,299 |               0 |
+    | NE    | ADAMS      | 31,001 | 1005-00-589-1271 | RIFLE,7.62 MILLIMETER                                          |        1 | Each    |           138.00 |     138.00 | 2008-07-11 |                      10 | WEAPONS                             |                1,005 | Guns, through 30 mm                                             | Adams County, NE      |           31,299 |               0 |
+    | NE    | ADAMS      | 31,001 | 1005-00-589-1271 | RIFLE,7.62 MILLIMETER                                          |        1 | Each    |           138.00 |     138.00 | 2008-07-11 |                      10 | WEAPONS                             |                1,005 | Guns, through 30 mm                                             | Adams County, NE      |           31,299 |               0 |
+    | NE    | BUFFALO    | 31,019 | 1005-00-073-9421 | RIFLE,5.56 MILLIMETER                                          |        1 | Each    |           499.00 |     499.00 | 2008-09-24 |                      10 | WEAPONS                             |                1,005 | Guns, through 30 mm                                             | Buffalo County, NE    |           46,330 |               0 |
+    | NE    | BUFFALO    | 31,019 | 1005-00-073-9421 | RIFLE,5.56 MILLIMETER                                          |        1 | Each    |           499.00 |     499.00 | 2008-09-24 |                      10 | WEAPONS                             |                1,005 | Guns, through 30 mm                                             | Buffalo County, NE    |           46,330 |               0 |
+
+
+## csvstack : 두 데이터 합치기
+
+`R`의 `dplyr`에 익숙하다면 `bind_row`와 비슷한 역할을 수행합니다.
+
+
+```python
+! curl -L -O https://raw.githubusercontent.com/wireservice/csvkit/master/examples/realdata/ks_1033_data.csv
+```
+
+      % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
+                                     Dload  Upload   Total   Spent    Left  Speed
+    100  207k  100  207k    0     0   783k      0 --:--:-- --:--:-- --:--:--  781k
+
+
+
+```python
+! in2csv ne_1033_data.xlsx > ne_1033_data.csv
+```
+
+
+```python
+! csvstack ne_1033_data.csv ks_1033_data.csv > region.csv
+```
+
+
+```python
+! csvstat -c state,acquisition_cost region.csv
+```
+
+      1. "state"
+    
+    	Type of data:          Text
+    	Contains null values:  False
+    	Unique values:         2
+    	Longest value:         2 characters
+    	Most common values:    KS (1575x)
+    	                       NE (1036x)
+    
+      8. "acquisition_cost"
+    
+    	Type of data:          Number
+    	Contains null values:  False
+    	Unique values:         127
+    	Smallest value:        0
+    	Largest value:         658,000
+    	Sum:                   9,440,445.91
+    	Mean:                  3,615.644
+    	Median:                138
+    	StDev:                 23,730.631
+    	Most common values:    120 (649x)
+    	                       499 (449x)
+    	                       138 (311x)
+    	                       6,800 (304x)
+    	                       58.71 (218x)
+    
+    Row count: 2611
+
+
