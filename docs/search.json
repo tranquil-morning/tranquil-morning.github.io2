@@ -718,7 +718,7 @@
     "href": "posts/llm-params/index.html#temperature",
     "title": "Random Sampling in LLM",
     "section": "Temperature",
-    "text": "Temperature\n다음은 Temperature가 0일 때의 예시입니다.\n\n다음은 Temperature가 2일 때의 예시입니다.\n\n위의 사례에서 볼 수 있듯이, Temperature가 높아질수록 Randomness도 높아짐을 알 수 있습니다. Temperature의 정도를 $ $ 라고 할 때, 단어의 출력은 하기와 같습니다 :\n\\[ \\sigma(z_i) = \\frac{e^{\\frac{z_i}{\\theta}}}{\\sum_{j=0}^{N}e^{\\frac{z_j}{\\theta}}} \\]\n즉, $ $ 가 1일 때, 출력은 softmax 함수와 같아집니다.\nTemperature가 클수록 다음에 출력될 단어들의 확률이 비슷해지고, 낮아질수록 확률이 상이해지는 것입니다."
+    "text": "Temperature\n다음은 Temperature가 0일 때의 예시입니다.\n\n다음은 Temperature가 2일 때의 예시입니다.\n\n위의 사례에서 볼 수 있듯이, Temperature가 높아질수록 Randomness도 높아짐을 알 수 있습니다. Temperature의 정도를 Θ 라고 할 때, 단어의 출력은 하기와 같습니다 :\n\\[ \\sigma(z_i) = \\frac{e^{\\frac{z_i}{\\theta}}}{\\sum_{j=0}^{N}e^{\\frac{z_j}{\\theta}}} \\]\n즉, Θ가 1일 때, 출력은 softmax 함수와 같아집니다.\nTemperature가 클수록 다음에 출력될 단어들의 확률이 비슷해지고, 낮아질수록 확률이 상이해지는 것입니다."
   },
   {
     "objectID": "posts/llm-params/index.html#nucleus-sampling",
