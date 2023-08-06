@@ -2,6 +2,7 @@
   {
     "listing": "/index.html",
     "items": [
+      "/posts/rss-data-visualization-guide/index.html",
       "/posts/llm-params/index.html",
       "/posts/csvkit/csvkit.html",
       "/posts/time-series-analysis-using-prophet/index.html",
