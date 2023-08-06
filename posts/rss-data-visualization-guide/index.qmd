@@ -421,7 +421,7 @@ plot_grid(gg.list[[1]], gg.list[[2]], rel_widths = c(2, 2.5))
 ### 차트 스타일링의 원칙
 
 아래 두 차트는 동일한 데이터의 동일한 유형의 차트입니다. (기니피크 치아 성장 데이터를 이용한 Bar Plot)\
-하지만 두 차트의 인상은 확연히 다릅니다. 색상, 텍스트 주석, 글꼴 크기, 레이블과 같은 추가 정보가 오른쪽 차트를 훨씬 더 쉽게 해석할 수 있도록 만들어 줍니다. 이 섹션에서는 이러한 각 요소를 살펴보고 차트의 접근성과 해석도를 개선하기 위한 스타일 지정법을 알아보겠습니다.
+하지만 두 차트의 인상은 확연히 다릅니다. 색상, 텍스트 주석, 글꼴 크기, 레이블과 같은 추가 정보가 차트를 훨씬 더 쉽게 해석할 수 있도록 만들어 줍니다. 이 섹션에서는 이러한 각 요소를 살펴보고 차트의 접근성과 해석도를 개선하기 위한 스타일 지정법을 알아보겠습니다.
 
 ```{r, echo=FALSE,message=FALSE,warning=FALSE}
 library(ggplot2)
@@ -484,8 +484,10 @@ gg_st <- ggplot(
     axis.text.x = element_blank()
   )
 
-library(cowplot) 
-plot_grid(gg_unst,gg_st, rel_widths = c(2, 2))
+
+gg_unst
+gg_st
+
 ```
 
 ### Colours
