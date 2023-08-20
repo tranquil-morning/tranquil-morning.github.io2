@@ -2,6 +2,7 @@
   {
     "listing": "/index.html",
     "items": [
+      "/posts/automate-boring-stuff-excel/index.html",
       "/posts/rss-data-visualization-guide/index.html",
       "/posts/llm-params/index.html",
       "/posts/csvkit/csvkit.html",
