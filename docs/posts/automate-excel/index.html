@@ -2,14 +2,14 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
 
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.3.361">
+<meta name="generator" content="quarto-1.3.353">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 <meta name="author" content="Jinwook Chang">
-<meta name="dcterms.date" content="2023-08-20">
+<meta name="dcterms.date" content="2023-08-27">
 
-<title>Note of myself - Automate Boring Stuff - Excel</title>
+<title>Note of myself - Automoate Excel with python - xlwings</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -91,8 +91,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     "search-more-matches-text": "more matches in this document",
     "search-clear-button-title": "Clear",
     "search-detached-cancel-button-title": "Cancel",
-    "search-submit-button-title": "Submit",
-    "search-label": "Search"
+    "search-submit-button-title": "Submit"
   }
 }</script>
 <script async="" src="https://www.googletagmanager.com/gtag/js?id=G-D7YERGZ04Y"></script>
@@ -156,7 +155,7 @@ gtag('config', 'G-D7YERGZ04Y', { 'anonymize_ip': true});
 <header id="title-block-header" class="quarto-title-block default page-columns page-full">
   <div class="quarto-title-banner page-columns page-full">
     <div class="quarto-title column-body">
-      <h1 class="title">Automate Boring Stuff - Excel</h1>
+      <h1 class="title">Automoate Excel with python - xlwings</h1>
                                 <div class="quarto-categories">
                 <div class="quarto-category">DataScience</div>
                 <div class="quarto-category">Script</div>
@@ -177,14 +176,14 @@ gtag('config', 'G-D7YERGZ04Y', { 'anonymize_ip': true});
       <div>
       <div class="quarto-title-meta-heading">Published</div>
       <div class="quarto-title-meta-contents">
-        <p class="date">August 20, 2023</p>
+        <p class="date">August 27, 2023</p>
       </div>
     </div>
     
       <div>
       <div class="quarto-title-meta-heading">Modified</div>
       <div class="quarto-title-meta-contents">
-        <p class="date-modified">August 20, 2023</p>
+        <p class="date-modified">August 27, 2023</p>
       </div>
     </div>
       
@@ -201,110 +200,74 @@ gtag('config', 'G-D7YERGZ04Y', { 'anonymize_ip': true});
 
 
 
-<p>본 자료는 Al Swigart가 쓴 <a href="https://automatetheboringstuff.com/">Automate The Boring Stuff with Python</a> 교재의 <a href="https://automatetheboringstuff.com/2e/chapter13/">13장</a>을 요약한 글입니다.</p>
-<p><code>openpyxl</code> 라이브러리를 활용하여 지루한 작업을 자동화해보도록 하겠습니다.</p>
+<p><code>xlwings</code>를 활용하여 Excel를 자동화하는 방법에 대해 알아보도록 하겠습니다.</p>
+<section id="python을-excel에-연결하기" class="level2">
+<h2 class="anchored" data-anchor-id="python을-excel에-연결하기">Python을 Excel에 연결하기</h2>
 <div class="cell" data-execution_count="1">
-<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> openpyxl</span>
-<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>wb <span class="op">=</span> openpyxl.load_workbook(<span class="st">'example.xlsx'</span>)</span>
-<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="bu">type</span>(wb))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> xlwings <span class="im">as</span> xw</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Open File</span></span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>wb <span class="op">=</span> xw.Book(<span class="st">'data.xlsx'</span>)</span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="co">#app = xw.App() ## May execute new excel</span></span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a><span class="co"># Available sheets</span></span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a>wks <span class="op">=</span> xw.sheets</span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(wks)</span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a><span class="co"># Select a sheet</span></span>
+<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a>ws <span class="op">=</span> wks[<span class="dv">0</span>]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>&lt;class 'openpyxl.workbook.workbook.Workbook'&gt;</code></pre>
+<pre><code>Sheets([&lt;Sheet [data.xlsx]Sheet1&gt;, &lt;Sheet [data.xlsx]Sheet2&gt;])</code></pre>
 </div>
 </div>
-<p><img src="example.png" class="img-fluid"></p>
-<p><code>workbook</code>은 엑셀 문서 그 자체를 나타냅니다. 이제 이 문서의 <code>sheet</code>에 접근하겠습니다.</p>
+</section>
+<section id="excel-값-조회하기" class="level2">
+<h2 class="anchored" data-anchor-id="excel-값-조회하기">Excel 값 조회하기</h2>
 <div class="cell" data-execution_count="2">
-<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(wb.sheetnames)</span>
-<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>sheet <span class="op">=</span> wb[<span class="st">'Sheet3'</span>]</span>
-<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="bu">type</span>(sheet))</span>
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Select a value from sheet</span></span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>val <span class="op">=</span> ws.<span class="bu">range</span>(<span class="st">"A1"</span>).value</span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(val)</span>
 <span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(sheet.title)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a><span class="co"># Select row or column</span></span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a>r <span class="op">=</span> ws.<span class="bu">range</span>(<span class="st">"4:4"</span>).value</span>
+<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="bu">list</span>(<span class="bu">filter</span>(<span class="kw">lambda</span> e: e <span class="op">!=</span> <span class="va">None</span>, r))) <span class="co"># Remove None</span></span>
+<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a>c <span class="op">=</span> ws.<span class="bu">range</span>(<span class="st">"C:C"</span>).value</span>
+<span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="bu">list</span>(<span class="bu">filter</span>(<span class="kw">lambda</span> e: e <span class="op">!=</span> <span class="va">None</span>, c)))</span>
+<span id="cb3-12"><a href="#cb3-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-13"><a href="#cb3-13" aria-hidden="true" tabindex="-1"></a><span class="co"># Select table</span></span>
+<span id="cb3-14"><a href="#cb3-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-15"><a href="#cb3-15" aria-hidden="true" tabindex="-1"></a>table <span class="op">=</span> ws.<span class="bu">range</span>(<span class="st">"A1:C4"</span>).value</span>
+<span id="cb3-16"><a href="#cb3-16" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(table)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>['Sheet1', 'Sheet2', 'Sheet3']
-&lt;class 'openpyxl.worksheet.worksheet.Worksheet'&gt;
-Sheet3</code></pre>
+<pre><code>tranquil_morning@icloud.com
+['a', 'b', 'c']
+[1.0, 2.0, '@', 'c']
+[['tranquil_morning@icloud.com', 'Fun', 1.0], ['Hello', 23.0, 2.0], ['World', '2+1', '@'], ['a', 'b', 'c']]</code></pre>
 </div>
 </div>
-<p>이제 <code>sheet</code> 안의 <code>cell</code>의 정보에 접근해보겠습니다. <code>cell</code>은 주소로 접근할 수도 있으나, row / column을 지정할 수도 있습니다. 또한 <code>sheet</code>의 <code>max_row</code> / <code>max_column</code>을 통하여 최대 행과 열을 파악할 수 있습니다.</p>
+<p><img src="example_1.png" class="img-fluid"></p>
+</section>
+<section id="excel에-값-씌우기" class="level2">
+<h2 class="anchored" data-anchor-id="excel에-값-씌우기">Excel에 값 씌우기</h2>
 <div class="cell" data-execution_count="3">
-<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>sheet <span class="op">=</span> wb[<span class="st">'Sheet1'</span>]</span>
-<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>cell <span class="op">=</span> sheet[<span class="st">'A1'</span>]</span>
-<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(cell.coordinate)</span>
-<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(cell.value)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>A1
-2015-04-05 13:34:02</code></pre>
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>ws <span class="op">=</span> wks[<span class="dv">1</span>]</span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>ws.<span class="bu">range</span>(<span class="st">"A1"</span>).value <span class="op">=</span> <span class="st">"My name is John"</span> <span class="co"># write on one cell</span></span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>ws.<span class="bu">range</span>(<span class="st">"B1"</span>).value <span class="op">=</span> [<span class="st">"Howdy"</span>,<span class="st">"Loudy"</span>] <span class="co"># write from b1 to c1</span></span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a>ws.<span class="bu">range</span>(<span class="st">"A2"</span>).value <span class="op">=</span> [[<span class="dv">1</span>,<span class="dv">2</span>,<span class="dv">3</span>],[<span class="st">'a'</span>,<span class="st">'b'</span>,<span class="st">'c'</span>]] <span class="co">#write table</span></span>
+<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a>ws.<span class="bu">range</span>(<span class="st">"A4:C4"</span>).value <span class="op">=</span> [<span class="st">"This"</span>, <span class="st">"is"</span>, <span class="st">"awesome"</span>]</span>
+<span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-10"><a href="#cb5-10" aria-hidden="true" tabindex="-1"></a>ws.<span class="bu">range</span>(<span class="st">"a2"</span>).value <span class="op">=</span> <span class="st">"=average(B2,C2)"</span> <span class="co"># write excel function</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-</div>
-<div class="cell" data-execution_count="4">
-<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> i <span class="kw">in</span> <span class="bu">range</span>(<span class="dv">1</span>, <span class="dv">8</span>):</span>
-<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>  <span class="bu">print</span>(<span class="ss">f'</span><span class="sc">{</span>sheet<span class="sc">.</span>cell(row <span class="op">=</span> i, column <span class="op">=</span> <span class="dv">2</span>)<span class="sc">.</span>coordinate<span class="sc">}</span><span class="ss"> : </span><span class="sc">{</span>sheet<span class="sc">.</span>cell(row <span class="op">=</span> i, column <span class="op">=</span> <span class="dv">2</span>)<span class="sc">.</span>value<span class="sc">}</span><span class="ss">'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>B1 : Apples
-B2 : Cherries
-B3 : Pears
-B4 : Oranges
-B5 : Apples
-B6 : Bananas
-B7 : Strawberries</code></pre>
-</div>
-</div>
-<div class="cell" data-execution_count="5">
-<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"</span><span class="sc">{</span>sheet<span class="sc">.</span>max_row<span class="sc">}</span><span class="ss"> : </span><span class="sc">{</span>sheet<span class="sc">.</span>max_column<span class="sc">}</span><span class="ss">"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>7 : 3</code></pre>
-</div>
-</div>
-<p><code>cell</code>의 주소를 쉽게 숫자로 바꾸어주거나, 숫자를 주소로 변환해주는 함수 역시 지원합니다.</p>
-<div class="cell" data-execution_count="6">
-<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> openpyxl.utils <span class="im">import</span> get_column_letter, column_index_from_string</span>
-<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(get_column_letter(<span class="dv">27</span>))</span>
-<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(column_index_from_string(<span class="st">'AA'</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>AA
-27</code></pre>
-</div>
-</div>
-<p>이제 여러 <code>cell</code>에 한번에 접근해보겠습니다.</p>
-<div class="cell" data-execution_count="7">
-<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> i <span class="kw">in</span> sheet[<span class="st">'A1'</span> : <span class="st">'C3'</span>]:</span>
-<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>  p <span class="op">=</span> <span class="st">""</span></span>
-<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a>  <span class="cf">for</span> j <span class="kw">in</span> i:</span>
-<span id="cb13-4"><a href="#cb13-4" aria-hidden="true" tabindex="-1"></a>    p <span class="op">+=</span> <span class="bu">str</span>(j.value)</span>
-<span id="cb13-5"><a href="#cb13-5" aria-hidden="true" tabindex="-1"></a>    p <span class="op">+=</span> <span class="st">" "</span></span>
-<span id="cb13-6"><a href="#cb13-6" aria-hidden="true" tabindex="-1"></a>  <span class="bu">print</span>(p)</span>
-<span id="cb13-7"><a href="#cb13-7" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb13-8"><a href="#cb13-8" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb13-9"><a href="#cb13-9" aria-hidden="true" tabindex="-1"></a>sheet[<span class="st">'A'</span>:<span class="st">'A'</span>]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>2015-04-05 13:34:02 Apples 73 
-2015-04-05 03:41:23 Cherries 85 
-2015-04-06 12:46:51 Pears 14 </code></pre>
-</div>
-<div class="cell-output cell-output-display" data-execution_count="7">
-<pre><code>(&lt;Cell 'Sheet1'.A1&gt;,
- &lt;Cell 'Sheet1'.A2&gt;,
- &lt;Cell 'Sheet1'.A3&gt;,
- &lt;Cell 'Sheet1'.A4&gt;,
- &lt;Cell 'Sheet1'.A5&gt;,
- &lt;Cell 'Sheet1'.A6&gt;,
- &lt;Cell 'Sheet1'.A7&gt;)</code></pre>
-</div>
-</div>
-<p>다음을 통해 excel 내 formula 역시 사용할 수 있습니다.</p>
-<div class="cell" data-execution_count="8">
-<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a>sheet <span class="op">=</span> wb[<span class="st">'Sheet2'</span>]</span>
-<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a>sheet[<span class="st">'A1'</span>] <span class="op">=</span> <span class="dv">200</span></span>
-<span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a>sheet[<span class="st">'A2'</span>] <span class="op">=</span> <span class="dv">300</span></span>
-<span id="cb16-4"><a href="#cb16-4" aria-hidden="true" tabindex="-1"></a>sheet[<span class="st">'A3'</span>] <span class="op">=</span> <span class="st">'=SUM(A1:A2)'</span></span>
-<span id="cb16-5"><a href="#cb16-5" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb16-6"><a href="#cb16-6" aria-hidden="true" tabindex="-1"></a>wb.save(<span class="st">'writeformula.xlsx'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</div>
-<p><img src="example2.png" class="img-fluid"></p>
+<p><img src="example_2.png" class="img-fluid"></p>
 
 
+</section>
 
 </main> <!-- /main -->
 <script id="quarto-html-after-body" type="application/javascript">

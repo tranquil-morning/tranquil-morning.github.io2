@@ -1,0 +1,11 @@
+{
+  "hash": "cbeb2bd21df86ac90be6c3957c49ebf4",
+  "result": {
+    "markdown": "---\ntitle: \"Automoate Excel with python - xlwings\"\nauthor: \"Jinwook Chang\"\ndate: \"2023-08-27\"\ndate-modified: \"2023-08-27\"\ncategories: [DataScience, Script]\n---\n\n`xlwings`를 활용하여 Excel를 자동화하는 방법에 대해 알아보도록 하겠습니다.\n\n## Python을 Excel에 연결하기\n\n::: {.cell execution_count=1}\n``` {.python .cell-code}\nimport xlwings as xw\n\n# Open File\n\nwb = xw.Book('data.xlsx')\n#app = xw.App() ## May execute new excel\n\n# Available sheets\nwks = xw.sheets\nprint(wks)\n\n# Select a sheet\nws = wks[0]\n```\n\n::: {.cell-output .cell-output-stdout}\n```\nSheets([<Sheet [data.xlsx]Sheet1>, <Sheet [data.xlsx]Sheet2>])\n```\n:::\n:::\n\n\n## Excel 값 조회하기\n\n::: {.cell execution_count=2}\n``` {.python .cell-code}\n# Select a value from sheet\nval = ws.range(\"A1\").value\nprint(val)\n\n# Select row or column\n\nr = ws.range(\"4:4\").value\nprint(list(filter(lambda e: e != None, r))) # Remove None\n\nc = ws.range(\"C:C\").value\nprint(list(filter(lambda e: e != None, c)))\n\n# Select table\n\ntable = ws.range(\"A1:C4\").value\nprint(table)\n```\n\n::: {.cell-output .cell-output-stdout}\n```\ntranquil_morning@icloud.com\n['a', 'b', 'c']\n[1.0, 2.0, '@', 'c']\n[['tranquil_morning@icloud.com', 'Fun', 1.0], ['Hello', 23.0, 2.0], ['World', '2+1', '@'], ['a', 'b', 'c']]\n```\n:::\n:::\n\n\n![](example_1.png)\n\n## Excel에 값 씌우기\n\n::: {.cell execution_count=3}\n``` {.python .cell-code}\nws = wks[1]\n\nws.range(\"A1\").value = \"My name is John\" # write on one cell\nws.range(\"B1\").value = [\"Howdy\",\"Loudy\"] # write from b1 to c1\n\nws.range(\"A2\").value = [[1,2,3],['a','b','c']] #write table\n\nws.range(\"A4:C4\").value = [\"This\", \"is\", \"awesome\"]\n\nws.range(\"a2\").value = \"=average(B2,C2)\" # write excel function\n```\n:::\n\n\n![](example_2.png)\n\n",
+    "supporting": [
+      "index_files"
+    ],
+    "filters": [],
+    "includes": {}
+  }
+}
